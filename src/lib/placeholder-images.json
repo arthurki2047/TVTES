@@ -1,3 +1,112 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "news-1-thumb",
+      "description": "Thumbnail for a news channel",
+      "imageUrl": "https://images.unsplash.com/photo-1763674561330-5f87d703ea0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxuZXdzJTIwYnJvYWRjYXN0fGVufDB8fHx8MTc2ODgxNTMwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "news broadcast"
+    },
+    {
+      "id": "news-1-logo",
+      "description": "Logo for a news channel",
+      "imageUrl": "https://images.unsplash.com/photo-1662057168152-d5dc088deb25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxuZXdzJTIwbG9nb3xlbnwwfHx8fDE3Njg3MjE0Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "news logo"
+    },
+    {
+      "id": "sports-1-thumb",
+      "description": "Thumbnail for a sports channel",
+      "imageUrl": "https://images.unsplash.com/photo-1638573615178-6f2950746614?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdGFkaXVtJTIwbGlnaHRzfGVufDB8fHx8MTc2ODc4MDM2NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "stadium lights"
+    },
+    {
+      "id": "sports-1-logo",
+      "description": "Logo for a sports channel",
+      "imageUrl": "https://images.unsplash.com/photo-1760037028553-3c5c801f18c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzcG9ydHMlMjBsb2dvfGVufDB8fHx8MTc2ODcyMTQ3OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sports logo"
+    },
+    {
+      "id": "movies-1-thumb",
+      "description": "Thumbnail for a movie channel",
+      "imageUrl": "https://images.unsplash.com/photo-1543536448-d209d2d13a1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmaWxtJTIwcmVlbHxlbnwwfHx8fDE3Njg3MTQ4MDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "film reel"
+    },
+    {
+      "id": "movies-1-logo",
+      "description": "Logo for a movie channel",
+      "imageUrl": "https://images.unsplash.com/photo-1563381013529-1c922c80ac8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3ZpZSUyMGxvZ298ZW58MHx8fHwxNzY4NzIxNDc5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "movie logo"
+    },
+    {
+      "id": "entertainment-1-thumb",
+      "description": "Thumbnail for an entertainment channel",
+      "imageUrl": "https://images.unsplash.com/photo-1514306191717-452ec28c7814?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxyZWQlMjBjYXJwZXR8ZW58MHx8fHwxNzY4NzE0ODA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red carpet"
+    },
+    {
+      "id": "entertainment-1-logo",
+      "description": "Logo for an entertainment channel",
+      "imageUrl": "https://images.unsplash.com/photo-1766186616015-3f308f197d21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxlbnRlcnRhaW5tZW50JTIwbG9nb3xlbnwwfHx8fDE3Njg4MTUzMTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "entertainment logo"
+    },
+    {
+      "id": "kids-1-thumb",
+      "description": "Thumbnail for a kids channel",
+      "imageUrl": "https://images.unsplash.com/photo-1678895643086-ca22c349fe75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjYXJ0b29uJTIwYW5pbWF0aW9ufGVufDB8fHx8MTc2ODgxNTMwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon animation"
+    },
+    {
+      "id": "kids-1-logo",
+      "description": "Logo for a kids channel",
+      "imageUrl": "https://images.unsplash.com/photo-1762077656270-c9a1005eb11f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxraWRzJTIwbG9nb3xlbnwwfHx8fDE3Njg4MTUzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "kids logo"
+    },
+    {
+      "id": "music-1-thumb",
+      "description": "Thumbnail for a music channel",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwY3Jvd2R8ZW58MHx8fHwxNzY4Nzk5MDYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "concert crowd"
+    },
+    {
+      "id": "music-1-logo",
+      "description": "Logo for a music channel",
+      "imageUrl": "https://images.unsplash.com/photo-1722665600826-f054f8fe6f44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtdXNpYyUyMGxvZ298ZW58MHx8fHwxNzY4ODE1MzA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "music logo"
+    },
+    {
+      "id": "sports-2-thumb",
+      "description": "Thumbnail for another sports channel",
+      "imageUrl": "https://images.unsplash.com/photo-1563302905-4830598613c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxiYXNrZXRiYWxsJTIwY291cnR8ZW58MHx8fHwxNzY4Nzk4NDI3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "basketball court"
+    },
+    {
+      "id": "sports-2-logo",
+      "description": "Logo for another sports channel",
+      "imageUrl": "https://images.unsplash.com/photo-1608550742884-68021295cd82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3BvcnRzJTIwbG9nb3xlbnwwfHx8fDE3Njg3MjE0Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sports logo"
+    },
+    {
+      "id": "news-2-thumb",
+      "description": "Thumbnail for another news channel",
+      "imageUrl": "https://images.unsplash.com/photo-1730094737470-585776d7f790?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxuZXdzJTIwZGVza3xlbnwwfHx8fDE3Njg4MTUzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "news desk"
+    },
+    {
+      "id": "news-2-logo",
+      "description": "Logo for another news channel",
+      "imageUrl": "https://images.unsplash.com/photo-1662027057465-bac8ada9a86a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxuZXdzJTIwbG9nb3xlbnwwfHx8fDE3Njg3MjE0Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "news logo"
+    },
+    {
+      "id": "mp4-video-thumb",
+      "description": "Thumbnail for an MP4 video",
+      "imageUrl": "https://images.unsplash.com/photo-1621846846625-f0bde2eb7c3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxuYXR1cmUlMjBsYW5kc2NhcGV8ZW58MHx8fHwxNzY4NzgwNzUzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nature landscape"
+    },
+    {
+      "id": "mp4-video-logo",
+      "description": "Logo for an MP4 video channel",
+      "imageUrl": "https://images.unsplash.com/photo-1662466767414-0cbe9edd0457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2aWRlbyUyMGxvZ298ZW58MHx8fHwxNzY4ODE1MzA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "video logo"
+    }
+  ]
 }
