@@ -39,11 +39,16 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const playVideo = (video: HTMLVideoElement) => {
     video.play().catch(error => {
       if (error.name !== 'AbortError') {
@@ -190,16 +195,24 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   }, [isPlaying]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    // Don't trigger swipe if a button is touched
+    if (target.closest('button')) {
+      touchStartX.current = 0;
+      touchEndX.current = 0;
+      return;
+    }
     resetControlsTimeout();
     touchStartX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if(touchStartX.current === 0) return;
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchEnd = () => {
-    if (touchStartX.current === 0) return;
+    if (touchStartX.current === 0 || touchEndX.current === 0) return;
     const swipeDistance = touchStartX.current - touchEndX.current;
     if (Math.abs(swipeDistance) > 50) {
       onSwipe(swipeDistance > 0 ? 'left' : 'right');
@@ -304,7 +317,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={toggleControls} />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={(e) => { e.stopPropagation(); toggleControls(); }} />
       
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
@@ -313,7 +326,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       )}
 
       <div
-        onClick={toggleControls}
+        onClick={(e) => { e.stopPropagation(); toggleControls(); }}
         className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
@@ -375,7 +388,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
                     )}
                 </div>
                 <div className="flex items-center gap-1 md:gap-2">
-                    {typeof document !== 'undefined' && document.pictureInPictureEnabled && (
+                    {isClient && document.pictureInPictureEnabled && (
                         <Button variant="ghost" size="icon" onClick={togglePiP} className="text-white hover:bg-white/20">
                             <PictureInPicture2 />
                         </Button>
