@@ -49,7 +49,8 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     setIsClient(true);
   }, []);
 
-  const playVideo = (video: HTMLVideoElement) => {
+  const playVideo = (video: HTMLVideoElement | null) => {
+    if (!video) return;
     video.play().catch(error => {
       if (error.name !== 'AbortError') {
         // console.error("Video play failed:", error);
@@ -197,7 +198,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     // Don't trigger swipe if a button is touched
-    if (target.closest('button')) {
+    if (target.closest('button, [role="slider"]')) {
       touchStartX.current = 0;
       touchEndX.current = 0;
       return;
@@ -337,7 +338,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
             </Button>
         </div>
         
-        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+        <div className="w-full flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
