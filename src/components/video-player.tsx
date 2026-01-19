@@ -31,6 +31,7 @@ function formatTime(seconds: number) {
 export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
+  const hlsRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -62,21 +63,23 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    let hlsInstance: any = null;
     setIsLoading(true);
 
     if (type === 'hls') {
         if(video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = src;
-            video.addEventListener('loadedmetadata', () => playVideo(video));
+            playVideo(video);
         } else if (typeof window !== 'undefined') {
             import('hls.js').then(Hls => {
                 if (Hls.default.isSupported()) {
+                  if (hlsRef.current) {
+                    hlsRef.current.destroy();
+                  }
                   const hls = new Hls.default({
                     liveSyncDurationCount: 3, 
                     maxMaxBufferLength: 30,
                   });
-                  hlsInstance = hls;
+                  hlsRef.current = hls;
                   hls.loadSource(src);
                   hls.attachMedia(video);
                   hls.on(Hls.default.Events.MANIFEST_PARSED, () => {
@@ -84,7 +87,6 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
                   });
                    hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                      // console.error('Fatal HLS error:', data);
                       if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
                         hls.startLoad();
                       }
@@ -94,16 +96,23 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
             });
         }
     } else {
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+          hlsRef.current = null;
+        }
         video.src = src;
         playVideo(video);
     }
     
     return () => {
-        if (hlsInstance) {
-          hlsInstance.destroy();
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+          hlsRef.current = null;
         }
         if (video) {
-            video.removeEventListener('loadedmetadata', () => playVideo(video));
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
         }
     }
 
@@ -218,7 +227,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     if (Math.abs(swipeDistance) > 50) {
       onSwipe(swipeDistance > 0 ? 'left' : 'right');
     } else {
-        setShowControls(s => !s);
+        toggleControls();
     }
     touchStartX.current = 0;
     touchEndX.current = 0;
@@ -259,14 +268,16 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
 
     if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
         if (player.requestFullscreen) {
-            player.requestFullscreen().catch(err => console.error(`FS Error: ${err.message}`));
+            player.requestFullscreen().catch(err => {});
         } else if ((player as any).webkitRequestFullscreen) {
             (player as any).webkitRequestFullscreen();
         } else if ((player as any).msRequestFullscreen) {
             (player as any).msRequestFullscreen();
         }
         if (screen.orientation && typeof screen.orientation.lock === 'function') {
-          screen.orientation.lock('landscape').catch(() => {});
+          try {
+            screen.orientation.lock('landscape').catch(() => {});
+          } catch(e) {}
         }
     } else {
         if (document.exitFullscreen) {
@@ -338,7 +349,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
             </Button>
         </div>
         
-        <div className="w-full flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+        <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
