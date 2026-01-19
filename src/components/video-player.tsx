@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -127,18 +127,112 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
 
   }, [src, type]);
 
-  const resetControlsTimeout = () => {
+  const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
     setShowControls(true);
     controlsTimeoutRef.current = setTimeout(() => {
-      if(videoRef.current && !videoRef.current.paused) {
+      if (videoRef.current && !videoRef.current.paused) {
         setShowControls(false);
       }
     }, 3000);
-  };
+  }, []);
 
+  const toggleControls = useCallback(() => {
+    setShowControls(s => {
+      const nextState = !s;
+      if (nextState) {
+        resetControlsTimeout();
+      } else {
+        if (controlsTimeoutRef.current) {
+          clearTimeout(controlsTimeoutRef.current);
+        }
+      }
+      return nextState;
+    });
+  }, [resetControlsTimeout]);
+
+  const togglePlay = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (videoRef.current?.paused) {
+      playVideo(videoRef.current);
+    } else {
+      videoRef.current?.pause();
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if(videoRef.current) videoRef.current.muted = !videoRef.current.muted;
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+
+  const handleVolumeChange = useCallback((value: number[]) => {
+    if(videoRef.current) {
+        videoRef.current.volume = value[0];
+        videoRef.current.muted = value[0] === 0;
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+  
+  const toggleFullscreen = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const player = playerRef.current;
+    if (!player) return;
+
+    if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
+        if (player.requestFullscreen) {
+            player.requestFullscreen().catch(err => {});
+        } else if ((player as any).webkitRequestFullscreen) {
+            (player as any).webkitRequestFullscreen();
+        } else if ((player as any).msRequestFullscreen) {
+            (player as any).msRequestFullscreen();
+        }
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          try {
+            screen.orientation.lock('landscape').catch(() => {});
+          } catch(e) {}
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+            (document as any).webkitExitFullscreen();
+        } else if ((document as any).msExitFullscreen) {
+            (document as any).msExitFullscreen();
+        }
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+          screen.orientation.unlock();
+        }
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+  
+  const togglePiP = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    if (document.pictureInPictureElement) {
+        document.exitPictureInPicture();
+    } else {
+        videoRef.current?.requestPictureInPicture().catch(console.error);
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+
+  const handleNextChannel = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSwipe('left');
+    resetControlsTimeout();
+  }, [onSwipe, resetControlsTimeout]);
+
+  const handlePrevChannel = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSwipe('right');
+    resetControlsTimeout();
+  }, [onSwipe, resetControlsTimeout]);
+  
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -168,6 +262,13 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
             }
         }
     };
+    
+    const handleMouseLeave = () => {
+      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    };
 
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
@@ -181,10 +282,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     const player = playerRef.current;
     
     player?.addEventListener('mousemove', resetControlsTimeout);
-    player?.addEventListener('mouseleave', () => {
-        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-        if(isPlaying) setShowControls(false);
-    });
+    player?.addEventListener('mouseleave', handleMouseLeave);
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
@@ -201,21 +299,17 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       video.removeEventListener('playing', handlePlaying);
       
       player?.removeEventListener('mousemove', resetControlsTimeout);
-      player?.removeEventListener('mouseleave', () => {
-        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-        if(isPlaying) setShowControls(false);
-      });
+      player?.removeEventListener('mouseleave', handleMouseLeave);
 
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     };
-  }, [isPlaying]);
+  }, [resetControlsTimeout]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    // Don't trigger swipe if a button is touched
     if (target.closest('button, [role="slider"]')) {
       touchStartX.current = 0;
       touchEndX.current = 0;
@@ -253,90 +347,6 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     touchEndX.current = 0;
   };
   
-  const toggleControls = () => {
-    setShowControls(s => !s);
-  };
-
-  const togglePlay = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (videoRef.current?.paused) {
-      playVideo(videoRef.current);
-    } else {
-      videoRef.current?.pause();
-    }
-    resetControlsTimeout();
-  };
-
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if(videoRef.current) videoRef.current.muted = !isMuted;
-    resetControlsTimeout();
-  };
-
-  const handleVolumeChange = (value: number[]) => {
-    if(videoRef.current) {
-        videoRef.current.volume = value[0];
-        videoRef.current.muted = value[0] === 0;
-    }
-    resetControlsTimeout();
-  };
-  
-  const toggleFullscreen = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const player = playerRef.current;
-    if (!player) return;
-
-    if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
-        if (player.requestFullscreen) {
-            player.requestFullscreen().catch(err => {});
-        } else if ((player as any).webkitRequestFullscreen) {
-            (player as any).webkitRequestFullscreen();
-        } else if ((player as any).msRequestFullscreen) {
-            (player as any).msRequestFullscreen();
-        }
-        if (screen.orientation && typeof screen.orientation.lock === 'function') {
-          try {
-            screen.orientation.lock('landscape').catch(() => {});
-          } catch(e) {}
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-            (document as any).webkitExitFullscreen();
-        } else if ((document as any).msExitFullscreen) {
-            (document as any).msExitFullscreen();
-        }
-        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-          screen.orientation.unlock();
-        }
-    }
-    resetControlsTimeout();
-  };
-  
-  const togglePiP = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    if (document.pictureInPictureElement) {
-        document.exitPictureInPicture();
-    } else {
-        videoRef.current?.requestPictureInPicture().catch(console.error);
-    }
-    resetControlsTimeout();
-  };
-
-  const handleNextChannel = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSwipe('left');
-    resetControlsTimeout();
-  }
-
-  const handlePrevChannel = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSwipe('right');
-    resetControlsTimeout();
-  }
-  
   const isLive = duration === Infinity;
 
 
@@ -363,7 +373,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
 
-        <div className="p-2 md:p-4">
+        <div className="p-2 md:p-4 flex justify-between">
             <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={onBack}>
                 <ArrowLeft />
             </Button>
