@@ -144,6 +144,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_740.m3u8',
     type: 'hls',
   },
+  {
+    id: 'b4u-music',
+    name: 'B4U Music',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/1402/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/1401/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string }[] = [
