@@ -318,13 +318,13 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
 
-        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
+        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onBack}>
                 <ArrowLeft />
             </Button>
         </div>
         
-        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
+        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
@@ -336,7 +336,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
           </Button>
         </div>
 
-        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
+        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
             {!isLive && duration > 0 && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
