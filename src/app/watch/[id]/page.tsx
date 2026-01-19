@@ -1,14 +1,13 @@
 'use client';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { getChannelById, getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
-import { VideoPlayer } from '@/components/video-player';
+import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 
@@ -16,6 +15,7 @@ export default function WatchPage() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
+  const videoPlayerRef = useRef<VideoPlayerHandles>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
   
@@ -36,6 +36,13 @@ export default function WatchPage() {
       router.replace('/');
     }
   }, [channel, router]);
+
+  const handleGoHomeAndPiP = () => {
+    if (videoPlayerRef.current) {
+      videoPlayerRef.current.requestPictureInPicture();
+    }
+    router.push('/');
+  };
 
   const handleSwipe = (direction: 'left' | 'right') => {
     const listType = searchParams.get('list') ? 'list' : searchParams.get('category') ? 'category' : 'list';
@@ -73,7 +80,7 @@ export default function WatchPage() {
   return (
     <div className="flex h-screen flex-col bg-black">
        <div className="relative">
-         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} />
+         <VideoPlayer ref={videoPlayerRef} src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} />
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4 pb-20 md:pb-4">
         <div className="container mx-auto max-w-4xl">
@@ -98,11 +105,9 @@ export default function WatchPage() {
                 <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
             </div>
             <div className="mt-8 text-center">
-                <Button asChild size="lg" className="h-auto px-16 py-6 text-2xl font-bold">
-                    <Link href="/">
-                        <Home className="mr-4 h-8 w-8" />
-                        Home
-                    </Link>
+                <Button size="lg" className="h-auto px-16 py-6 text-2xl font-bold" onClick={handleGoHomeAndPiP}>
+                    <Home className="mr-4 h-8 w-8" />
+                    Home
                 </Button>
             </div>
         </div>

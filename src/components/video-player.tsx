@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -11,6 +11,10 @@ interface VideoPlayerProps {
   type: 'hls' | 'mp4';
   onSwipe: (direction: 'left' | 'right') => void;
   onBack: () => void;
+}
+
+export interface VideoPlayerHandles {
+  requestPictureInPicture: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -28,7 +32,7 @@ function formatTime(seconds: number) {
 }
 
 
-export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
+export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ src, type, onSwipe, onBack }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
@@ -252,6 +256,18 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
   
+  const enterPiP = useCallback(() => {
+    if (videoRef.current && document.pictureInPictureEnabled && !videoRef.current.disablePictureInPicture) {
+       if (!document.pictureInPictureElement) {
+           videoRef.current.requestPictureInPicture().catch(console.error);
+       }
+    }
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    requestPictureInPicture: enterPiP
+  }));
+
   const togglePiP = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (!videoRef.current) return;
@@ -501,4 +517,6 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       </div>
     </div>
   );
-}
+});
+
+VideoPlayer.displayName = 'VideoPlayer';
