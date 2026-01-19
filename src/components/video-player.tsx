@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
@@ -57,7 +58,6 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     const promise = video.play();
     if (promise !== undefined) {
       promise.catch(error => {
-        // Autoplay was prevented.
         if (error.name !== 'AbortError') {
           console.error("Video play failed:", error);
         }
@@ -70,12 +70,10 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     if (!video) return;
 
     setIsLoading(true);
-    // Ensure previous HLS instance is destroyed
     if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
     }
-    // Ensure previous src is cleared
     video.pause();
     video.removeAttribute('src');
     video.load();
@@ -134,6 +132,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   }, [src, type, playVideo]);
 
   const resetControlsTimeout = useCallback(() => {
+    if (isLocked) return;
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
@@ -143,9 +142,10 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         setShowControls(false);
       }
     }, 5000);
-  }, []);
+  }, [isLocked]);
   
   const toggleControls = useCallback(() => {
+    if (isLocked) return;
     setShowControls(s => {
       const nextState = !s;
       if (nextState) {
@@ -157,7 +157,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       }
       return nextState;
     });
-  }, [resetControlsTimeout]);
+  }, [resetControlsTimeout, isLocked]);
 
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -215,6 +215,19 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     }
     resetControlsTimeout();
   }, [resetControlsTimeout]);
+
+  const toggleLock = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const willBeLocked = !isLocked;
+    setIsLocked(willBeLocked);
+
+    if (willBeLocked) {
+      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      setShowControls(false);
+    } else {
+      resetControlsTimeout();
+    }
+  }, [isLocked, resetControlsTimeout]);
   
   const togglePiP = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -264,6 +277,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
         setIsFullscreen(isCurrentlyFullscreen);
         if (!isCurrentlyFullscreen) {
+            setIsLocked(false);
             if (screen.orientation && typeof screen.orientation.unlock === 'function') {
                 screen.orientation.unlock();
             }
@@ -271,6 +285,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     };
     
     const handleMouseLeave = () => {
+      if (isLocked) return;
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (videoRef.current && !videoRef.current.paused) {
         setShowControls(false);
@@ -311,10 +326,10 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     };
-  }, [resetControlsTimeout]);
+  }, [resetControlsTimeout, isLocked]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    // Only set touch start if the target is not a button or slider
+    if (isLocked) return;
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"]')) {
         touchStartX.current = 0;
@@ -326,12 +341,14 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if(touchStartX.current === 0) return;
+    if (isLocked || touchStartX.current === 0) return;
     touchEndX.current = e.targetTouches[0].clientX;
     touchEndY.current = e.targetTouches[0].clientY;
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isLocked) return;
+    
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"]')) {
       return;
@@ -340,17 +357,14 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     const xDiff = touchStartX.current - touchEndX.current;
     const yDiff = touchStartY.current - touchEndY.current;
     
-    // Check if it was a swipe (significant horizontal movement)
     const isSwipe = touchEndX.current !== 0 && Math.abs(xDiff) > 50 && Math.abs(xDiff) > Math.abs(yDiff);
 
     if (isSwipe) {
       onSwipe(xDiff > 0 ? 'left' : 'right');
     } else {
-      // It was a tap, toggle controls
       toggleControls();
     }
     
-    // Reset touch coordinates
     touchStartX.current = 0;
     touchEndX.current = 0;
     touchStartY.current = 0;
@@ -369,7 +383,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={toggleControls} />
       
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
@@ -377,15 +391,28 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         </div>
       )}
 
+      {isLocked && isFullscreen && (
+         <div className="absolute inset-0 z-20 flex items-center justify-center" onClick={toggleLock}>
+            <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110">
+                <Unlock size={48} />
+            </Button>
+        </div>
+      )}
+
       <div
-        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
 
-        <div className="p-2 md:p-4 flex justify-between">
+        <div className="p-2 md:p-4 flex justify-between items-center">
             <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}>
                 <ArrowLeft />
             </Button>
+            {isFullscreen && (
+                <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleLock}>
+                    <Lock />
+                </Button>
+            )}
         </div>
         
         <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()}>
