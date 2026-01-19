@@ -47,7 +47,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const playVideo = (video: HTMLVideoElement) => {
     video.play().catch(error => {
       if (error.name !== 'AbortError') {
-        console.error("Video play failed:", error);
+        // console.error("Video play failed:", error);
       }
     });
   }
@@ -78,7 +78,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
                   });
                    hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                      console.error('Fatal HLS error:', data);
+                      // console.error('Fatal HLS error:', data);
                       if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
                         hls.startLoad();
                       }
@@ -138,6 +138,11 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     const handleFullscreenChange = () => {
         const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
         setIsFullscreen(isCurrentlyFullscreen);
+        if (!isCurrentlyFullscreen) {
+            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                screen.orientation.unlock();
+            }
+        }
     };
 
     video.addEventListener('play', handlePlay);
@@ -185,13 +190,11 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   }, [isPlaying]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('.video-controls-container')) return;
     resetControlsTimeout();
     touchStartX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('.video-controls-container')) return;
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
@@ -248,6 +251,9 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         } else if ((player as any).msRequestFullscreen) {
             (player as any).msRequestFullscreen();
         }
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -255,6 +261,9 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
             (document as any).webkitExitFullscreen();
         } else if ((document as any).msExitFullscreen) {
             (document as any).msExitFullscreen();
+        }
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+          screen.orientation.unlock();
         }
     }
     resetControlsTimeout();
@@ -309,13 +318,13 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
 
-        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()}>
+        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onBack}>
                 <ArrowLeft />
             </Button>
         </div>
         
-        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
@@ -327,7 +336,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
           </Button>
         </div>
 
-        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
+        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
             {!isLive && duration > 0 && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
