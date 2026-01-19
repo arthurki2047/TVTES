@@ -40,9 +40,11 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [showUnlock, setShowUnlock] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const unlockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -143,6 +145,16 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       }
     }, 5000);
   }, [isLocked]);
+
+  const resetUnlockTimeout = useCallback(() => {
+    if (unlockTimeoutRef.current) {
+      clearTimeout(unlockTimeoutRef.current);
+    }
+    setShowUnlock(true);
+    unlockTimeoutRef.current = setTimeout(() => {
+      setShowUnlock(false);
+    }, 5000);
+  }, []);
   
   const toggleControls = useCallback(() => {
     if (isLocked) return;
@@ -158,6 +170,14 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       return nextState;
     });
   }, [resetControlsTimeout, isLocked]);
+
+  const handleTap = () => {
+    if (isLocked) {
+        resetUnlockTimeout();
+    } else {
+        toggleControls();
+    }
+  };
 
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -224,10 +244,13 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     if (willBeLocked) {
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       setShowControls(false);
+      resetUnlockTimeout();
     } else {
+      if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
+      setShowUnlock(false);
       resetControlsTimeout();
     }
-  }, [isLocked, resetControlsTimeout]);
+  }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
   
   const togglePiP = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -325,11 +348,11 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
   }, [resetControlsTimeout, isLocked]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isLocked) return;
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"]')) {
         touchStartX.current = 0;
@@ -341,14 +364,12 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isLocked || touchStartX.current === 0) return;
+    if (touchStartX.current === 0) return;
     touchEndX.current = e.targetTouches[0].clientX;
     touchEndY.current = e.targetTouches[0].clientY;
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isLocked) return;
-    
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"]')) {
       return;
@@ -359,10 +380,10 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     
     const isSwipe = touchEndX.current !== 0 && Math.abs(xDiff) > 50 && Math.abs(xDiff) > Math.abs(yDiff);
 
-    if (isSwipe) {
+    if (!isLocked && isSwipe) {
       onSwipe(xDiff > 0 ? 'left' : 'right');
-    } else {
-      toggleControls();
+    } else if (!isSwipe && touchStartX.current !== 0) {
+      handleTap();
     }
     
     touchStartX.current = 0;
@@ -383,7 +404,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={toggleControls} />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={handleTap} />
       
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
@@ -391,8 +412,8 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         </div>
       )}
 
-      {isLocked && isFullscreen && (
-         <div className="absolute inset-0 z-20 flex items-center justify-center" onClick={toggleLock}>
+      {isLocked && isFullscreen && showUnlock && (
+         <div className="absolute inset-0 z-20 flex items-center justify-center">
             <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110">
                 <Unlock size={48} />
             </Button>
