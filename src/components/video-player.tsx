@@ -1,19 +1,34 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface VideoPlayerProps {
   src: string;
   type: 'hls' | 'mp4';
   onSwipe: (direction: 'left' | 'right') => void;
+  onBack: () => void;
 }
 
-export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
+function formatTime(seconds: number) {
+    if (isNaN(seconds) || seconds === Infinity || seconds < 0) {
+        return '00:00';
+    }
+    const date = new Date(seconds * 1000);
+    const hh = date.getUTCHours();
+    const mm = date.getUTCMinutes();
+    const ss = date.getUTCSeconds().toString().padStart(2, '0');
+    if (hh) {
+        return `${hh}:${mm.toString().padStart(2, '0')}:${ss}`;
+    }
+    return `${mm}:${ss}`;
+}
+
+
+export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,7 +46,6 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
   
   const playVideo = (video: HTMLVideoElement) => {
     video.play().catch(error => {
-      // Ignore AbortError which can happen when a new video is loaded while the previous one is trying to play.
       if (error.name !== 'AbortError') {
         console.error("Video play failed:", error);
       }
@@ -46,18 +60,14 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     setIsLoading(true);
 
     if (type === 'hls') {
-        // Native playback for Safari and other supporting browsers
         if(video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = src;
             video.addEventListener('loadedmetadata', () => playVideo(video));
         } else if (typeof window !== 'undefined') {
-            // Use hls.js for other browsers
             import('hls.js').then(Hls => {
                 if (Hls.default.isSupported()) {
                   const hls = new Hls.default({
-                    // Start loading from a position near the live edge
                     liveSyncDurationCount: 3, 
-                    // Lower the max buffer length to reduce memory usage
                     maxMaxBufferLength: 30,
                   });
                   hlsInstance = hls;
@@ -69,7 +79,6 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
                    hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                       console.error('Fatal HLS error:', data);
-                       // Attempt to recover from network errors
                       if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
                         hls.startLoad();
                       }
@@ -127,7 +136,8 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     };
     
     const handleFullscreenChange = () => {
-        setIsFullscreen(!!document.fullscreenElement || !!(document as any).webkitIsFullScreen);
+        const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
+        setIsFullscreen(isCurrentlyFullscreen);
     };
 
     video.addEventListener('play', handlePlay);
@@ -175,7 +185,6 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
   }, [isPlaying]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    // Only handle swipes on the video element itself, not on controls
     if ((e.target as HTMLElement).closest('.video-controls-container')) return;
     resetControlsTimeout();
     touchStartX.current = e.targetTouches[0].clientX;
@@ -189,14 +198,17 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
   const handleTouchEnd = () => {
     if (touchStartX.current === 0) return;
     const swipeDistance = touchStartX.current - touchEndX.current;
-    if (Math.abs(swipeDistance) > 50) { // Min swipe distance
+    if (Math.abs(swipeDistance) > 50) {
       onSwipe(swipeDistance > 0 ? 'left' : 'right');
     } else {
-        // It's a tap, not a swipe
         setShowControls(s => !s);
     }
     touchStartX.current = 0;
     touchEndX.current = 0;
+  };
+  
+  const toggleControls = () => {
+    setShowControls(s => !s);
   };
 
   const togglePlay = (e?: React.MouseEvent) => {
@@ -231,17 +243,17 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
         if (player.requestFullscreen) {
             player.requestFullscreen().catch(err => console.error(`FS Error: ${err.message}`));
-        } else if ((player as any).webkitRequestFullscreen) { /* Safari */
+        } else if ((player as any).webkitRequestFullscreen) {
             (player as any).webkitRequestFullscreen();
-        } else if ((player as any).msRequestFullscreen) { /* IE11 */
+        } else if ((player as any).msRequestFullscreen) {
             (player as any).msRequestFullscreen();
         }
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) { /* Safari */
+        } else if ((document as any).webkitExitFullscreen) {
             (document as any).webkitExitFullscreen();
-        } else if ((document as any).msExitFullscreen) { /* IE11 */
+        } else if ((document as any).msExitFullscreen) {
             (document as any).msExitFullscreen();
         }
     }
@@ -270,6 +282,8 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     onSwipe('right');
     resetControlsTimeout();
   }
+  
+  const isLive = duration === Infinity;
 
 
   return (
@@ -281,7 +295,7 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={() => setShowControls(s => !s)} />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={toggleControls} />
       
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
@@ -290,46 +304,74 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
       )}
 
       <div
-        onClick={(e) => e.stopPropagation()}
-        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between bg-black/30 transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+        onClick={toggleControls}
+        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         
-        {/* Top Controls (placeholder) */}
-        <div></div>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
+
+        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()}>
+            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onBack}>
+                <ArrowLeft />
+            </Button>
+        </div>
         
-        {/* Middle Controls */}
-        <div className="flex items-center justify-around px-4 md:px-16">
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16">
-            <ChevronLeft size={48} />
+        <div className="flex items-center justify-center gap-8 md:gap-16" onClick={e => e.stopPropagation()}>
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+            <ChevronLeft size={40} />
           </Button>
-          <Button variant="ghost" size="icon" onClick={togglePlay} className="h-16 w-16">
-            {isPlaying ? <Pause size={48} /> : <Play size={48} />}
+          <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+            {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16">
-            <ChevronRight size={48} />
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+            <ChevronRight size={40} />
           </Button>
         </div>
 
-        {/* Bottom Controls */}
-        <div className="p-4">
-            <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={togglePlay}>
-                        {isPlaying ? <Pause /> : <Play />}
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={toggleMute}>
-                        {isMuted ? <VolumeX /> : <Volume2 />}
-                    </Button>
-                    <div className="flex w-24 items-center">
-                        <Slider value={[isMuted ? 0 : volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
+        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
+            {!isLive && duration > 0 && (
+                <div className="px-4 md:px-6 mb-2">
+                    <Slider
+                        value={[progress]}
+                        max={duration}
+                        onValueChange={(value) => {
+                            if (videoRef.current) videoRef.current.currentTime = value[0];
+                        }}
+                        className="w-full [&>span:first-child]:bg-primary"
+                    />
+                    <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
+                        <span>{formatTime(progress)}</span>
+                        <span>{formatTime(duration)}</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
+            )}
+            <div className="flex items-center justify-between gap-4 px-2 md:px-4">
+                <div className="flex items-center gap-1 md:gap-2">
+                    <Button variant="ghost" size="icon" onClick={togglePlay} className="text-white hover:bg-white/20">
+                        {isPlaying ? <Pause /> : <Play />}
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={toggleMute} className="text-white hover:bg-white/20">
+                        {isMuted ? <VolumeX /> : <Volume2 />}
+                    </Button>
+                    <div className="hidden md:flex w-24 items-center">
+                        <Slider value={[isMuted ? 0 : volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
+                    </div>
+                     {isLive && (
+                        <div className="flex items-center gap-1.5 ml-2">
+                            <div className="relative flex h-2.5 w-2.5">
+                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
+                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
+                            </div>
+                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center gap-1 md:gap-2">
                     {typeof document !== 'undefined' && document.pictureInPictureEnabled && (
-                        <Button variant="ghost" size="icon" onClick={togglePiP}>
+                        <Button variant="ghost" size="icon" onClick={togglePiP} className="text-white hover:bg-white/20">
                             <PictureInPicture2 />
                         </Button>
                     )}
-                    <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
+                    <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
                         {isFullscreen ? <Minimize /> : <Maximize />}
                     </Button>
                 </div>
