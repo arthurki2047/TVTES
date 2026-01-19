@@ -50,14 +50,18 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     setIsClient(true);
   }, []);
 
-  const playVideo = (video: HTMLVideoElement | null) => {
+  const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
-    video.play().catch(error => {
-      if (error.name !== 'AbortError') {
-        // console.error("Video play failed:", error);
-      }
-    });
-  }
+    const promise = video.play();
+    if (promise !== undefined) {
+      promise.catch(error => {
+        // Autoplay was prevented.
+        if (error.name !== 'AbortError') {
+          console.error("Video play failed:", error);
+        }
+      });
+    }
+  },[]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -125,7 +129,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         }
     }
 
-  }, [src, type]);
+  }, [src, type, playVideo]);
 
   const resetControlsTimeout = useCallback(() => {
     if (controlsTimeoutRef.current) {
@@ -138,8 +142,9 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       }
     }, 3000);
   }, []);
-
-  const toggleControls = useCallback(() => {
+  
+  const toggleControls = useCallback((e?: React.MouseEvent | React.TouchEvent) => {
+    if(e) e.stopPropagation();
     setShowControls(s => {
       const nextState = !s;
       if (nextState) {
@@ -161,7 +166,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       videoRef.current?.pause();
     }
     resetControlsTimeout();
-  }, [resetControlsTimeout]);
+  }, [resetControlsTimeout, playVideo]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -235,7 +240,8 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const player = playerRef.current;
+    if (!video || !player) return;
 
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
@@ -278,12 +284,10 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
-
-    const player = playerRef.current;
     
-    player?.addEventListener('mousemove', resetControlsTimeout);
-    player?.addEventListener('mouseleave', handleMouseLeave);
-
+    player.addEventListener('mousemove', resetControlsTimeout);
+    player.addEventListener('mouseleave', handleMouseLeave);
+    
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
@@ -298,8 +302,8 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
       
-      player?.removeEventListener('mousemove', resetControlsTimeout);
-      player?.removeEventListener('mouseleave', handleMouseLeave);
+      player.removeEventListener('mousemove', resetControlsTimeout);
+      player.removeEventListener('mouseleave', handleMouseLeave);
 
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
@@ -330,19 +334,22 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
+    // Don't do anything if the touch ended on a button or slider.
     if (target.closest('button, [role="slider"]')) {
       return;
     }
-    if (touchStartX.current === 0 || touchEndX.current === 0) {
-        toggleControls();
-        return;
-    };
-    const swipeDistance = touchStartX.current - touchEndX.current;
-    if (Math.abs(swipeDistance) > 50) {
-      onSwipe(swipeDistance > 0 ? 'left' : 'right');
+    
+    // Check if it was a swipe or a tap
+    const isSwipe = touchEndX.current !== 0 && Math.abs(touchStartX.current - touchEndX.current) > 50;
+
+    if (isSwipe) {
+      onSwipe(touchStartX.current > touchEndX.current ? 'left' : 'right');
     } else {
-        toggleControls();
+      // It was a tap, toggle controls
+      toggleControls(e);
     }
+    
+    // Reset touch coordinates
     touchStartX.current = 0;
     touchEndX.current = 0;
   };
@@ -359,7 +366,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={(e) => { e.stopPropagation(); toggleControls(); }} />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={toggleControls} />
       
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
@@ -368,18 +375,18 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
       )}
 
       <div
-        onClick={(e) => { e.stopPropagation(); toggleControls(); }}
+        onClick={toggleControls}
         className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
 
         <div className="p-2 md:p-4 flex justify-between">
-            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={onBack}>
+            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}>
                 <ArrowLeft />
             </Button>
         </div>
         
-        <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+        <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
@@ -391,7 +398,7 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
           </Button>
         </div>
 
-        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+        <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
             {!isLive && duration > 0 && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
