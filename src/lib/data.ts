@@ -155,6 +155,28 @@ export const channels: Channel[] = [
     streamUrl: 'https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8',
     type: 'hls',
   },
+  {
+    id: '9xm',
+    name: '9XM',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/1502/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://9xjio.wiseplayout.com/9XM/master.m3u8',
+    type: 'hls',
+  },
+  {
+    id: '9x-jalwa',
+    name: '9X Jalwa',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/1602/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
+    thumbnailImageHint: 'bollywood music',
+    streamUrl: 'https://9xjio.wiseplayout.com/9XJALWA/master.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string }[] = [
