@@ -1,5 +1,5 @@
 import { ChannelCard } from '@/components/channel-card';
-import { Recommendations } from '@/components/recommendations';
+import { RecentlyPlayed } from '@/components/recommendations';
 import { getChannels } from '@/lib/data';
 
 export default function HomePage() {
@@ -9,7 +9,7 @@ export default function HomePage() {
     <div className="container py-6">
       <div className="space-y-8">
         <section>
-          <Recommendations />
+          <RecentlyPlayed />
         </section>
 
         <section className="space-y-4">

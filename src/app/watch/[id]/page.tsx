@@ -10,15 +10,23 @@ import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Home } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
+import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 
 export default function WatchPage() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { addRecentlyPlayed } = useRecentlyPlayed();
   
   const channel = getChannelById(channelId);
   
+  useEffect(() => {
+    if (channelId) {
+      addRecentlyPlayed(channelId);
+    }
+  }, [channelId, addRecentlyPlayed]);
+
   const handleBack = useCallback(() => {
       router.push('/');
   }, [router]);
