@@ -1,13 +1,15 @@
 'use client';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getChannelById, getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
 import { VideoPlayer } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
+import { BottomNav } from '@/components/bottom-nav';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -16,6 +18,10 @@ export default function WatchPage() {
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   
   const channel = getChannelById(channelId);
+  
+  const handleBack = useCallback(() => {
+      router.push('/');
+  }, [router]);
   
   useEffect(() => {
     if (!channel) {
@@ -59,9 +65,9 @@ export default function WatchPage() {
   return (
     <div className="flex h-screen flex-col bg-black">
        <div className="relative">
-         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={() => router.push('/')} />
+         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} />
        </div>
-       <div className="flex-1 overflow-y-auto bg-background p-4">
+       <div className="flex-1 overflow-y-auto bg-background p-4 pb-20 md:pb-4">
         <div className="container mx-auto max-w-4xl">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -83,8 +89,17 @@ export default function WatchPage() {
             <div className="mt-4 prose prose-invert max-w-none">
                 <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
             </div>
+            <div className="mt-8 text-center">
+                <Button asChild size="lg" className="h-auto px-16 py-6 text-2xl font-bold">
+                    <Link href="/">
+                        <Home className="mr-4 h-8 w-8" />
+                        Home
+                    </Link>
+                </Button>
+            </div>
         </div>
        </div>
+       <BottomNav />
     </div>
   );
 }
