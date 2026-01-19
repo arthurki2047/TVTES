@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { getChannelById, getChannels } from '@/lib/data';
@@ -57,7 +57,7 @@ export default function WatchPage() {
   return (
     <div className="flex h-screen flex-col bg-black">
        <div className="relative">
-         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={() => router.push('/categories')} />
+         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={() => router.push('/')} />
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4">
         <div className="container mx-auto max-w-4xl">
