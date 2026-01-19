@@ -28,36 +28,68 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  
+  const playVideo = (video: HTMLVideoElement) => {
+    video.play().catch(error => {
+      // Ignore AbortError which can happen when a new video is loaded while the previous one is trying to play.
+      if (error.name !== 'AbortError') {
+        console.error("Video play failed:", error);
+      }
+    });
+  }
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Dynamically import hls.js only on the client-side
-    if (type === 'hls' && video.canPlayType('application/vnd.apple.mpegurl') === '') {
-      import('hls.js').then(Hls => {
-        if (Hls.default.isSupported()) {
-          const hls = new Hls.default();
-          hls.loadSource(src);
-          hls.attachMedia(video);
-          hls.on(Hls.default.Events.MANIFEST_PARSED, () => {
-             setIsLoading(false);
-             video.play().catch(console.error);
-          });
-           hls.on(Hls.default.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-              console.error('Fatal HLS error:', data);
-            }
-          });
+    let hlsInstance: any = null;
+    setIsLoading(true);
+
+    if (type === 'hls') {
+        // Native playback for Safari and other supporting browsers
+        if(video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = src;
+            video.addEventListener('loadedmetadata', () => playVideo(video));
+        } else if (typeof window !== 'undefined') {
+            // Use hls.js for other browsers
+            import('hls.js').then(Hls => {
+                if (Hls.default.isSupported()) {
+                  const hls = new Hls.default({
+                    // Start loading from a position near the live edge
+                    liveSyncDurationCount: 3, 
+                    // Lower the max buffer length to reduce memory usage
+                    maxMaxBufferLength: 30,
+                  });
+                  hlsInstance = hls;
+                  hls.loadSource(src);
+                  hls.attachMedia(video);
+                  hls.on(Hls.default.Events.MANIFEST_PARSED, () => {
+                     playVideo(video);
+                  });
+                   hls.on(Hls.default.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                      console.error('Fatal HLS error:', data);
+                       // Attempt to recover from network errors
+                      if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
+                        hls.startLoad();
+                      }
+                    }
+                  });
+                }
+            });
         }
-      });
     } else {
         video.src = src;
-        video.play().catch(console.error);
+        playVideo(video);
     }
     
     return () => {
-        // Cleanup if hls instance was created
+        if (hlsInstance) {
+          hlsInstance.destroy();
+        }
+        if (video) {
+            video.removeEventListener('loadedmetadata', () => playVideo(video));
+        }
     }
 
   }, [src, type]);
@@ -68,7 +100,9 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     }
     setShowControls(true);
     controlsTimeoutRef.current = setTimeout(() => {
-      setShowControls(false);
+      if(videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
     }, 3000);
   };
 
@@ -79,14 +113,22 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
     const handleVolumeChange = () => {
+      if (!video) return;
       setIsMuted(video.muted);
       setVolume(video.volume);
     };
-    const handleTimeUpdate = () => setProgress(video.currentTime);
-    const handleDurationChange = () => setDuration(video.duration);
+    const handleTimeUpdate = () => video && setProgress(video.currentTime);
+    const handleDurationChange = () => video && setDuration(video.duration);
     const handleCanPlay = () => setIsLoading(false);
     const handleWaiting = () => setIsLoading(true);
-    const handlePlaying = () => setIsLoading(false);
+    const handlePlaying = () => {
+      setIsLoading(false);
+      resetControlsTimeout();
+    };
+    
+    const handleFullscreenChange = () => {
+        setIsFullscreen(!!document.fullscreenElement || !!(document as any).webkitIsFullScreen);
+    };
 
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
@@ -97,8 +139,17 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
 
-    resetControlsTimeout();
-    playerRef.current?.addEventListener('mousemove', resetControlsTimeout);
+    const player = playerRef.current;
+    
+    player?.addEventListener('mousemove', resetControlsTimeout);
+    player?.addEventListener('mouseleave', () => {
+        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+        if(isPlaying) setShowControls(false);
+    });
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
 
     return () => {
       video.removeEventListener('play', handlePlay);
@@ -110,38 +161,56 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
       
-      playerRef.current?.removeEventListener('mousemove', resetControlsTimeout);
-      if (controlsTimeoutRef.current) {
-        clearTimeout(controlsTimeoutRef.current);
-      }
+      player?.removeEventListener('mousemove', resetControlsTimeout);
+      player?.removeEventListener('mouseleave', () => {
+        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+        if(isPlaying) setShowControls(false);
+      });
+
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     };
-  }, []);
+  }, [isPlaying]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    // Only handle swipes on the video element itself, not on controls
+    if ((e.target as HTMLElement).closest('.video-controls-container')) return;
     resetControlsTimeout();
     touchStartX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('.video-controls-container')) return;
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchEnd = () => {
+    if (touchStartX.current === 0) return;
     const swipeDistance = touchStartX.current - touchEndX.current;
     if (Math.abs(swipeDistance) > 50) { // Min swipe distance
       onSwipe(swipeDistance > 0 ? 'left' : 'right');
+    } else {
+        // It's a tap, not a swipe
+        setShowControls(s => !s);
     }
     touchStartX.current = 0;
     touchEndX.current = 0;
   };
 
-  const togglePlay = () => {
-    if (videoRef.current?.paused) videoRef.current?.play();
-    else videoRef.current?.pause();
+  const togglePlay = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (videoRef.current?.paused) {
+      playVideo(videoRef.current);
+    } else {
+      videoRef.current?.pause();
+    }
     resetControlsTimeout();
   };
 
-  const toggleMute = () => {
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if(videoRef.current) videoRef.current.muted = !isMuted;
     resetControlsTimeout();
   };
@@ -154,20 +223,34 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     resetControlsTimeout();
   };
   
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-        playerRef.current?.requestFullscreen().catch(err => {
-            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-        });
-        setIsFullscreen(true);
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const player = playerRef.current;
+    if (!player) return;
+
+    if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
+        if (player.requestFullscreen) {
+            player.requestFullscreen().catch(err => console.error(`FS Error: ${err.message}`));
+        } else if ((player as any).webkitRequestFullscreen) { /* Safari */
+            (player as any).webkitRequestFullscreen();
+        } else if ((player as any).msRequestFullscreen) { /* IE11 */
+            (player as any).msRequestFullscreen();
+        }
     } else {
-        document.exitFullscreen();
-        setIsFullscreen(false);
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) { /* Safari */
+            (document as any).webkitExitFullscreen();
+        } else if ((document as any).msExitFullscreen) { /* IE11 */
+            (document as any).msExitFullscreen();
+        }
     }
     resetControlsTimeout();
   };
   
-  const togglePiP = () => {
+  const togglePiP = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
     if (document.pictureInPictureElement) {
         document.exitPictureInPicture();
     } else {
@@ -176,12 +259,14 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     resetControlsTimeout();
   };
 
-  const handleNextChannel = () => {
+  const handleNextChannel = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onSwipe('left');
     resetControlsTimeout();
   }
 
-  const handlePrevChannel = () => {
+  const handlePrevChannel = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onSwipe('right');
     resetControlsTimeout();
   }
@@ -191,22 +276,23 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     <div
       ref={playerRef}
       className="group relative w-full aspect-video bg-black text-white"
-      onClick={() => setShowControls(s => !s)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline />
-        {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                <Skeleton className="h-full w-full" />
-                <div className="absolute h-12 w-12 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-            </div>
-        )}
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={() => setShowControls(s => !s)} />
+      
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+        </div>
+      )}
 
-      <div 
+      <div
         onClick={(e) => e.stopPropagation()}
-        className={cn("absolute inset-0 flex flex-col justify-between bg-black/30 transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between bg-black/30 transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+        
         {/* Top Controls (placeholder) */}
         <div></div>
         
@@ -225,8 +311,6 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
 
         {/* Bottom Controls */}
         <div className="p-4">
-            {/* Progress bar would go here */}
-
             <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" onClick={togglePlay}>
@@ -240,7 +324,7 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    {document.pictureInPictureEnabled && (
+                    {typeof document !== 'undefined' && document.pictureInPictureEnabled && (
                         <Button variant="ghost" size="icon" onClick={togglePiP}>
                             <PictureInPicture2 />
                         </Button>
