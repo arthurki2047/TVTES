@@ -6,7 +6,7 @@ import { ChannelCard } from '@/components/channel-card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 async function RecommendationsContent() {
-  const mockViewingHistory = ['CBS News', 'PGA Tour'];
+  const mockViewingHistory = ['CBS News'];
   
   try {
     const { recommendedChannels } = await getPersonalizedChannelRecommendations({
