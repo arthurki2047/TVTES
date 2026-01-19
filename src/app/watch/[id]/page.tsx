@@ -80,7 +80,7 @@ export default function WatchPage() {
   return (
     <div className="flex h-screen flex-col bg-black">
        <div className="relative">
-         <VideoPlayer ref={videoPlayerRef} src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} />
+         <VideoPlayer ref={videoPlayerRef} src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} channel={channel} />
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4 pb-20 md:pb-4">
         <div className="container mx-auto max-w-4xl">

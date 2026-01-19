@@ -5,12 +5,14 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, C
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import type { Channel } from '@/lib/types';
 
 interface VideoPlayerProps {
   src: string;
   type: 'hls' | 'mp4';
   onSwipe: (direction: 'left' | 'right') => void;
   onBack: () => void;
+  channel: Channel;
 }
 
 export interface VideoPlayerHandles {
@@ -32,7 +34,7 @@ function formatTime(seconds: number) {
 }
 
 
-export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ src, type, onSwipe, onBack }, ref) => {
+export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ src, type, onSwipe, onBack, channel }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
@@ -136,6 +138,73 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
 
   }, [src, type, playVideo]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !channel || !('mediaSession' in navigator)) {
+      return;
+    }
+
+    const mediaSessionPlay = () => {
+      if (video.paused) {
+        playVideo(video);
+      }
+    };
+
+    const mediaSessionPause = () => {
+      if (!video.paused) {
+        video.pause();
+      }
+    };
+    
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: channel.name,
+      artist: channel.category,
+      artwork: [
+        { src: channel.logoUrl, sizes: '96x96' },
+        { src: channel.logoUrl, sizes: '128x128' },
+        { src: channel.logoUrl, sizes: '192x192' },
+        { src: channel.logoUrl, sizes: '256x256' },
+        { src: channel.logoUrl, sizes: '384x384' },
+        { src: channel.logoUrl, sizes: '512x512' },
+      ],
+    });
+
+    navigator.mediaSession.setActionHandler('play', mediaSessionPlay);
+    navigator.mediaSession.setActionHandler('pause', mediaSessionPause);
+    navigator.mediaSession.setActionHandler('nexttrack', () => onSwipe('left'));
+    navigator.mediaSession.setActionHandler('previoustrack', () => onSwipe('right'));
+    
+    const handlePlay = () => {
+      navigator.mediaSession.playbackState = 'playing';
+    };
+    const handlePause = () => {
+      navigator.mediaSession.playbackState = 'paused';
+    };
+
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+
+    if (video.paused) {
+      handlePause();
+    } else {
+      handlePlay();
+    }
+
+    return () => {
+      if ('mediaSession' in navigator) {
+          video.removeEventListener('play', handlePlay);
+          video.removeEventListener('pause', handlePause);
+          
+          navigator.mediaSession.metadata = null;
+          navigator.mediaSession.setActionHandler('play', null);
+          navigator.mediaSession.setActionHandler('pause', null);
+          navigator.mediaSession.setActionHandler('nexttrack', null);
+          navigator.mediaSession.setActionHandler('previoustrack', null);
+          navigator.mediaSession.playbackState = 'none';
+      }
+    };
+  }, [channel, onSwipe, playVideo]);
 
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
