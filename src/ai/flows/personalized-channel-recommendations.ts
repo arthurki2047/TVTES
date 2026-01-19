@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { channels } from '@/lib/data';
 
 const PersonalizedChannelRecommendationsInputSchema = z.object({
   viewingHistory: z.array(z.string()).describe('An array of channel names the user has previously watched.'),
@@ -35,8 +36,17 @@ const getChannelInfo = ai.defineTool(
     }),
   },
   async (input) => {
-    // TODO: Implement the actual retrieval of channel information from a database or external source.
-    // This is a placeholder implementation.
+    const channel = channels.find(c => c.name.toLowerCase() === input.channelName.toLowerCase());
+
+    if (channel) {
+      return {
+        channelName: channel.name,
+        category: channel.category,
+        description: `A TV channel in the ${channel.category} category.`,
+      };
+    }
+    
+    // This is a placeholder implementation for channels not in our static data.
     return {
       channelName: input.channelName,
       category: 'Unknown',
@@ -54,7 +64,19 @@ const prompt = ai.definePrompt({
   input: {schema: PersonalizedChannelRecommendationsInputSchema},
   output: {schema: PersonalizedChannelRecommendationsOutputSchema},
   tools: [getChannelInfo],
-  prompt: `You are a TV channel recommendation expert. Based on the user's viewing history, you will recommend other channels they might enjoy. Consider the categories and descriptions of channels the user has watched, and suggest similar channels.\n\nUser's Viewing History: {{#each viewingHistory}}- {{this}}\n{{/each}}\n\nRecommended Channels:`,
+  prompt: `You are a TV channel recommendation expert. Based on the user's viewing history, you will recommend other channels they might enjoy. 
+  
+First, use the getChannelInfo tool for each channel in the user's viewing history to understand their preferences.
+
+Then, from the following list of available channels, select a few that are a good match for the user's preferences. Do not recommend channels that are already in their viewing history.
+
+Available channels: ${channels.map(c => c.name).join(', ')}
+
+User's Viewing History:
+{{#each viewingHistory}}
+- {{this}}
+{{/each}}
+`,
 });
 
 const personalizedChannelRecommendationsFlow = ai.defineFlow(

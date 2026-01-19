@@ -34,7 +34,6 @@ async function RecommendationsContent() {
       </div>
     );
   } catch (error) {
-    console.error("Error fetching recommendations:", error);
     return <p className="text-destructive">Failed to load recommendations. Please try again later.</p>;
   }
 }
