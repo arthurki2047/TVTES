@@ -58,11 +58,8 @@ export default function WatchPage() {
 
   return (
     <div className="flex h-screen flex-col bg-black">
-      <Button variant="ghost" size="icon" className="absolute top-4 left-4 z-50 text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={() => router.push('/')}>
-        <ArrowLeft />
-      </Button>
        <div className="relative">
-         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} />
+         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={() => router.push('/')} />
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4">
         <div className="container mx-auto max-w-4xl">

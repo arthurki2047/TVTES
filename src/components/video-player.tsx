@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ interface VideoPlayerProps {
   src: string;
   type: 'hls' | 'mp4';
   onSwipe: (direction: 'left' | 'right') => void;
+  onBack: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -27,7 +28,7 @@ function formatTime(seconds: number) {
 }
 
 
-export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
+export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
@@ -363,7 +364,9 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
 
         <div className="p-2 md:p-4">
-            {/* Placeholder to push controls down */}
+            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={onBack}>
+                <ArrowLeft />
+            </Button>
         </div>
         
         <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
