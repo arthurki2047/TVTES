@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,6 @@ interface VideoPlayerProps {
   src: string;
   type: 'hls' | 'mp4';
   onSwipe: (direction: 'left' | 'right') => void;
-  onBack: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -28,7 +27,7 @@ function formatTime(seconds: number) {
 }
 
 
-export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
+export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
@@ -64,6 +63,15 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
     if (!video) return;
 
     setIsLoading(true);
+    // Ensure previous HLS instance is destroyed
+    if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+    }
+    // Ensure previous src is cleared
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
 
     if (type === 'hls') {
         if(video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -217,12 +225,23 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, [role="slider"]')) {
+      return;
+    }
     if(touchStartX.current === 0) return;
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
-  const handleTouchEnd = () => {
-    if (touchStartX.current === 0 || touchEndX.current === 0) return;
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, [role="slider"]')) {
+      return;
+    }
+    if (touchStartX.current === 0 || touchEndX.current === 0) {
+        toggleControls();
+        return;
+    };
     const swipeDistance = touchStartX.current - touchEndX.current;
     if (Math.abs(swipeDistance) > 50) {
       onSwipe(swipeDistance > 0 ? 'left' : 'right');
@@ -343,10 +362,8 @@ export function VideoPlayer({ src, type, onSwipe, onBack }: VideoPlayerProps) {
         
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/20 to-black/60" />
 
-        <div className="flex justify-between items-center p-2 md:p-4" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onBack}>
-                <ArrowLeft />
-            </Button>
+        <div className="p-2 md:p-4">
+            {/* Placeholder to push controls down */}
         </div>
         
         <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>

@@ -6,6 +6,8 @@ import { getChannelById, getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
 import { VideoPlayer } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -56,8 +58,11 @@ export default function WatchPage() {
 
   return (
     <div className="flex h-screen flex-col bg-black">
+      <Button variant="ghost" size="icon" className="absolute top-4 left-4 z-50 text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={() => router.push('/')}>
+        <ArrowLeft />
+      </Button>
        <div className="relative">
-         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={() => router.push('/')} />
+         <VideoPlayer src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} />
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4">
         <div className="container mx-auto max-w-4xl">
