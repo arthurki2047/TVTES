@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -176,6 +176,17 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
     resetControlsTimeout();
   };
 
+  const handleNextChannel = () => {
+    onSwipe('left');
+    resetControlsTimeout();
+  }
+
+  const handlePrevChannel = () => {
+    onSwipe('right');
+    resetControlsTimeout();
+  }
+
+
   return (
     <div
       ref={playerRef}
@@ -193,14 +204,22 @@ export function VideoPlayer({ src, type, onSwipe }: VideoPlayerProps) {
             </div>
         )}
 
-      <div className={cn("absolute inset-0 flex flex-col justify-between bg-black/30 transition-opacity", showControls ? 'opacity-100' : 'opacity-0')}>
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className={cn("absolute inset-0 flex flex-col justify-between bg-black/30 transition-opacity", showControls ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         {/* Top Controls (placeholder) */}
         <div></div>
         
         {/* Middle Controls */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-around px-4 md:px-16">
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16">
+            <ChevronLeft size={48} />
+          </Button>
           <Button variant="ghost" size="icon" onClick={togglePlay} className="h-16 w-16">
             {isPlaying ? <Pause size={48} /> : <Play size={48} />}
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16">
+            <ChevronRight size={48} />
           </Button>
         </div>
 
