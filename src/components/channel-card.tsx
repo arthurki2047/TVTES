@@ -30,17 +30,17 @@ export function ChannelCard({ channel, listType, listValue, className }: Channel
               data-ai-hint={channel.thumbnailImageHint}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <Badge variant="destructive" className="absolute left-2 top-2 uppercase">Live</Badge>
-            <div className="absolute bottom-2 left-2 flex items-center gap-2">
+            <Badge variant="destructive" className="absolute left-1.5 top-1.5 px-1.5 py-0.5 text-xs uppercase">Live</Badge>
+            <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1.5">
               <Image
                 src={channel.logoUrl}
                 alt={`Logo for ${channel.name}`}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full border-2 border-background/80 bg-background/80 object-contain p-1"
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full border-2 border-background/80 bg-background/80 object-contain p-0.5"
                 data-ai-hint={channel.logoImageHint}
               />
-              <h3 className="font-headline text-lg font-semibold text-white shadow-black [text-shadow:0_1px_2px_var(--tw-shadow-color)]">
+              <h3 className="font-headline text-base font-semibold text-white shadow-black [text-shadow:0_1px_2px_var(--tw-shadow-color)]">
                 {channel.name}
               </h3>
             </div>
