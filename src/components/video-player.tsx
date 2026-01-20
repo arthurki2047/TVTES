@@ -82,6 +82,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     }, 5000);
   }, [isLocked]);
+
+  const handleSeek = useCallback((amount: number) => {
+    if (videoRef.current && duration !== Infinity) {
+        const newTime = videoRef.current.currentTime + amount;
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, duration]);
   
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -94,14 +102,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       });
     }
   },[]);
-
-  const handleSeek = useCallback((amount: number) => {
-    if (videoRef.current && duration !== Infinity) {
-        const newTime = videoRef.current.currentTime + amount;
-        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout, duration]);
   
   useEffect(() => {
     setIsClient(true);
@@ -146,7 +146,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 hls.loadSource(src);
                 hls.attachMedia(video);
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
-                     setIsManifestLive(data.details.live);
+                     if (data.levels.length) {
+                        const manifestIsLive = data.levels.some(level => level.details ? !level.details.live : data.details.live);
+                        setIsManifestLive(manifestIsLive);
+                     }
                      playVideo(video);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -680,7 +683,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         onValueChange={(value) => {
                             if (videoRef.current) videoRef.current.currentTime = value[0];
                         }}
-                        className="w-full [&>span:first-child]:bg-primary"
+                        className="w-full"
                     />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
                         <span>{formatTime(progress)}</span>
