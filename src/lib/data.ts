@@ -595,6 +595,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/zoom-tv/d81b6cd3-f51a-434c-9a6c-73d1a69bbfc0/0.m3u8',
     type: 'hls',
   },
+  {
+    id: 'sony-max-hd',
+    name: 'SONY MAX HD',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/5502/100/100',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/5501/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-max-hd',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
