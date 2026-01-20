@@ -397,6 +397,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_559.m3u8',
     type: 'hls',
   },
+  {
+    id: 'star-jalsha',
+    name: 'Star Jalsha',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/3702/100/100',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/3701/600/400',
+    thumbnailImageHint: 'bengali drama',
+    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=54161',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
