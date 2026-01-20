@@ -82,14 +82,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     }, 5000);
   }, [isLocked]);
-
-  const handleSeek = useCallback((amount: number) => {
-    if (videoRef.current && duration !== Infinity) {
-        const newTime = videoRef.current.currentTime + amount;
-        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout, duration]);
   
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -146,9 +138,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 hls.loadSource(src);
                 hls.attachMedia(video);
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
-                     if (data.levels.length) {
-                        const manifestIsLive = data.levels.some(level => level.details ? !level.details.live : data.details.live);
-                        setIsManifestLive(manifestIsLive);
+                     if (data.details) {
+                        const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
+                        setIsManifestLive(isStreamLive);
                      }
                      playVideo(video);
                      if (hls.levels && hls.levels.length > 1) {
@@ -200,6 +192,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [src, type, playVideo]);
 
   const isLive = duration === Infinity || isManifestLive;
+
+  const handleSeek = useCallback((amount: number) => {
+    if (videoRef.current && !isLive) {
+        const newTime = videoRef.current.currentTime + amount;
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, isLive, duration]);
   
   useEffect(() => {
     const video = videoRef.current;
