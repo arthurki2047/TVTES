@@ -126,6 +126,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     
     return () => {
+        if (videoRef.current && document.pictureInPictureElement === videoRef.current) {
+            return;
+        }
+
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
@@ -328,9 +332,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const enterPiP = useCallback(() => {
     if (videoRef.current && document.pictureInPictureEnabled && !videoRef.current.disablePictureInPicture) {
        if (!document.pictureInPictureElement) {
-           videoRef.current.requestPictureInPicture().catch(console.error);
+           return videoRef.current.requestPictureInPicture();
        }
     }
+    return Promise.resolve();
   }, []);
 
   useImperativeHandle(ref, () => ({

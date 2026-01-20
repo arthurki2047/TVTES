@@ -37,9 +37,14 @@ export default function WatchPage() {
     }
   }, [channel, router]);
 
-  const handleGoHomeAndPiP = () => {
+  const handleGoHomeAndPiP = async () => {
     if (videoPlayerRef.current) {
-      videoPlayerRef.current.requestPictureInPicture();
+      try {
+        await videoPlayerRef.current.requestPictureInPicture();
+      } catch (error) {
+        console.error("Failed to enter Picture-in-Picture mode", error);
+        // Still navigate home even if PiP fails
+      }
     }
     router.push('/');
   };
