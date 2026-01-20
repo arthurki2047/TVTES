@@ -131,6 +131,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 const hls = new Hls.default({
                     liveSyncDurationCount: 3, 
                     maxMaxBufferLength: 30,
+                    liveDurationInfinity: true,
                     // Always use hls.js even if native HLS is supported
                     forceHLS: true,
                 });
