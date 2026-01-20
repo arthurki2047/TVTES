@@ -41,6 +41,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
+  const wakeLockRef = useRef<any>(null);
   const { setPlayerRef } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -62,13 +63,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
-  
-  useEffect(() => {
-    setIsClient(true);
-    setPlayerRef(videoRef);
-    return () => setPlayerRef(null);
-  }, [setPlayerRef]);
 
+  const isMutedRef = useRef(isMuted);
+  isMutedRef.current = isMuted;
+
+  const volumeRef = useRef(volume);
+  volumeRef.current = volume;
+  
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
     if (controlsTimeoutRef.current) {
@@ -81,7 +82,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     }, 5000);
   }, [isLocked]);
-
+  
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current && duration !== Infinity) {
         const newTime = videoRef.current.currentTime + amount;
@@ -101,6 +102,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       });
     }
   },[]);
+  
+  useEffect(() => {
+    setIsClient(true);
+    setPlayerRef(videoRef);
+    return () => setPlayerRef(null);
+  }, [setPlayerRef]);
+
 
   useEffect(() => {
     const video = videoRef.current;
@@ -317,20 +325,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
-      const currentVideoVolume = videoRef.current?.volume ?? 0;
-      const newMuted = !isMuted;
-      
-      setIsMuted(newMuted);
-
-      if (newMuted) {
-        setVolume(0);
-      } else {
-        // If unmuting and volume was 0, set to a default value (e.g., 1)
-        setVolume(currentVideoVolume > 0 ? currentVideoVolume : 1);
-      }
-      
+      setIsMuted(prev => {
+        const newMuted = !prev;
+        if(newMuted) {
+            setVolume(0);
+        } else {
+            setVolume(1); // or restore previous volume
+        }
+        return newMuted;
+      });
       resetControlsTimeout();
-  }, [resetControlsTimeout, isMuted]);
+  }, [resetControlsTimeout]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -438,13 +443,43 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const player = playerRef.current;
     if (!video || !player) return;
 
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
+    // Wake Lock logic
+    const requestWakeLock = async () => {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLockRef.current = await navigator.wakeLock.request('screen');
+        } catch (err) {
+          console.error('Could not acquire wake lock:', err);
+        }
+      }
+    };
+    const releaseWakeLock = async () => {
+      if (wakeLockRef.current) {
+        try {
+            await wakeLockRef.current.release();
+            wakeLockRef.current = null;
+        } catch(e) {
+            // This can happen if the lock was already released.
+        }
+      }
+    };
+
+    const handlePlay = () => {
+        setIsPlaying(true);
+        requestWakeLock();
+    };
+    const handlePause = () => {
+        setIsPlaying(false);
+        releaseWakeLock();
+    };
     
     const handleVolumeChangeEvent = () => {
       if (!video) return;
-      setVolume(video.volume);
-      setIsMuted(video.muted);
+      // Using refs to prevent re-renders from causing loops
+      if (isMutedRef.current !== video.muted || volumeRef.current !== video.volume) {
+          setVolume(video.volume);
+          setIsMuted(video.muted);
+      }
     };
 
     const handleTimeUpdate = () => video && setProgress(video.currentTime);
@@ -490,6 +525,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && video && !video.paused) {
+        requestWakeLock();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       video.removeEventListener('play', handlePlay);
@@ -506,6 +547,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      releaseWakeLock();
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
@@ -574,12 +618,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     >
       <video ref={videoRef} className="h-full w-full" playsInline onClick={handleTap} />
       
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-        </div>
-      )}
-
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
             <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110">
@@ -671,7 +709,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     )}
                 </div>
                 <div className="flex items-center gap-1 md:gap-2">
-                    {qualityLevels.length > 1 && type === 'hls' && (
+                    {uniqueQualityLevels.length > 1 && type === 'hls' && (
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
@@ -692,7 +730,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     </div>
                                     {uniqueQualityLevels.map((level) => (
                                         <div
-                                            key={level.height}
+                                            key={level.bitrate}
                                             onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
                                             className={cn(
                                                 "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
