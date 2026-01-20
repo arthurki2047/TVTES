@@ -69,6 +69,27 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     return () => setPlayerRef(null);
   }, [setPlayerRef]);
 
+  const resetControlsTimeout = useCallback(() => {
+    if (isLocked) return;
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    setShowControls(true);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    }, 5000);
+  }, [isLocked]);
+
+  const handleSeek = useCallback((amount: number) => {
+    if (videoRef.current && duration !== Infinity) {
+        const newTime = videoRef.current.currentTime + amount;
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, duration]);
+  
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
     const promise = video.play();
@@ -110,6 +131,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 const hls = new Hls.default({
                     liveSyncDurationCount: 3, 
                     maxMaxBufferLength: 30,
+                    // Always use hls.js even if native HLS is supported
+                    forceHLS: true,
                 });
                 hlsRef.current = hls;
                 hls.loadSource(src);
@@ -165,27 +188,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [src, type, playVideo]);
 
   const isLive = duration === Infinity;
-  
-  const resetControlsTimeout = useCallback(() => {
-    if (isLocked) return;
-    if (controlsTimeoutRef.current) {
-      clearTimeout(controlsTimeoutRef.current);
-    }
-    setShowControls(true);
-    controlsTimeoutRef.current = setTimeout(() => {
-      if (videoRef.current && !videoRef.current.paused) {
-        setShowControls(false);
-      }
-    }, 5000);
-  }, [isLocked]);
-
-  const handleSeek = useCallback((amount: number) => {
-    if (videoRef.current && !isLive) {
-        const newTime = videoRef.current.currentTime + amount;
-        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-    }
-    resetControlsTimeout();
-  }, [isLive, duration, resetControlsTimeout]);
   
   useEffect(() => {
     const video = videoRef.current;
@@ -306,32 +308,35 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     resetControlsTimeout();
   }, [resetControlsTimeout, playVideo]);
 
-  const handleVolumeChange = useCallback((newVolume: number) => {
-      setVolume(newVolume);
-      setIsMuted(newVolume === 0);
-  }, []);
-  
-  const handleVolumeSliderChange = (value: number[]) => {
-      handleVolumeChange(value[0]);
+  const handleVolumeChange = useCallback((newVolume: number[]) => {
+      const value = newVolume[0];
+      setVolume(value);
+      setIsMuted(value === 0);
       resetControlsTimeout();
-  };
+  }, [resetControlsTimeout]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
-      const currentVolume = videoRef.current?.volume ?? volume;
-      if(isMuted) {
-        handleVolumeChange(currentVolume > 0 ? currentVolume : 1);
+      const currentVideoVolume = videoRef.current?.volume ?? 0;
+      const newMuted = !isMuted;
+      
+      setIsMuted(newMuted);
+
+      if (newMuted) {
+        setVolume(0);
       } else {
-        handleVolumeChange(0);
+        // If unmuting and volume was 0, set to a default value (e.g., 1)
+        setVolume(currentVideoVolume > 0 ? currentVideoVolume : 1);
       }
+      
       resetControlsTimeout();
-  }, [resetControlsTimeout, handleVolumeChange, volume, isMuted]);
+  }, [resetControlsTimeout, isMuted]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
         video.volume = volume;
-        video.muted = isMuted;
+        video.muted = isMuted || volume === 0;
     }
   }, [volume, isMuted]);
   
@@ -438,7 +443,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     
     const handleVolumeChangeEvent = () => {
       if (!video) return;
-      handleVolumeChange(video.volume);
+      setVolume(video.volume);
       setIsMuted(video.muted);
     };
 
@@ -505,7 +510,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, handleVolumeChange]);
+  }, [resetControlsTimeout, isLocked]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -642,7 +647,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         {isMuted ? <VolumeX /> : <Volume2 />}
                     </Button>
                     <div className="hidden md:flex w-24 items-center">
-                        <Slider value={[isMuted ? 0 : volume]} onValueChange={handleVolumeSliderChange} max={1} step={0.1} />
+                        <Slider value={[volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
                     </div>
                      {isLive && (
                         <div className="flex items-center gap-1.5 ml-2">
