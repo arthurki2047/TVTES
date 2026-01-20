@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'StreamVerse',
+  title: 'Amar Tv',
   description: 'A modern live TV streaming web application.',
 };
 

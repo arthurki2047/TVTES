@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 
-const FAVORITES_KEY = 'streamverse-favorites';
+const FAVORITES_KEY = 'amartv-favorites';
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);

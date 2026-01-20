@@ -7,7 +7,7 @@ export function SiteLogo({ className }: { className?: string }) {
     <Link href="/" className={cn("flex items-center gap-2", className)}>
       <Tv className="h-6 w-6 text-primary" />
       <span className="font-headline text-2xl font-bold tracking-tighter">
-        StreamVerse
+        Amar Tv
       </span>
     </Link>
   );

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 
-const RECENTLY_PLAYED_KEY = 'streamverse-recently-played';
+const RECENTLY_PLAYED_KEY = 'amartv-recently-played';
 const MAX_RECENTLY_PLAYED = 6;
 
 export function useRecentlyPlayed() {
