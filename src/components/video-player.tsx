@@ -39,8 +39,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [lastNonMuteVolume, setLastNonMuteVolume] = useState(1);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -266,19 +267,36 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     resetControlsTimeout();
   }, [resetControlsTimeout, playVideo]);
 
-  const toggleMute = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if(videoRef.current) videoRef.current.muted = !videoRef.current.muted;
-    resetControlsTimeout();
-  }, [resetControlsTimeout]);
-
-  const handleVolumeChange = useCallback((value: number[]) => {
-    if(videoRef.current) {
-        videoRef.current.volume = value[0];
-        videoRef.current.muted = value[0] === 0;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+        video.volume = volume;
+        video.muted = isMuted;
     }
-    resetControlsTimeout();
-  }, [resetControlsTimeout]);
+  }, [volume, isMuted]);
+
+  const handleVolumeSliderChange = (value: number[]) => {
+      const newVolume = value[0];
+      setVolume(newVolume);
+      setIsMuted(newVolume === 0);
+      if (newVolume > 0) {
+          setLastNonMuteVolume(newVolume);
+      }
+      resetControlsTimeout();
+  };
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+      e.stopPropagation();
+      const currentlyMuted = isMuted;
+      setIsMuted(!currentlyMuted);
+      if (currentlyMuted) {
+          setVolume(lastNonMuteVolume > 0 ? lastNonMuteVolume : 0.5);
+      } else {
+          setLastNonMuteVolume(volume);
+          setVolume(0);
+      }
+      resetControlsTimeout();
+  }, [resetControlsTimeout, isMuted, lastNonMuteVolume, volume]);
   
   const toggleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -372,10 +390,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
-    const handleVolumeChange = () => {
+    const handleVolumeChangeEvent = () => {
       if (!video) return;
-      setIsMuted(video.muted);
       setVolume(video.volume);
+      setIsMuted(video.muted);
+      if (!video.muted && video.volume > 0) {
+        setLastNonMuteVolume(video.volume);
+      }
     };
     const handleTimeUpdate = () => video && setProgress(video.currentTime);
     const handleDurationChange = () => video && setDuration(video.duration);
@@ -407,7 +428,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
-    video.addEventListener('volumechange', handleVolumeChange);
+    video.addEventListener('volumechange', handleVolumeChangeEvent);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('canplay', handleCanPlay);
@@ -424,7 +445,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     return () => {
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
-      video.removeEventListener('volumechange', handleVolumeChange);
+      video.removeEventListener('volumechange', handleVolumeChangeEvent);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('canplay', handleCanPlay);
@@ -564,7 +585,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         {isMuted ? <VolumeX /> : <Volume2 />}
                     </Button>
                     <div className="hidden md:flex w-24 items-center">
-                        <Slider value={[isMuted ? 0 : volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
+                        <Slider value={[isMuted ? 0 : volume]} onValueChange={handleVolumeSliderChange} max={1} step={0.1} />
                     </div>
                      {isLive && (
                         <div className="flex items-center gap-1.5 ml-2">
