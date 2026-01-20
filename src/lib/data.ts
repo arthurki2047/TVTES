@@ -463,6 +463,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://vglivessai.akamaized.net/ptnr-yupptv/title-Green_Gold_India/eu/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/675a37e5-f517-434e-adae-d25ae1706340/48c68bfd-7883-4b85-9d1b-1548b66174a5/1.m3u8',
     type: 'hls',
   },
+  {
+    id: 'mastiii',
+    name: 'Mastiii',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/4302/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4301/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://d1msejlow1t3l4.cloudfront.net/211125/mastii/chunks.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
