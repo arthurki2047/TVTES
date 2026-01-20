@@ -52,7 +52,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isLocked, setIsLocked] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [showUnlock, setShowUnlock] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [qualityLevels, setQualityLevels] = useState<any[]>([]);
   const [currentQuality, setCurrentQuality] = useState(-1);
@@ -83,14 +82,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }, 5000);
   }, [isLocked]);
   
-  const handleSeek = useCallback((amount: number) => {
-    if (videoRef.current && duration !== Infinity) {
-        const newTime = videoRef.current.currentTime + amount;
-        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout, duration]);
-  
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
     const promise = video.play();
@@ -102,6 +93,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       });
     }
   },[]);
+
+  const handleSeek = useCallback((amount: number) => {
+    if (videoRef.current && duration !== Infinity) {
+        const newTime = videoRef.current.currentTime + amount;
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, duration]);
   
   useEffect(() => {
     setIsClient(true);
@@ -119,7 +118,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       return;
     }
 
-    setIsLoading(true);
     setQualityLevels([]);
     setCurrentQuality(-1);
     if (hlsRef.current) {
@@ -448,8 +446,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if ('wakeLock' in navigator) {
         try {
           wakeLockRef.current = await navigator.wakeLock.request('screen');
-        } catch (err) {
-          console.error('Could not acquire wake lock:', err);
+        } catch (err: any) {
+          // NotAllowedError can happen if the document is not visible,
+          // or if the user has not granted permission. We can ignore it.
+          if (err.name !== 'NotAllowedError') {
+            console.error('Could not acquire wake lock:', err);
+          }
         }
       }
     };
@@ -484,10 +486,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const handleTimeUpdate = () => video && setProgress(video.currentTime);
     const handleDurationChange = () => video && setDuration(video.duration);
-    const handleCanPlay = () => setIsLoading(false);
-    const handleWaiting = () => setIsLoading(true);
+    const handleWaiting = () => {};
     const handlePlaying = () => {
-      setIsLoading(false);
       resetControlsTimeout();
     };
     
@@ -515,7 +515,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.addEventListener('volumechange', handleVolumeChangeEvent);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
-    video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
     
@@ -538,7 +537,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('volumechange', handleVolumeChangeEvent);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('durationchange', handleDurationChange);
-      video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
       
