@@ -474,6 +474,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://d1msejlow1t3l4.cloudfront.net/211125/mastii/chunks.m3u8',
     type: 'hls',
   },
+  {
+    id: 'yrf-music',
+    name: 'YRF Music',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/4402/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4401/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/yrf-music/master.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
