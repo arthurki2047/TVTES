@@ -606,6 +606,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-max-hd',
     type: 'iframe',
   },
+  {
+    id: 'shemaroo-bollywood',
+    name: 'SHEMAROO BOLLYWOOD',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/5602/100/100',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/5601/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/shemaroo-bollywood/ca553735-e908-4f75-a8cd-705c3c22fcb2/0.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
