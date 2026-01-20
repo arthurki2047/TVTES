@@ -416,7 +416,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/3801/600/400',
     thumbnailImageHint: 'movie poster',
-    streamUrl: 'https://cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
+    streamUrl: '//cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
     type: 'iframe',
   },
   {
@@ -504,7 +504,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://streamcrichd.com/update/star.php',
+    streamUrl: '//streamcrichd.com/update/star.php',
     type: 'iframe',
   },
   {
@@ -515,7 +515,18 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4701/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://streamcrichd.com/update/star1hi.php',
+    streamUrl: '//streamcrichd.com/update/star1hi.php',
+    type: 'iframe',
+  },
+  {
+    id: 'zee',
+    name: 'Zee',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/4802/100/100',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4801/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://player.twitch.tv/?channel=lirik&parent=allinonereborn.xyz&autoplay=false&muted=false&time=0s',
     type: 'iframe',
   },
 ];
