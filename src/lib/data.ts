@@ -507,6 +507,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://streamcrichd.com/update/star.php',
     type: 'iframe',
   },
+  {
+    id: 'star-sports-1-hindi',
+    name: 'Star Sports 1 Hindi',
+    category: 'Sports',
+    logoUrl: 'https://picsum.photos/seed/4702/100/100',
+    logoImageHint: 'sports logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4701/600/400',
+    thumbnailImageHint: 'cricket match',
+    streamUrl: 'https://streamcrichd.com/update/star1hi.php',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
