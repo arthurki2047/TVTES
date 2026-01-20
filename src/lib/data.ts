@@ -408,6 +408,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=54161',
     type: 'hls',
   },
+  {
+    id: 'jalsha-movies-hd',
+    name: 'Jalsha Movies HD',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/3802/100/100',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/3801/600/400',
+    thumbnailImageHint: 'movie poster',
+    streamUrl: 'https://cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [

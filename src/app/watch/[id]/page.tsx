@@ -7,7 +7,7 @@ import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 
@@ -28,7 +28,10 @@ export default function WatchPage() {
   }, [channelId, addRecentlyPlayed]);
 
   const handleBack = useCallback(() => {
-      router.push('/');
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture();
+    }
+    router.push('/');
   }, [router]);
   
   useEffect(() => {
@@ -50,6 +53,7 @@ export default function WatchPage() {
   };
 
   const handleSwipe = (direction: 'left' | 'right') => {
+    if (!channel || channel.type === 'iframe') return;
     const listType = searchParams.get('list') ? 'list' : searchParams.get('category') ? 'category' : 'list';
     const listValue = searchParams.get('list') || searchParams.get('category') || 'all';
 
@@ -84,8 +88,24 @@ export default function WatchPage() {
 
   return (
     <div className="flex h-screen flex-col bg-black">
-       <div className="relative">
-         <VideoPlayer ref={videoPlayerRef} src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} channel={channel} />
+       <div className="relative aspect-video w-full bg-black">
+         {channel.type === 'iframe' ? (
+           <>
+             <iframe
+               src={channel.streamUrl}
+               className="h-full w-full border-0"
+               allow="autoplay; encrypted-media; fullscreen"
+               allowFullScreen
+             ></iframe>
+             <div className="absolute left-2 top-2">
+                <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={handleBack}>
+                   <ArrowLeft />
+                </Button>
+             </div>
+           </>
+         ) : (
+           <VideoPlayer ref={videoPlayerRef} src={channel.streamUrl} type={channel.type} onSwipe={handleSwipe} onBack={handleBack} channel={channel} />
+         )}
        </div>
        <div className="flex-1 overflow-y-auto bg-background p-4 pb-20 md:pb-4">
         <div className="container mx-auto max-w-4xl">
@@ -107,7 +127,11 @@ export default function WatchPage() {
                 <FavoriteToggleButton channelId={channel.id} channelName={channel.name} className="h-12 w-12 shrink-0"/>
             </div>
             <div className="mt-4 prose prose-invert max-w-none">
-                <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
+                {channel.type === 'iframe' ? (
+                  <p>You are watching {channel.name}. Player controls are provided by the embedded stream. Some features like Picture-in-Picture or swiping to change channels may not be available.</p>
+                ) : (
+                  <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
+                )}
             </div>
             <div className="mt-8 text-center">
                 <Button size="lg" className="h-auto px-16 py-6 text-2xl font-bold" onClick={handleGoHomeAndPiP}>

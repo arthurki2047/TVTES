@@ -9,5 +9,5 @@ export interface Channel {
   thumbnailUrl: string;
   thumbnailImageHint: string;
   streamUrl: string;
-  type: 'hls' | 'mp4';
+  type: 'hls' | 'mp4' | 'iframe';
 }
