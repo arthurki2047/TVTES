@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -120,6 +120,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         setQualityLevels(hls.levels);
                      }
                 });
+                hls.on(Hls.default.Events.LEVEL_SWITCHED, (event, data) => {
+                    setCurrentQuality(data.level)
+                });
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
@@ -161,6 +164,16 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   }, [src, type, playVideo]);
 
+  const isLive = duration === Infinity;
+  
+  const handleSeek = useCallback((amount: number) => {
+    if (videoRef.current && !isLive) {
+        const newTime = videoRef.current.currentTime + amount;
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, isLive, duration]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !channel || !('mediaSession' in navigator)) {
@@ -196,6 +209,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     navigator.mediaSession.setActionHandler('pause', mediaSessionPause);
     navigator.mediaSession.setActionHandler('nexttrack', () => onSwipe('left'));
     navigator.mediaSession.setActionHandler('previoustrack', () => onSwipe('right'));
+    if (!isLive) {
+      navigator.mediaSession.setActionHandler('seekforward', (details) => handleSeek(details.seekOffset || 30));
+      navigator.mediaSession.setActionHandler('seekbackward', (details) => handleSeek(-(details.seekOffset || 30)));
+    } else {
+      navigator.mediaSession.setActionHandler('seekforward', null);
+      navigator.mediaSession.setActionHandler('seekbackward', null);
+    }
     
     const handlePlay = () => {
       navigator.mediaSession.playbackState = 'playing';
@@ -223,10 +243,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           navigator.mediaSession.setActionHandler('pause', null);
           navigator.mediaSession.setActionHandler('nexttrack', null);
           navigator.mediaSession.setActionHandler('previoustrack', null);
+          navigator.mediaSession.setActionHandler('seekforward', null);
+          navigator.mediaSession.setActionHandler('seekbackward', null);
           navigator.mediaSession.playbackState = 'none';
       }
     };
-  }, [channel, onSwipe, playVideo]);
+  }, [channel, onSwipe, playVideo, isLive, handleSeek]);
 
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
@@ -284,6 +306,27 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     resetControlsTimeout();
   }, [resetControlsTimeout, playVideo]);
 
+  const handleVolumeChange = useCallback((newVolume: number) => {
+      setVolume(newVolume);
+      setIsMuted(newVolume === 0);
+  }, []);
+  
+  const handleVolumeSliderChange = (value: number[]) => {
+      handleVolumeChange(value[0]);
+      resetControlsTimeout();
+  };
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+      e.stopPropagation();
+      const currentVolume = videoRef.current?.volume ?? volume;
+      if(isMuted) {
+        handleVolumeChange(currentVolume > 0 ? currentVolume : 1);
+      } else {
+        handleVolumeChange(0);
+      }
+      resetControlsTimeout();
+  }, [resetControlsTimeout, handleVolumeChange, volume, isMuted]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -291,19 +334,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         video.muted = isMuted;
     }
   }, [volume, isMuted]);
-
-  const handleVolumeSliderChange = (value: number[]) => {
-      const newVolume = value[0];
-      setVolume(newVolume);
-      setIsMuted(newVolume === 0);
-      resetControlsTimeout();
-  };
-
-  const toggleMute = useCallback((e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsMuted(current => !current);
-      resetControlsTimeout();
-  }, [resetControlsTimeout]);
   
   const toggleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -408,7 +438,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     
     const handleVolumeChangeEvent = () => {
       if (!video) return;
-      setVolume(video.volume);
+      handleVolumeChange(video.volume);
       setIsMuted(video.muted);
     };
 
@@ -475,7 +505,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked]);
+  }, [resetControlsTimeout, isLocked, handleVolumeChange]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -516,9 +546,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     touchStartY.current = 0;
     touchEndY.current = 0;
   };
-  
-  const isLive = duration === Infinity;
-
 
   return (
     <div
@@ -565,9 +592,25 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
-          <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-            {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
-          </Button>
+
+          <div className="flex items-center justify-center gap-2 md:gap-4">
+            {!isLive && (
+                <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+                    <RotateCcw size={32} />
+                </Button>
+            )}
+
+            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+              {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
+            </Button>
+            
+            {!isLive && (
+                <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+                    <RotateCw size={32} />
+                </Button>
+            )}
+          </div>
+
           <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronRight size={40} />
           </Button>
