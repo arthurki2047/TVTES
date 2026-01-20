@@ -633,7 +633,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     </div>
                                     {[...qualityLevels].reverse().map((level) => (
                                         <div
-                                            key={level.height}
+                                            key={level.bitrate}
                                             onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
                                             className={cn(
                                                 "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
