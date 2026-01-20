@@ -552,6 +552,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     touchEndY.current = 0;
   };
 
+  const uniqueQualityLevels = React.useMemo(() => {
+    if (qualityLevels.length === 0) return [];
+    // hls.js provides levels sorted by bitrate ascending. We want to show highest quality first.
+    const reversedLevels = [...qualityLevels].reverse();
+    // Get unique levels by height, preferring the one with higher bitrate (which comes first in reversedLevels)
+    const uniqueByHeight = reversedLevels.filter((level, index, self) =>
+      index === self.findIndex((l) => l.height === level.height)
+    );
+    return uniqueByHeight;
+  }, [qualityLevels]);
+
   return (
     <div
       ref={playerRef}
@@ -679,9 +690,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     >
                                         Auto
                                     </div>
-                                    {[...qualityLevels].reverse().map((level) => (
+                                    {uniqueQualityLevels.map((level) => (
                                         <div
-                                            key={level.bitrate}
+                                            key={level.height}
                                             onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
                                             className={cn(
                                                 "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
