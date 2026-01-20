@@ -496,6 +496,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/shemaroo-filmigaane/2b476436-5d57-472b-9b9d-58ce64878076/1.m3u8',
     type: 'hls',
   },
+  {
+    id: 'star-sports-1-hd',
+    name: 'Star Sports 1 HD',
+    category: 'Sports',
+    logoUrl: 'https://picsum.photos/seed/4602/100/100',
+    logoImageHint: 'sports logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
+    thumbnailImageHint: 'cricket match',
+    streamUrl: 'https://streamcrichd.com/update/star.php',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
