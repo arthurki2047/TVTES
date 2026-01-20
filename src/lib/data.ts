@@ -551,6 +551,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/kids-tv-india-nursery-rhymes-and-baby-songs/6ad12dcb-7c9b-47e0-ad73-cee522f38393/2.m3u8',
     type: 'hls',
   },
+  {
+    id: 'test1',
+    name: 'TEST1',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/5102/100/100',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/5101/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://www.yupptv.com/yupptvnew/channels/star-jalsha/live/embed',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
