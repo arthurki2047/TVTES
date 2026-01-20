@@ -57,6 +57,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [currentQuality, setCurrentQuality] = useState(-1);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const unlockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isManifestLive, setIsManifestLive] = useState(false);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -120,6 +121,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     setQualityLevels([]);
     setCurrentQuality(-1);
+    setIsManifestLive(false);
     if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
@@ -144,6 +146,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 hls.loadSource(src);
                 hls.attachMedia(video);
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
+                     setIsManifestLive(data.details.live);
                      playVideo(video);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -193,7 +196,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   }, [src, type, playVideo]);
 
-  const isLive = duration === Infinity;
+  const isLive = duration === Infinity || isManifestLive;
   
   useEffect(() => {
     const video = videoRef.current;
