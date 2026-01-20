@@ -430,6 +430,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://sports.dtvworld.site/prime?id=willow',
     type: 'iframe',
   },
+  {
+    id: 'goldmines',
+    name: 'GOLDMINES',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/4002/100/100',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4001/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://cdn-2.pishow.tv/live/1459/master.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
