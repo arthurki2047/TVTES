@@ -419,6 +419,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
     type: 'iframe',
   },
+  {
+    id: 'willow-hd',
+    name: 'Willow HD',
+    category: 'Sports',
+    logoUrl: 'https://picsum.photos/seed/3902/100/100',
+    logoImageHint: 'sports logo',
+    thumbnailUrl: 'https://picsum.photos/seed/3901/600/400',
+    thumbnailImageHint: 'cricket sport',
+    streamUrl: 'https://sports.dtvworld.site/prime?id=willow',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
