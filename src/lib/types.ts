@@ -1,4 +1,4 @@
-export type ChannelCategory = 'News' | 'Entertainment' | 'Kids' | 'Music' | 'Infotainment' | 'Sports' | 'Other';
+export type ChannelCategory = 'News' | 'Entertainment' | 'Kids' | 'Music' | 'Infotainment' | 'Sports' | 'Movies' | 'Other';
 
 export interface Channel {
   id: string;

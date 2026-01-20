@@ -180,7 +180,7 @@ export const channels: Channel[] = [
   {
     id: 'colors-bangla-cinema',
     name: 'COLORS BANGLA CINEMA',
-    category: 'Entertainment',
+    category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/1702/100/100',
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/1701/600/400',
@@ -290,7 +290,7 @@ export const channels: Channel[] = [
   {
     id: 'colors-cineplex-hd',
     name: 'COLORS CINEPLEX HD',
-    category: 'Entertainment',
+    category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/2702/100/100',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/2701/600/400',
@@ -356,7 +356,7 @@ export const channels: Channel[] = [
   {
     id: 'b4u-kadak',
     name: 'B4U KADAK',
-    category: 'Entertainment',
+    category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/3302/100/100',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/3301/600/400',
@@ -414,6 +414,7 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
   { name: 'News', slug: 'news', imageUrl: 'https://picsum.photos/seed/cat-news/600/400', imageHint: 'news broadcast' },
   { name: 'Kids', slug: 'kids', imageUrl: 'https://picsum.photos/seed/cat-kids/600/400', imageHint: 'cartoon characters' },
   { name: 'Entertainment', slug: 'entertainment', imageUrl: 'https://picsum.photos/seed/cat-ent/600/400', imageHint: 'movie set' },
+  { name: 'Movies', slug: 'movies', imageUrl: 'https://picsum.photos/seed/cat-movies/600/400', imageHint: 'film reel' },
   { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/600/400', imageHint: 'live concert' },
   { name: 'Sports', slug: 'sports', imageUrl: 'https://picsum.photos/seed/cat-sports/600/400', imageHint: 'stadium lights' },
   { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/600/400', imageHint: 'nature documentary' },
