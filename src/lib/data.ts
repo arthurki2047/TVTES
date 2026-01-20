@@ -441,6 +441,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://cdn-2.pishow.tv/live/1459/master.m3u8',
     type: 'hls',
   },
+  {
+    id: 'gopal-bhar',
+    name: 'GOPAL BHAR',
+    category: 'Kids',
+    logoUrl: 'https://picsum.photos/seed/4102/100/100',
+    logoImageHint: 'kids logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4101/600/400',
+    thumbnailImageHint: 'cartoon character',
+    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-209611/index.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
