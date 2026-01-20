@@ -7,6 +7,7 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Channel } from '@/lib/types';
+import { useVideoPlayer } from '@/context/video-player-context';
 
 interface VideoPlayerProps {
   src: string;
@@ -17,7 +18,8 @@ interface VideoPlayerProps {
 }
 
 export interface VideoPlayerHandles {
-  requestPictureInPicture: () => void;
+  requestPictureInPicture: () => Promise<void>;
+  getVideoElement: () => HTMLVideoElement | null;
 }
 
 function formatTime(seconds: number) {
@@ -39,10 +41,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
+  const { setPlayerRef } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [lastNonMuteVolume, setLastNonMuteVolume] = useState(1);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -63,7 +65,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    setPlayerRef(videoRef);
+    return () => setPlayerRef(null);
+  }, [setPlayerRef]);
 
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -81,6 +85,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const video = videoRef.current;
     if (!video) return;
 
+    // Don't re-initialize if it's the video in PiP
+    if (document.pictureInPictureElement === video) {
+      return;
+    }
+
     setIsLoading(true);
     setQualityLevels([]);
     setCurrentQuality(-1);
@@ -92,40 +101,40 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.removeAttribute('src');
     video.load();
 
-    if (type === 'hls') {
-        if(video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = src;
-            playVideo(video);
-        } else if (typeof window !== 'undefined') {
-            import('hls.js').then(Hls => {
-                if (Hls.default.isSupported()) {
-                  if (hlsRef.current) {
+    if (type === 'hls' && typeof window !== 'undefined') {
+        import('hls.js').then(Hls => {
+            if (Hls.default.isSupported()) {
+                if (hlsRef.current) {
                     hlsRef.current.destroy();
-                  }
-                  const hls = new Hls.default({
+                }
+                const hls = new Hls.default({
                     liveSyncDurationCount: 3, 
                     maxMaxBufferLength: 30,
-                  });
-                  hlsRef.current = hls;
-                  hls.loadSource(src);
-                  hls.attachMedia(video);
-                  hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
+                });
+                hlsRef.current = hls;
+                hls.loadSource(src);
+                hls.attachMedia(video);
+                hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
                      playVideo(video);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
                      }
-                  });
-                   hls.on(Hls.default.Events.ERROR, (event, data) => {
+                });
+                hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                      if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
-                        hls.startLoad();
-                      }
+                        if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
+                            console.log("HLS.js network error, retrying");
+                            hls.startLoad();
+                        }
                     }
-                  });
-                }
-            });
-        }
-    } else {
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Fallback to native HLS support if hls.js is not supported
+                video.src = src;
+                playVideo(video);
+            }
+        });
+    } else if (type === 'mp4') {
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
@@ -287,22 +296,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       const newVolume = value[0];
       setVolume(newVolume);
       setIsMuted(newVolume === 0);
-      if (newVolume > 0) {
-          setLastNonMuteVolume(newVolume);
-      }
       resetControlsTimeout();
   };
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
-      const newVolume = isMuted ? lastNonMuteVolume > 0 ? lastNonMuteVolume : 0.5 : 0;
-      if(!isMuted){
-        setLastNonMuteVolume(volume);
-      }
-      setVolume(newVolume);
-      setIsMuted(!isMuted);
+      setIsMuted(current => !current);
       resetControlsTimeout();
-  }, [resetControlsTimeout, isMuted, lastNonMuteVolume, volume]);
+  }, [resetControlsTimeout]);
   
   const toggleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -353,17 +354,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
   
-  const enterPiP = useCallback(() => {
+  const enterPiP = useCallback(async () => {
     if (videoRef.current && document.pictureInPictureEnabled && !videoRef.current.disablePictureInPicture) {
        if (!document.pictureInPictureElement) {
-           return videoRef.current.requestPictureInPicture();
+           await videoRef.current.requestPictureInPicture();
        }
     }
-    return Promise.resolve();
   }, []);
 
   useImperativeHandle(ref, () => ({
-    requestPictureInPicture: enterPiP
+    requestPictureInPicture: enterPiP,
+    getVideoElement: () => videoRef.current
   }));
 
   const togglePiP = useCallback((e: React.MouseEvent) => {
@@ -404,23 +405,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
+    
     const handleVolumeChangeEvent = () => {
       if (!video) return;
-      if (video.muted && !isMuted){
-        setIsMuted(true);
-      } else if (!video.muted && isMuted) {
-        setIsMuted(false);
-      }
-      
-      const newVolume = video.muted ? 0 : video.volume;
-      if (newVolume !== volume) {
-        setVolume(newVolume);
-      }
-
-      if (!video.muted && video.volume > 0) {
-        setLastNonMuteVolume(video.volume);
-      }
+      setVolume(video.volume);
+      setIsMuted(video.muted);
     };
+
     const handleTimeUpdate = () => video && setProgress(video.currentTime);
     const handleDurationChange = () => video && setDuration(video.duration);
     const handleCanPlay = () => setIsLoading(false);
@@ -484,7 +475,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, volume, isMuted]);
+  }, [resetControlsTimeout, isLocked]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -601,10 +592,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
             <div className="flex items-center justify-between gap-4 px-2 md:px-4">
                 <div className="flex items-center gap-1 md:gap-2">
-                    <Button variant="ghost" size="icon" onClick={togglePlay} className="text-white hover:bg-white/20">
+                    <Button variant="ghost" size="icon" onClick={togglePlay}>
                         {isPlaying ? <Pause /> : <Play />}
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={toggleMute} className="text-white hover:bg-white/20">
+                    <Button variant="ghost" size="icon" onClick={toggleMute}>
                         {isMuted ? <VolumeX /> : <Volume2 />}
                     </Button>
                     <div className="hidden md:flex w-24 items-center">
@@ -624,7 +615,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     {qualityLevels.length > 1 && type === 'hls' && (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()} className="text-white hover:bg-white/20">
+                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
                                     <Settings />
                                 </Button>
                             </PopoverTrigger>
@@ -657,11 +648,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         </Popover>
                     )}
                     {isClient && document.pictureInPictureEnabled && (
-                        <Button variant="ghost" size="icon" onClick={togglePiP} className="text-white hover:bg-white/20">
+                        <Button variant="ghost" size="icon" onClick={togglePiP}>
                             <PictureInPicture2 />
                         </Button>
                     )}
-                    <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
+                    <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
                         {isFullscreen ? <Minimize /> : <Maximize />}
                     </Button>
                 </div>
