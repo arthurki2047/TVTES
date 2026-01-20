@@ -175,7 +175,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     
     return () => {
-        if (videoRef.current && document.pictureInPictureElement === videoRef.current) {
+        if (video && document.pictureInPictureElement === video) {
             return;
         }
 
