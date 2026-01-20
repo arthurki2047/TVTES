@@ -179,12 +179,12 @@ export const channels: Channel[] = [
   },
 ];
 
-export const categories: { name: ChannelCategory; slug: string }[] = [
-  { name: 'News', slug: 'news' },
-  { name: 'Kids', slug: 'kids' },
-  { name: 'Entertainment', slug: 'entertainment' },
-  { name: 'Music', slug: 'music' },
-  { name: 'Infotainment', slug: 'infotainment' },
+export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
+  { name: 'News', slug: 'news', imageUrl: 'https://picsum.photos/seed/cat-news/600/400', imageHint: 'news broadcast' },
+  { name: 'Kids', slug: 'kids', imageUrl: 'https://picsum.photos/seed/cat-kids/600/400', imageHint: 'cartoon characters' },
+  { name: 'Entertainment', slug: 'entertainment', imageUrl: 'https://picsum.photos/seed/cat-ent/600/400', imageHint: 'movie set' },
+  { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/600/400', imageHint: 'live concert' },
+  { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/600/400', imageHint: 'nature documentary' },
 ];
 
 export function getChannels(category?: string): Channel[] {
@@ -198,6 +198,6 @@ export function getChannelById(id: string): Channel | undefined {
   return channels.find(channel => channel.id === id);
 }
 
-export function getChannelCategory(slug: string): { name: ChannelCategory; slug: string } | undefined {
+export function getChannelCategory(slug: string): { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; } | undefined {
     return categories.find(cat => cat.slug === slug);
 }
