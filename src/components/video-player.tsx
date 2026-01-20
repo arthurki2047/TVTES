@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Channel } from '@/lib/types';
 
 interface VideoPlayerProps {
@@ -50,6 +51,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [showUnlock, setShowUnlock] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [qualityLevels, setQualityLevels] = useState<any[]>([]);
+  const [currentQuality, setCurrentQuality] = useState(-1);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const unlockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -79,6 +82,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (!video) return;
 
     setIsLoading(true);
+    setQualityLevels([]);
+    setCurrentQuality(-1);
     if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
@@ -104,8 +109,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                   hlsRef.current = hls;
                   hls.loadSource(src);
                   hls.attachMedia(video);
-                  hls.on(Hls.default.Events.MANIFEST_PARSED, () => {
+                  hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
                      playVideo(video);
+                     if (hls.levels && hls.levels.length > 1) {
+                        setQualityLevels(hls.levels);
+                     }
                   });
                    hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
@@ -287,14 +295,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
-      const currentlyMuted = isMuted;
-      setIsMuted(!currentlyMuted);
-      if (currentlyMuted) {
-          setVolume(lastNonMuteVolume > 0 ? lastNonMuteVolume : 0.5);
-      } else {
-          setLastNonMuteVolume(volume);
-          setVolume(0);
+      const newVolume = isMuted ? lastNonMuteVolume > 0 ? lastNonMuteVolume : 0.5 : 0;
+      if(!isMuted){
+        setLastNonMuteVolume(volume);
       }
+      setVolume(newVolume);
+      setIsMuted(!isMuted);
       resetControlsTimeout();
   }, [resetControlsTimeout, isMuted, lastNonMuteVolume, volume]);
   
@@ -382,6 +388,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     onSwipe('right');
     resetControlsTimeout();
   }, [onSwipe, resetControlsTimeout]);
+
+  const handleQualityChange = useCallback((levelIndex: number) => {
+    if (hlsRef.current) {
+        hlsRef.current.currentLevel = levelIndex;
+        setCurrentQuality(levelIndex);
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
   
   useEffect(() => {
     const video = videoRef.current;
@@ -392,8 +406,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const handlePause = () => setIsPlaying(false);
     const handleVolumeChangeEvent = () => {
       if (!video) return;
-      setVolume(video.volume);
-      setIsMuted(video.muted);
+      if (video.muted && !isMuted){
+        setIsMuted(true);
+      } else if (!video.muted && isMuted) {
+        setIsMuted(false);
+      }
+      
+      const newVolume = video.muted ? 0 : video.volume;
+      if (newVolume !== volume) {
+        setVolume(newVolume);
+      }
+
       if (!video.muted && video.volume > 0) {
         setLastNonMuteVolume(video.volume);
       }
@@ -461,11 +484,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked]);
+  }, [resetControlsTimeout, isLocked, volume, isMuted]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.closest('button, [role="slider"]')) {
+    if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) {
         touchStartX.current = 0;
         touchEndX.current = 0;
         return;
@@ -482,7 +505,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.closest('button, [role="slider"]')) {
+    if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) {
       return;
     }
     
@@ -598,6 +621,41 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     )}
                 </div>
                 <div className="flex items-center gap-1 md:gap-2">
+                    {qualityLevels.length > 1 && type === 'hls' && (
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()} className="text-white hover:bg-white/20">
+                                    <Settings />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                                <div className="grid gap-1">
+                                    <div
+                                        key={-1}
+                                        onClick={() => handleQualityChange(-1)}
+                                        className={cn(
+                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
+                                            currentQuality === -1 && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                    >
+                                        Auto
+                                    </div>
+                                    {[...qualityLevels].reverse().map((level) => (
+                                        <div
+                                            key={level.height}
+                                            onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
+                                            className={cn(
+                                                "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
+                                                currentQuality === qualityLevels.indexOf(level) && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                            )}
+                                        >
+                                            {level.height}p
+                                        </div>
+                                    ))}
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    )}
                     {isClient && document.pictureInPictureEnabled && (
                         <Button variant="ghost" size="icon" onClick={togglePiP} className="text-white hover:bg-white/20">
                             <PictureInPicture2 />
