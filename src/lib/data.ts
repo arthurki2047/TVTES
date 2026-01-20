@@ -661,6 +661,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-pix-hd',
     type: 'iframe',
   },
+  {
+    id: 'cine-jomjomat',
+    name: 'Cine Jomjomat',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/6102/100/100',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/6101/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'https://amg13779-amg13779c1-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg13779-amg13779c1-amgplt0173/playlist.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
