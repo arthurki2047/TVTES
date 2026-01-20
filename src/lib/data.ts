@@ -207,8 +207,8 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/1901/600/400',
     thumbnailImageHint: 'drama series',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_697.m3u8',
-    type: 'hls',
+    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-aath',
+    type: 'iframe',
   },
   {
     id: 'rongeen-tv',
