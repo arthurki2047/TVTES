@@ -101,7 +101,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.removeAttribute('src');
     video.load();
 
-    if (type === 'hls' && typeof window !== 'undefined') {
+    if (type === 'hls') {
         import('hls.js').then(Hls => {
             if (Hls.default.isSupported()) {
                 if (hlsRef.current) {
@@ -166,14 +166,27 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   const isLive = duration === Infinity;
   
+  const resetControlsTimeout = useCallback(() => {
+    if (isLocked) return;
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    setShowControls(true);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    }, 5000);
+  }, [isLocked]);
+
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current && !isLive) {
         const newTime = videoRef.current.currentTime + amount;
         videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
     }
     resetControlsTimeout();
-  }, [resetControlsTimeout, isLive, duration]);
-
+  }, [isLive, duration, resetControlsTimeout]);
+  
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !channel || !('mediaSession' in navigator)) {
@@ -249,19 +262,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     };
   }, [channel, onSwipe, playVideo, isLive, handleSeek]);
-
-  const resetControlsTimeout = useCallback(() => {
-    if (isLocked) return;
-    if (controlsTimeoutRef.current) {
-      clearTimeout(controlsTimeoutRef.current);
-    }
-    setShowControls(true);
-    controlsTimeoutRef.current = setTimeout(() => {
-      if (videoRef.current && !videoRef.current.paused) {
-        setShowControls(false);
-      }
-    }, 5000);
-  }, [isLocked]);
 
   const resetUnlockTimeout = useCallback(() => {
     if (unlockTimeoutRef.current) {
