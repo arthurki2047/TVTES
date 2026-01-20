@@ -485,6 +485,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/yrf-music/master.m3u8',
     type: 'hls',
   },
+  {
+    id: 'shemaroo-filmi-gaane',
+    name: 'Shemaroo Filmi Gaane',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/4502/100/100',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/4501/600/400',
+    thumbnailImageHint: 'bollywood music',
+    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/shemaroo-filmigaane/2b476436-5d57-472b-9b9d-58ce64878076/1.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
