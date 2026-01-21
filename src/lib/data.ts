@@ -672,6 +672,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://cdn-2.pishow.tv/live/1461/1461_1.m3u8',
     type: 'hls',
   },
+  {
+    id: 'test-1',
+    name: 'test 1',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/test1logo/400/400',
+    logoImageHint: 'test logo',
+    thumbnailUrl: 'https://picsum.photos/seed/test1thumb/600/400',
+    thumbnailImageHint: 'test thumbnail',
+    streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=165',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
