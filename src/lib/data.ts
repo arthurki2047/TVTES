@@ -691,7 +691,7 @@ export const channels: Channel[] = [
     logoImageHint: 'test logo',
     thumbnailUrl: 'https://picsum.photos/seed/test1thumb/600/400',
     thumbnailImageHint: 'test thumbnail',
-    streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=165',
+    streamUrl: 'https://ranapk.online/OPPLEX/RANAPK1/play.php?id=383183%7CUser-Agent=RANAPK',
     type: 'iframe',
   },
 ];
