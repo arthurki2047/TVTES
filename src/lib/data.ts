@@ -526,7 +526,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/4801/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://player.twitch.tv/?channel=lirik&parent=allinonereborn.xyz&autoplay=false&muted=false&time=0s',
+    streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=165',
     type: 'iframe',
   },
   {
