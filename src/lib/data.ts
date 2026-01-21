@@ -684,6 +684,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'm-tunes',
+    name: 'M Tunes',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/mtunes-logo/400/400',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/mtunes-thumb/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://ca1.buximedia.com/itv/indian/tracks-v1a1/mono.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'test-1',
     name: 'test 1',
     category: 'Entertainment',
