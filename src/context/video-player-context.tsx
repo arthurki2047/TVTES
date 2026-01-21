@@ -50,17 +50,23 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     if (!videoElement) return;
 
     const handleLeavePiP = () => {
-      // Destroy the HLS instance of the old PiP player to prevent dual audio
+      // This is a heuristic. When a user closes the PiP window via the 'X' button,
+      // the browser often tears down the video element, setting its readyState to 0.
+      // When restoring by clicking the "back to tab" icon, the video element is
+      // kept alive and its readyState remains greater than 0.
+      const isLikelyRestore = videoElement && videoElement.readyState > 0 && !videoElement.ended;
+
+      // Always destroy the HLS instance of the old PiP player to prevent dual audio.
       if (pipHlsRef?.current) {
         pipHlsRef.current.destroy();
       }
 
-      // When user clicks "restore" in PiP, navigate to watch page and trigger fullscreen.
-      if (pipChannelId) {
+      // Only navigate if it's a restore action.
+      if (isLikelyRestore && pipChannelId) {
         router.push(`/watch/${pipChannelId}?fullscreen=true`);
       }
       
-      // Clean up the PiP ref once it's no longer in PiP
+      // Clean up the PiP ref once it's no longer in PiP, regardless of the action.
       setPipPlayerRef(null);
       setPipHlsRef(null);
       setPipChannelId(null);
