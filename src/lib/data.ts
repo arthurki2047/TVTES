@@ -553,6 +553,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'fresh-movies',
+    name: 'Fresh Movies',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/fresh-movies-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/fresh-movies-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'https://amg02411-vvsfilms-amg02411c1-lg-ca-9654.playouts.now.amagi.tv/playlist/amg02411-vvsfilms-freshmovies-lgca/playlist.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'm-tunes',
     name: 'M Tunes',
     category: 'Music',
