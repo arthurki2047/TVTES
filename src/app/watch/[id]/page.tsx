@@ -29,6 +29,20 @@ export default function WatchPage() {
     }
   }, [channelId, addRecentlyPlayed]);
 
+  // New useEffect to handle entering fullscreen from PiP restore
+  useEffect(() => {
+    const shouldEnterFullscreen = searchParams.get('fullscreen') === 'true';
+    if (shouldEnterFullscreen) {
+      const timer = setTimeout(() => {
+        videoPlayerRef.current?.requestFullscreen();
+        // Clean up the URL to avoid re-triggering on refresh/back
+        router.replace(`/watch/${channelId}`, { scroll: false });
+      }, 300); // Small delay to ensure component is ready
+
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, channelId, router]);
+
   const handleBack = useCallback(() => {
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture();

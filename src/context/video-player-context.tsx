@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, RefObject, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface VideoPlayerContextType {
   playerRef: RefObject<HTMLVideoElement> | null;
@@ -9,14 +10,18 @@ interface VideoPlayerContextType {
   setPipPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
   isMuted: boolean;
   toggleMute: () => void;
+  pipChannelId: string | null;
+  setPipChannelId: (id: string | null) => void;
 }
 
 const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
   const [pipPlayerRef, setPipPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [pipChannelId, setPipChannelId] = useState<string | null>(null);
 
   const toggleMute = useCallback(() => {
     const video = playerRef?.current || pipPlayerRef?.current;
@@ -36,17 +41,20 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [playerRef, pipPlayerRef]);
 
-  // This effect handles pausing the video when it leaves PiP.
+  // This effect handles user exiting PiP.
   useEffect(() => {
     const videoElement = pipPlayerRef?.current;
     if (!videoElement) return;
 
     const handleLeavePiP = () => {
-      if (videoElement && !videoElement.paused) {
-        videoElement.pause();
+      // When user clicks "restore" in PiP, navigate to watch page and trigger fullscreen.
+      if (pipChannelId) {
+        router.push(`/watch/${pipChannelId}?fullscreen=true`);
       }
+      
       // Clean up the PiP ref once it's no longer in PiP
       setPipPlayerRef(null);
+      setPipChannelId(null);
     };
 
     videoElement.addEventListener('leavepictureinpicture', handleLeavePiP);
@@ -56,7 +64,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
         videoElement.removeEventListener('leavepictureinpicture', handleLeavePiP);
       }
     };
-  }, [pipPlayerRef]);
+  }, [pipPlayerRef, pipChannelId, router, setPipChannelId]);
   
   // Effect to sync mute state from video element to context
   useEffect(() => {
@@ -85,7 +93,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
 
 
   return (
-    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef, isMuted, toggleMute }}>
+    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef, isMuted, toggleMute, pipChannelId, setPipChannelId }}>
       {children}
     </VideoPlayerContext.Provider>
   );

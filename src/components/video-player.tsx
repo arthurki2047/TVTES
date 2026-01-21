@@ -20,6 +20,7 @@ interface VideoPlayerProps {
 export interface VideoPlayerHandles {
   requestPictureInPicture: () => Promise<void>;
   getVideoElement: () => HTMLVideoElement | null;
+  requestFullscreen: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -42,7 +43,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const wakeLockRef = useRef<any>(null);
-  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute } = useVideoPlayer();
+  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute, setPipChannelId } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const previousVolume = useRef(1);
@@ -106,6 +107,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const handleEnterPiP = () => {
       setPipPlayerRef(videoRef);
+       if (video.dataset.channelId && setPipChannelId) {
+        setPipChannelId(video.dataset.channelId);
+      }
     };
 
     video.addEventListener('enterpictureinpicture', handleEnterPiP);
@@ -115,7 +119,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         video.removeEventListener('enterpictureinpicture', handleEnterPiP);
       }
     };
-  }, [setPipPlayerRef]);
+  }, [setPipPlayerRef, setPipChannelId]);
 
 
   useEffect(() => {
@@ -373,8 +377,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   }, [volume]);
   
-  const toggleFullscreen = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const toggleFullscreen = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const player = playerRef.current;
     if (!player) return;
 
@@ -432,7 +436,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   useImperativeHandle(ref, () => ({
     requestPictureInPicture: enterPiP,
-    getVideoElement: () => videoRef.current
+    getVideoElement: () => videoRef.current,
+    requestFullscreen: () => toggleFullscreen(),
   }));
 
   const togglePiP = useCallback((e: React.MouseEvent) => {
@@ -633,7 +638,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={handleTap} />
+      <video ref={videoRef} className="h-full w-full" playsInline onClick={handleTap} data-channel-id={channel.id} />
       
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
