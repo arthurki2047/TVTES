@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -44,7 +44,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const wakeLockRef = useRef<any>(null);
-  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute, setPipChannelId } = useVideoPlayer();
+  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute, setPipChannelId, setPipHlsRef } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const previousVolume = useRef(1);
@@ -109,6 +109,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const handleEnterPiP = () => {
       setPipPlayerRef(videoRef);
+      if (hlsRef.current && setPipHlsRef) {
+        setPipHlsRef(hlsRef as RefObject<any>);
+      }
        if (video.dataset.channelId && setPipChannelId) {
         setPipChannelId(video.dataset.channelId);
       }
@@ -121,7 +124,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         video.removeEventListener('enterpictureinpicture', handleEnterPiP);
       }
     };
-  }, [setPipPlayerRef, setPipChannelId]);
+  }, [setPipPlayerRef, setPipChannelId, setPipHlsRef]);
 
 
   useEffect(() => {
@@ -783,7 +786,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     </div>
                                     {uniqueQualityLevels.map((level, i) => (
                                         <div
-                                            key={level.height || i}
+                                            key={level.height}
                                             onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
                                             className={cn(
                                                 "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",

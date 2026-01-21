@@ -8,6 +8,8 @@ interface VideoPlayerContextType {
   setPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
   pipPlayerRef: RefObject<HTMLVideoElement> | null;
   setPipPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
+  pipHlsRef: RefObject<any> | null;
+  setPipHlsRef: (ref: RefObject<any> | null) => void;
   isMuted: boolean;
   toggleMute: () => void;
   pipChannelId: string | null;
@@ -20,6 +22,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
   const router = useRouter();
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
   const [pipPlayerRef, setPipPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
+  const [pipHlsRef, setPipHlsRef] = useState<RefObject<any> | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [pipChannelId, setPipChannelId] = useState<string | null>(null);
 
@@ -47,6 +50,11 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     if (!videoElement) return;
 
     const handleLeavePiP = () => {
+      // Destroy the HLS instance of the old PiP player to prevent dual audio
+      if (pipHlsRef?.current) {
+        pipHlsRef.current.destroy();
+      }
+
       // When user clicks "restore" in PiP, navigate to watch page and trigger fullscreen.
       if (pipChannelId) {
         router.push(`/watch/${pipChannelId}?fullscreen=true`);
@@ -54,6 +62,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
       
       // Clean up the PiP ref once it's no longer in PiP
       setPipPlayerRef(null);
+      setPipHlsRef(null);
       setPipChannelId(null);
     };
 
@@ -64,7 +73,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
         videoElement.removeEventListener('leavepictureinpicture', handleLeavePiP);
       }
     };
-  }, [pipPlayerRef, pipChannelId, router, setPipChannelId]);
+  }, [pipPlayerRef, pipHlsRef, pipChannelId, router]);
   
   // Effect to sync mute state from video element to context
   useEffect(() => {
@@ -93,7 +102,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
 
 
   return (
-    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef, isMuted, toggleMute, pipChannelId, setPipChannelId }}>
+    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef, isMuted, toggleMute, pipChannelId, setPipChannelId, pipHlsRef, setPipHlsRef }}>
       {children}
     </VideoPlayerContext.Provider>
   );
