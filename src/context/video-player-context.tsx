@@ -25,6 +25,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
   const [pipHlsRef, setPipHlsRef] = useState<RefObject<any> | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [pipChannelId, setPipChannelId] = useState<string | null>(null);
+  const isSwitchingChannelsRef = React.useRef(false);
 
   const toggleMute = useCallback(() => {
     const video = playerRef?.current || pipPlayerRef?.current;
@@ -37,6 +38,7 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (playerRef && pipPlayerRef && playerRef.current !== pipPlayerRef.current) {
       if (document.pictureInPictureElement === pipPlayerRef.current) {
+        isSwitchingChannelsRef.current = true;
         document.exitPictureInPicture().catch((err) => {
             console.error("Failed to exit Picture-in-Picture mode automatically.", err);
         });
@@ -50,20 +52,25 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     if (!videoElement) return;
 
     const handleLeavePiP = () => {
-      // This is a heuristic. When a user closes the PiP window via the 'X' button,
-      // the browser often tears down the video element, setting its readyState to 0.
-      // When restoring by clicking the "back to tab" icon, the video element is
-      // kept alive and its readyState remains greater than 0.
-      const isLikelyRestore = videoElement && videoElement.readyState > 0 && !videoElement.ended;
-
       // Always destroy the HLS instance of the old PiP player to prevent dual audio.
       if (pipHlsRef?.current) {
         pipHlsRef.current.destroy();
       }
 
-      // Only navigate if it's a restore action.
-      if (isLikelyRestore && pipChannelId) {
-        router.push(`/watch/${pipChannelId}?fullscreen=true`);
+      // Check if we are programmatically closing PiP to switch channels.
+      if (isSwitchingChannelsRef.current) {
+        isSwitchingChannelsRef.current = false; // Reset the flag
+      } else {
+        // This is a heuristic. When a user closes the PiP window via the 'X' button,
+        // the browser often tears down the video element, setting its readyState to 0.
+        // When restoring by clicking the "back to tab" icon, the video element is
+        // kept alive and its readyState remains greater than 0.
+        const isLikelyRestore = videoElement && videoElement.readyState > 0 && !videoElement.ended;
+        
+        // Only navigate if it's a restore action.
+        if (isLikelyRestore && pipChannelId) {
+          router.push(`/watch/${pipChannelId}?fullscreen=true`);
+        }
       }
       
       // Clean up the PiP ref once it's no longer in PiP, regardless of the action.
