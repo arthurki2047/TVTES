@@ -152,8 +152,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     liveSyncDurationCount: 3, 
                     maxMaxBufferLength: 30,
                     liveDurationInfinity: true,
-                    // Always use hls.js even if native HLS is supported
-                    forceHLS: true,
                 });
                 hlsRef.current = hls;
                 hls.loadSource(src);
@@ -173,9 +171,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 });
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
-                            console.log("HLS.js network error, retrying");
-                            hls.startLoad();
+                        console.error(`HLS.js fatal error: ${data.type} - ${data.details}`);
+                        switch (data.type) {
+                            case Hls.default.ErrorTypes.NETWORK_ERROR:
+                                // Try to recover on network errors
+                                console.log('Fatal network error encountered, trying to recover...');
+                                hls.startLoad();
+                                break;
+                            case Hls.default.ErrorTypes.MEDIA_ERROR:
+                                console.log('Fatal media error encountered, trying to recover...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                // Cannot recover
+                                console.log('Unrecoverable HLS error, destroying instance.');
+                                hls.destroy();
+                                break;
                         }
                     }
                 });
