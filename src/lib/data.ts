@@ -416,7 +416,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/3801/600/400',
     thumbnailImageHint: 'movie poster',
-    streamUrl: '//cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
+    streamUrl: 'https://cdn.stmify.com/embed-free/v1/jalsha-movies-hd-in-jw',
     type: 'iframe',
   },
   {
@@ -504,7 +504,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: '//streamcrichd.com/update/star.php',
+    streamUrl: 'https://streamcrichd.com/update/star.php',
     type: 'iframe',
   },
   {
@@ -515,7 +515,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4701/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: '//streamcrichd.com/update/star1hi.php',
+    streamUrl: 'https://streamcrichd.com/update/star1hi.php',
     type: 'iframe',
   },
   {
