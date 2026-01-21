@@ -7,9 +7,10 @@ import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft } from 'lucide-react';
+import { Home, ArrowLeft, Volume2, VolumeX } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
+import { useVideoPlayer } from '@/context/video-player-context';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function WatchPage() {
   const videoPlayerRef = useRef<VideoPlayerHandles>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
+  const { isMuted, toggleMute } = useVideoPlayer();
   
   const channel = getChannelById(channelId);
   
@@ -133,7 +135,12 @@ export default function WatchPage() {
                   <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
                 )}
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-8 flex items-center justify-center gap-4 text-center">
+                {channel.type !== 'iframe' && (
+                  <Button variant="outline" size="lg" className="h-auto p-6" onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
+                    {isMuted ? <VolumeX className="h-8 w-8" /> : <Volume2 className="h-8 w-8" />}
+                  </Button>
+                )}
                 <Button size="lg" className="h-auto px-16 py-6 text-2xl font-bold" onClick={handleGoHomeAndPiP}>
                     <Home className="mr-4 h-8 w-8" />
                     Home

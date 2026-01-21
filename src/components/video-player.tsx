@@ -42,10 +42,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const wakeLockRef = useRef<any>(null);
-  const { setPlayerRef, setPipPlayerRef } = useVideoPlayer();
+  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [isMuted, setIsMuted] = useState(false);
+  const previousVolume = useRef(1);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -63,12 +63,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
-
-  const isMutedRef = useRef(isMuted);
-  isMutedRef.current = isMuted;
-
-  const volumeRef = useRef(volume);
-  volumeRef.current = volume;
   
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
@@ -346,31 +340,38 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const handleVolumeChange = useCallback((newVolume: number[]) => {
       const value = newVolume[0];
       setVolume(value);
-      setIsMuted(value === 0);
+      if (videoRef.current) {
+        videoRef.current.volume = value;
+        videoRef.current.muted = value === 0;
+      }
       resetControlsTimeout();
   }, [resetControlsTimeout]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsMuted(prev => {
-        const newMuted = !prev;
-        if(newMuted) {
-            setVolume(0);
-        } else {
-            setVolume(1); // or restore previous volume
-        }
-        return newMuted;
-      });
+      contextToggleMute();
       resetControlsTimeout();
-  }, [resetControlsTimeout]);
+  }, [contextToggleMute, resetControlsTimeout]);
+
+  useEffect(() => {
+    if (isMuted) {
+      if (volume > 0) {
+        previousVolume.current = volume;
+      }
+      setVolume(0);
+    } else {
+      if (volume === 0) {
+        setVolume(previousVolume.current);
+      }
+    }
+  }, [isMuted, volume]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
         video.volume = volume;
-        video.muted = isMuted || volume === 0;
     }
-  }, [volume, isMuted]);
+  }, [volume]);
   
   const toggleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -503,15 +504,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         setIsPlaying(false);
         releaseWakeLock();
     };
-    
-    const handleVolumeChangeEvent = () => {
-      if (!video) return;
-      // Using refs to prevent re-renders from causing loops
-      if (isMutedRef.current !== video.muted || volumeRef.current !== video.volume) {
-          setVolume(video.volume);
-          setIsMuted(video.muted);
-      }
-    };
 
     const handleTimeUpdate = () => video && setProgress(video.currentTime);
     const handleDurationChange = () => video && setDuration(video.duration);
@@ -541,7 +533,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
-    video.addEventListener('volumechange', handleVolumeChangeEvent);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('waiting', handleWaiting);
@@ -563,7 +554,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     return () => {
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
-      video.removeEventListener('volumechange', handleVolumeChangeEvent);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('waiting', handleWaiting);
