@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,7 @@ function formatTime(seconds: number) {
     return `${mm}:${ss}`;
 }
 
+type FitMode = 'contain' | 'cover' | 'fill';
 
 export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ src, type, onSwipe, onBack, channel }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -59,6 +60,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const unlockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isManifestLive, setIsManifestLive] = useState(false);
+  const [fitMode, setFitMode] = useState<FitMode>('contain');
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -481,6 +483,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     resetControlsTimeout();
   }, [resetControlsTimeout]);
+
+  const handleFitModeChange = useCallback((mode: FitMode) => {
+    setFitMode(mode);
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
   
   useEffect(() => {
     const video = videoRef.current;
@@ -649,7 +656,20 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       onTouchEnd={handleTouchEnd}
       onMouseMove={resetControlsTimeout}
     >
-      <video ref={videoRef} className="h-full w-full" playsInline onClick={handleTap} data-channel-id={channel.id} />
+      <video
+        ref={videoRef}
+        className={cn(
+          "h-full w-full",
+          {
+            'object-contain': fitMode === 'contain',
+            'object-cover': fitMode === 'cover',
+            'object-fill': fitMode === 'fill',
+          }
+        )}
+        playsInline
+        onClick={handleTap}
+        data-channel-id={channel.id}
+      />
       
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
@@ -773,6 +793,46 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                             {level.height}p
                                         </div>
                                     ))}
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    )}
+                    {isFullscreen && (
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
+                                    <Crop />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                                <div className="grid gap-1">
+                                    <div
+                                        onClick={() => handleFitModeChange('contain')}
+                                        className={cn(
+                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
+                                            fitMode === 'contain' && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                    >
+                                        Original
+                                    </div>
+                                    <div
+                                        onClick={() => handleFitModeChange('cover')}
+                                        className={cn(
+                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
+                                            fitMode === 'cover' && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                    >
+                                        Fit to Screen
+                                    </div>
+                                    <div
+                                        onClick={() => handleFitModeChange('fill')}
+                                        className={cn(
+                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
+                                            fitMode === 'fill' && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                    >
+                                        Stretch
+                                    </div>
                                 </div>
                             </PopoverContent>
                         </Popover>
