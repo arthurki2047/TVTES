@@ -680,7 +680,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4701/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://streamcrichd.com/update/star1hi.php',
+    streamUrl: 'https://allinonereborn.xyz/airteltv-web/live3.php?id=276731',
     type: 'iframe',
   },
   {
