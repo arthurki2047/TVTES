@@ -705,6 +705,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=165',
     type: 'iframe',
   },
+  {
+    id: 'south-station',
+    name: 'SOUTH STATION',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/south-station-logo/400/400',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/south-station-thumb/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'https://cc-yw7ztecy8do3q.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-yw7ztecy8do3q/SS_IN.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
