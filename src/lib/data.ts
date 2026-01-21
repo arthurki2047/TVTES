@@ -672,6 +672,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://amg13779-amg13779c1-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg13779-amg13779c1-amgplt0173/playlist.m3u8',
     type: 'hls',
   },
+  {
+    id: 'goldmines-movies',
+    name: 'GOLDMINES MOVIES',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/6202/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/6201/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://cdn-2.pishow.tv/live/1461/1461_1.m3u8',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
