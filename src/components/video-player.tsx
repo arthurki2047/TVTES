@@ -765,7 +765,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     {uniqueQualityLevels.length > 1 && type === 'hls' && (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="icon">
                                     <Settings />
                                 </Button>
                             </PopoverTrigger>
@@ -781,9 +781,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     >
                                         Auto
                                     </div>
-                                    {uniqueQualityLevels.map((level) => (
+                                    {uniqueQualityLevels.map((level, i) => (
                                         <div
-                                            key={level.height}
+                                            key={level.height || i}
                                             onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
                                             className={cn(
                                                 "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
@@ -800,7 +800,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     {isFullscreen && (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="icon">
                                     <Crop />
                                 </Button>
                             </PopoverTrigger>
