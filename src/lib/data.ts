@@ -355,6 +355,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'dd-bangla',
+    name: 'DD BANGLA',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/dd-bangla-logo/400/400',
+    logoImageHint: 'tv logo',
+    thumbnailUrl: 'https://picsum.photos/seed/dd-bangla-thumb/600/400',
+    thumbnailImageHint: 'bengali show',
+    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/7ff57cc9046b4c188b51a0d506f36e7f/index.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'wion',
     name: 'WION',
     category: 'News',
