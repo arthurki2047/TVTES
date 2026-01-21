@@ -427,7 +427,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/3901/600/400',
     thumbnailImageHint: 'cricket sport',
-    streamUrl: 'https://sports.dtvworld.site/prime?id=willow',
+    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=58117',
     type: 'iframe',
   },
   {
