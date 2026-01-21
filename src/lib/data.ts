@@ -673,6 +673,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'zee-cinema-hd-usa',
+    name: 'ZEE CINEMA HD USA',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/zee-cinema-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/zee-cinema-thumb/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'test-1',
     name: 'test 1',
     category: 'Entertainment',
