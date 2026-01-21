@@ -542,17 +542,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'zee-cinema-hd-usa',
-    name: 'ZEE CINEMA HD USA',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/zee-cinema-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/zee-cinema-thumb/600/400',
-    thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
-    type: 'hls',
-  },
-  {
     id: 'm-tunes',
     name: 'M Tunes',
     category: 'Music',
@@ -608,6 +597,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'cine-life',
+    name: 'Cine Life',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/cine-life-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/cine-life-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg00308-magnoliapicture-cinelife-tcl/playlist.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'swastik-stories',
     name: 'Swastik Stories',
     category: 'Entertainment',
@@ -618,6 +618,7 @@ export const channels: Channel[] = [
     streamUrl: 'https://csm-e-cesharedlsgsin2live-87593184.bln1.yospace.com/csm/extlive/runntvprd01,swastikrunn/master.m3u8',
     type: 'hls',
   },
+  // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
     name: 'SONY',
