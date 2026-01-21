@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, RefObject } from 'react';
+import React, { createContext, useContext, useState, RefObject, useEffect } from 'react';
 
 interface VideoPlayerContextType {
   playerRef: RefObject<HTMLVideoElement> | null;
@@ -11,6 +11,28 @@ const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
+
+  useEffect(() => {
+    const videoElement = playerRef?.current;
+    if (!videoElement) {
+      return;
+    }
+
+    const handleLeavePiP = () => {
+      if (videoElement && !videoElement.paused) {
+        videoElement.pause();
+      }
+    };
+
+    videoElement.addEventListener('leavepictureinpicture', handleLeavePiP);
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener('leavepictureinpicture', handleLeavePiP);
+      }
+    };
+  }, [playerRef]);
+
 
   return (
     <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef }}>

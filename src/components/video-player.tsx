@@ -98,7 +98,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   useEffect(() => {
     setIsClient(true);
     setPlayerRef(videoRef);
-    return () => setPlayerRef(null);
+    return () => {
+      if (document.pictureInPictureElement !== videoRef.current) {
+        setPlayerRef(null);
+      }
+    };
   }, [setPlayerRef]);
 
 
