@@ -672,6 +672,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://amg13779-amg13779c1-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg13779-amg13779c1-amgplt0173/playlist.m3u8',
     type: 'hls',
   },
+  {
+    id: 'test2',
+    name: 'TEST2',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/6202/100/100',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/6201/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=185',
+    type: 'iframe',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
