@@ -504,7 +504,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://streamcrichd.com/update/star.php',
+    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=54059',
     type: 'iframe',
   },
   {
@@ -550,17 +550,6 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'nursery rhymes',
     streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/kids-tv-india-nursery-rhymes-and-baby-songs/6ad12dcb-7c9b-47e0-ad73-cee522f38393/2.m3u8',
     type: 'hls',
-  },
-  {
-    id: 'test1',
-    name: 'TEST1',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/5102/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/5101/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'https://www.yupptv.com/yupptvnew/channels/star-jalsha/live/embed',
-    type: 'iframe',
   },
   {
     id: 'republic',
