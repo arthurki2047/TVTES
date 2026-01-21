@@ -42,7 +42,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const wakeLockRef = useRef<any>(null);
-  const { setPlayerRef } = useVideoPlayer();
+  const { setPlayerRef, setPipPlayerRef } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
@@ -99,11 +99,29 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     setIsClient(true);
     setPlayerRef(videoRef);
     return () => {
+      // Don't clear the ref if we are in PiP mode, so the context can still control it.
       if (document.pictureInPictureElement !== videoRef.current) {
         setPlayerRef(null);
       }
     };
   }, [setPlayerRef]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleEnterPiP = () => {
+      setPipPlayerRef(videoRef);
+    };
+
+    video.addEventListener('enterpictureinpicture', handleEnterPiP);
+
+    return () => {
+      if (video) {
+        video.removeEventListener('enterpictureinpicture', handleEnterPiP);
+      }
+    };
+  }, [setPipPlayerRef]);
 
 
   useEffect(() => {

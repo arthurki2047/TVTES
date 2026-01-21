@@ -5,23 +5,38 @@ import React, { createContext, useContext, useState, RefObject, useEffect } from
 interface VideoPlayerContextType {
   playerRef: RefObject<HTMLVideoElement> | null;
   setPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
+  pipPlayerRef: RefObject<HTMLVideoElement> | null;
+  setPipPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
 }
 
 const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
+  const [pipPlayerRef, setPipPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
 
+  // This effect handles closing an old PiP window when a new player is created on a watch page.
   useEffect(() => {
-    const videoElement = playerRef?.current;
-    if (!videoElement) {
-      return;
+    if (playerRef && pipPlayerRef && playerRef.current !== pipPlayerRef.current) {
+      if (document.pictureInPictureElement === pipPlayerRef.current) {
+        document.exitPictureInPicture().catch((err) => {
+            console.error("Failed to exit Picture-in-Picture mode automatically.", err);
+        });
+      }
     }
+  }, [playerRef, pipPlayerRef]);
+
+  // This effect handles pausing the video when it leaves PiP.
+  useEffect(() => {
+    const videoElement = pipPlayerRef?.current;
+    if (!videoElement) return;
 
     const handleLeavePiP = () => {
       if (videoElement && !videoElement.paused) {
         videoElement.pause();
       }
+      // Clean up the PiP ref once it's no longer in PiP
+      setPipPlayerRef(null);
     };
 
     videoElement.addEventListener('leavepictureinpicture', handleLeavePiP);
@@ -31,11 +46,11 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
         videoElement.removeEventListener('leavepictureinpicture', handleLeavePiP);
       }
     };
-  }, [playerRef]);
+  }, [pipPlayerRef]);
 
 
   return (
-    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef }}>
+    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef }}>
       {children}
     </VideoPlayerContext.Provider>
   );
