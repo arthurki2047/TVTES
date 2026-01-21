@@ -1,3 +1,4 @@
+
 import type { Channel, ChannelCategory } from '@/lib/types';
 
 export const channels: Channel[] = [
@@ -538,6 +539,17 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/zee-cinema-thumb/600/400',
     thumbnailImageHint: 'bollywood movie',
     streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
+    type: 'hls',
+  },
+  {
+    id: 'hollywood-desi',
+    name: 'Hollywood Desi',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/hollywood-desi-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/hollywood-desi-thumb/600/400',
+    thumbnailImageHint: 'hollywood movie',
+    streamUrl: 'https://cc-u6hadnoh0u6td.akamaized.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-u6hadnoh0u6td/c28d872b-db55-4bdd-ab20-ed2e84b650ec/1.m3u8',
     type: 'hls',
   },
   {
