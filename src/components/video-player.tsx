@@ -769,7 +769,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     <Settings />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
                                     <div
                                         key={-1}
@@ -804,7 +804,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                     <Crop />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
                                     <div
                                         onClick={() => handleFitModeChange('contain')}
