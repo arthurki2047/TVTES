@@ -20,7 +20,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">{category.name}</h1>
       {channelsInCategory.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {channelsInCategory.map(channel => (
             <ChannelCard key={channel.id} channel={channel} listType="category" listValue={params.slug}/>
           ))}

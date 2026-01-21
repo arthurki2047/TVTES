@@ -15,11 +15,11 @@ export default function FavoritesPage() {
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">Favorites</h1>
       {!isLoaded ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
         </div>
       ) : favoriteChannels.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {favoriteChannels.map(channel => (
             <ChannelCard key={channel.id} channel={channel} />
           ))}

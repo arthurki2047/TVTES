@@ -9,8 +9,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 function RecentlyPlayedSkeleton() {
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
         </div>
     );
 }
@@ -32,7 +32,7 @@ export function RecentlyPlayed() {
       {!isLoaded ? (
         <RecentlyPlayedSkeleton />
       ) : recentlyPlayedChannels.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {recentlyPlayedChannels.map(channel => (
             <ChannelCard key={channel.id} channel={channel} />
           ))}
