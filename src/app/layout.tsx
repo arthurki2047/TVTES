@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { VideoPlayerProvider } from '@/context/video-player-context';
 
 export const metadata: Metadata = {
-  title: 'Amar Tv',
+  title: 'Amar TV',
   description: 'A modern live TV streaming web application.',
 };
 
