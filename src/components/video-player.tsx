@@ -62,6 +62,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isManifestLive, setIsManifestLive] = useState(false);
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [playerError, setPlayerError] = useState<string | null>(null);
+  
+  const lastTimeUpdate = useRef(Date.now());
+  const stallCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -494,14 +497,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const player = playerRef.current;
     if (!video || !player) return;
 
-    // Wake Lock logic
     const requestWakeLock = async () => {
       if ('wakeLock' in navigator) {
         try {
           wakeLockRef.current = await navigator.wakeLock.request('screen');
         } catch (err: any) {
-          // NotAllowedError can happen if the document is not visible,
-          // or if the user has not granted permission. We can ignore it.
           if (err.name !== 'NotAllowedError') {
             console.error('Could not acquire wake lock:', err);
           }
@@ -513,26 +513,59 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         try {
             await wakeLockRef.current.release();
             wakeLockRef.current = null;
-        } catch(e) {
-            // This can happen if the lock was already released.
-        }
+        } catch(e) {}
       }
+    };
+
+    const handleStallCheck = () => {
+        if (video && !video.paused && (Date.now() - lastTimeUpdate.current > 4000)) {
+            if (hlsRef.current) {
+                if (isLive && hlsRef.current.liveSyncPosition) {
+                    video.currentTime = hlsRef.current.liveSyncPosition;
+                    playVideo(video);
+                } else {
+                    hlsRef.current.startLoad();
+                }
+            } else {
+                const currentTime = video.currentTime;
+                video.load();
+                video.currentTime = currentTime;
+                playVideo(video);
+            }
+            lastTimeUpdate.current = Date.now();
+        }
     };
 
     const handlePlay = () => {
         setIsPlaying(true);
         requestWakeLock();
+        lastTimeUpdate.current = Date.now();
+        if (!stallCheckIntervalRef.current) {
+            stallCheckIntervalRef.current = setInterval(handleStallCheck, 2000);
+        }
     };
     const handlePause = () => {
         setIsPlaying(false);
         releaseWakeLock();
+        if (stallCheckIntervalRef.current) {
+            clearInterval(stallCheckIntervalRef.current);
+            stallCheckIntervalRef.current = null;
+        }
     };
 
-    const handleTimeUpdate = () => video && setProgress(video.currentTime);
+    const handleTimeUpdate = () => {
+        if (video) {
+            setProgress(video.currentTime);
+            lastTimeUpdate.current = Date.now();
+        }
+    };
     const handleDurationChange = () => video && setDuration(video.duration);
-    const handleWaiting = () => {};
+    const handleWaiting = () => {
+        lastTimeUpdate.current = Date.now();
+    };
     const handlePlaying = () => {
       resetControlsTimeout();
+      lastTimeUpdate.current = Date.now();
     };
     
     const handleFullscreenChange = () => {
@@ -593,8 +626,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
+      if (stallCheckIntervalRef.current) {
+        clearInterval(stallCheckIntervalRef.current);
+        stallCheckIntervalRef.current = null;
+      }
     };
-  }, [resetControlsTimeout, isLocked]);
+  }, [resetControlsTimeout, isLocked, isLive, playVideo]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
