@@ -178,7 +178,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 });
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        console.error(`HLS.js fatal error: ${data.type} - ${data.details}`);
                         setPlayerError(data.details);
                         switch (data.type) {
                             case Hls.default.ErrorTypes.NETWORK_ERROR:
