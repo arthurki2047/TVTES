@@ -43,12 +43,12 @@ export function RecentlyPlayed() {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-end justify-between">
+      <div className="flex items-baseline justify-between">
         <h2 className="font-headline text-3xl font-bold">Recently Watched</h2>
         <Link href="/search" className="md:hidden">
-            <div className="flex flex-col items-center -mb-2 text-muted-foreground">
-                <span className="text-xs font-bold">Quick Search</span>
-                <Search className="h-6 w-6" />
+            <div className="flex flex-col items-center text-muted-foreground">
+                <span className="text-sm font-bold">Quick Search</span>
+                <Search className="h-7 w-7" />
             </div>
         </Link>
       </div>
