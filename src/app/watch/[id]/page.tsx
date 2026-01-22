@@ -43,34 +43,6 @@ export default function WatchPage() {
       return () => clearTimeout(timer);
     }
   }, [searchParams, channelId, router]);
-  
-    useEffect(() => {
-    const enterFullscreen = async () => {
-      const player = iframeRef.current;
-      if (!player) return;
-
-      try {
-        if (player.requestFullscreen) {
-          await player.requestFullscreen();
-        } else if ((player as any).webkitRequestFullscreen) {
-          await (player as any).webkitRequestFullscreen();
-        } else if ((player as any).msRequestFullscreen) {
-          await (player as any).msRequestFullscreen();
-        }
-
-        if (screen.orientation && typeof screen.orientation.lock === 'function') {
-          await screen.orientation.lock('landscape');
-        }
-      } catch (error) {
-        console.error("Failed to enter fullscreen or lock orientation:", error);
-      }
-    };
-
-    if (channel?.type === 'iframe') {
-        const timeoutId = setTimeout(enterFullscreen, 100);
-        return () => clearTimeout(timeoutId);
-    }
-  }, [channel]);
 
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {
