@@ -737,8 +737,8 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/t1-thumb/600/400',
     thumbnailImageHint: 'live sports',
-    streamUrl: 'https://allinonereborn2238.github.io/jiotv-plus/player.html?id=174',
-    type: 'iframe',
+    streamUrl: 'http://103.182.170.32:8888/play/a01v',
+    type: 'hls',
   },
 ];
 
