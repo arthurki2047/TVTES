@@ -399,6 +399,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'star-jalsha-hd',
+    name: 'Star Jalsha HD',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/star-jalsha-hd-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/star-jalsha-hd-thumb/600/400',
+    thumbnailImageHint: 'bengali drama',
+    streamUrl: 'https://tvsen1.aynaott.com/gUX8BJmNc2yF/index.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'goldmines',
     name: 'GOLDMINES',
     category: 'Movies',
@@ -726,8 +737,8 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=54059',
-    type: 'iframe',
+    streamUrl: 'https://mrzplayin.fun/roarzon/stream.php?id=18283d4f5f13c0cac5cab4433a0ed8f0&e=.m3u8',
+    type: 'hls',
   },
   {
     id: 'star-sports-1-hindi',
