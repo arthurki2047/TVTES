@@ -1,6 +1,7 @@
 import { ChannelCard } from '@/components/channel-card';
 import { RecentlyPlayed } from '@/components/recommendations';
 import { getChannels } from '@/lib/data';
+import { SiteLogo } from '@/components/site-logo';
 
 export default function HomePage() {
   const channels = getChannels();
@@ -8,9 +9,11 @@ export default function HomePage() {
   return (
     <div className="container py-6">
       <div className="space-y-8">
-        <section>
-          <RecentlyPlayed />
-        </section>
+        <div className="md:hidden">
+            <SiteLogo />
+        </div>
+
+        <RecentlyPlayed />
 
         <section className="space-y-4">
           <h2 className="font-headline text-3xl font-bold">All Channels</h2>
