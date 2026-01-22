@@ -816,17 +816,6 @@ export const channels: Channel[] = [
     streamUrl: 'https://mumt03.tangotv.in/ALLTIMEMOVIES/tracks-v2a1/mono.m3u8',
     type: 'hls',
   },
-  {
-    id: 'test1',
-    name: 'TEST1',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/test1-logo/400/400',
-    logoImageHint: 'tv logo',
-    thumbnailUrl: 'https://picsum.photos/seed/test1-thumb/600/400',
-    thumbnailImageHint: 'abstract pattern',
-    streamUrl: 'https://allinonereborn.xyz/filex.m3u8/live2.php?id=522609',
-    type: 'hls',
-  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
