@@ -618,6 +618,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://csm-e-cesharedlsgsin2live-87593184.bln1.yospace.com/csm/extlive/runntvprd01,swastikrunn/master.m3u8',
     type: 'hls',
   },
+  {
+    id: 'oggy-tv',
+    name: 'Oggy TV',
+    category: 'Kids',
+    logoUrl: 'https://picsum.photos/seed/oggy-logo/400/400',
+    logoImageHint: 'cartoon character',
+    thumbnailUrl: 'https://picsum.photos/seed/oggy-thumb/600/400',
+    thumbnailImageHint: 'cartoon animation',
+    streamUrl: 'https://tplay.live/playlist/kids/oggy-and-the-cockroaches/index.m3u8',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
