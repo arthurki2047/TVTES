@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -61,6 +61,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const unlockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isManifestLive, setIsManifestLive] = useState(false);
   const [fitMode, setFitMode] = useState<FitMode>('contain');
+  const [playerError, setPlayerError] = useState<string | null>(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -136,6 +137,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       return;
     }
 
+    setPlayerError(null);
     setQualityLevels([]);
     setCurrentQuality(-1);
     setIsManifestLive(false);
@@ -177,19 +179,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         console.error(`HLS.js fatal error: ${data.type} - ${data.details}`);
+                        setPlayerError(data.details);
                         switch (data.type) {
                             case Hls.default.ErrorTypes.NETWORK_ERROR:
-                                // Try to recover on network errors
-                                console.log('Fatal network error encountered, trying to recover...');
                                 hls.startLoad();
                                 break;
                             case Hls.default.ErrorTypes.MEDIA_ERROR:
-                                console.log('Fatal media error encountered, trying to recover...');
                                 hls.recoverMediaError();
                                 break;
                             default:
-                                // Cannot recover
-                                console.log('Unrecoverable HLS error, destroying instance.');
                                 hls.destroy();
                                 break;
                         }
@@ -674,6 +672,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         data-channel-id={channel.id}
       />
       
+      {playerError && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-4 text-center">
+            <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
+            <h3 className="text-xl font-bold">Stream Unavailable</h3>
+            <p className="mt-2 text-muted-foreground">
+                Could not load the video for this channel.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground/60">({playerError})</p>
+        </div>
+      )}
+
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
             <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110">
