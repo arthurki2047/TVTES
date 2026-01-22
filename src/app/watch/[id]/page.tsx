@@ -17,6 +17,7 @@ export default function WatchPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const videoPlayerRef = useRef<VideoPlayerHandles>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
   const { isMuted, toggleMute } = useVideoPlayer();
@@ -42,8 +43,39 @@ export default function WatchPage() {
       return () => clearTimeout(timer);
     }
   }, [searchParams, channelId, router]);
+  
+    useEffect(() => {
+    const enterFullscreen = async () => {
+      const player = iframeRef.current;
+      if (!player) return;
+
+      try {
+        if (player.requestFullscreen) {
+          await player.requestFullscreen();
+        } else if ((player as any).webkitRequestFullscreen) {
+          await (player as any).webkitRequestFullscreen();
+        } else if ((player as any).msRequestFullscreen) {
+          await (player as any).msRequestFullscreen();
+        }
+
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          await screen.orientation.lock('landscape');
+        }
+      } catch (error) {
+        console.error("Failed to enter fullscreen or lock orientation:", error);
+      }
+    };
+
+    if (channel?.type === 'iframe') {
+        const timeoutId = setTimeout(enterFullscreen, 100);
+        return () => clearTimeout(timeoutId);
+    }
+  }, [channel]);
 
   const handleBack = useCallback(() => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture();
     }
@@ -115,6 +147,7 @@ export default function WatchPage() {
          {channel.type === 'iframe' ? (
            <>
              <iframe
+               ref={iframeRef}
                src={channel.streamUrl}
                className="h-full w-full border-0"
                allow="autoplay; encrypted-media; fullscreen"
