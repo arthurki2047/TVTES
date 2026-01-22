@@ -816,6 +816,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://mumt03.tangotv.in/ALLTIMEMOVIES/tracks-v2a1/mono.m3u8',
     type: 'hls',
   },
+   {
+    id: 'zee-cinema-usa',
+    name: 'Zee Cinema USA',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/zee-cinema-usa-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/zee-cinema-usa-thumb/600/400',
+    thumbnailImageHint: 'bollywood movie',
+    streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
