@@ -112,6 +112,7 @@ export default function WatchPage() {
                className="h-full w-full border-0"
                allow="autoplay; encrypted-media; fullscreen"
                allowFullScreen
+               sandbox="allow-forms allow-presentation allow-same-origin allow-scripts"
              ></iframe>
              <div className="absolute left-2 top-2">
                 <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={handleBack}>
