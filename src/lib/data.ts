@@ -827,6 +827,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
     type: 'hls',
   },
+  {
+    id: 'gubbare',
+    name: 'GUBBARE',
+    category: 'Kids',
+    logoUrl: 'https://picsum.photos/seed/gubbare-logo/400/400',
+    logoImageHint: 'kids logo',
+    thumbnailUrl: 'https://picsum.photos/seed/gubbare-thumb/600/400',
+    thumbnailImageHint: 'kids cartoon',
+    streamUrl: 'https://epiconvh.akamaized.net/live/gubbare/master.m3u8',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
