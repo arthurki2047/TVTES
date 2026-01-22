@@ -2,6 +2,8 @@ import { ChannelCard } from '@/components/channel-card';
 import { RecentlyPlayed } from '@/components/recommendations';
 import { getChannels } from '@/lib/data';
 import { SiteLogo } from '@/components/site-logo';
+import Link from 'next/link';
+import { Search } from 'lucide-react';
 
 export default function HomePage() {
   const channels = getChannels();
@@ -9,8 +11,14 @@ export default function HomePage() {
   return (
     <div className="container py-6">
       <div className="space-y-8">
-        <div className="md:hidden">
-            <SiteLogo />
+        <div className="flex items-center justify-between md:hidden">
+          <SiteLogo />
+          <Link href="/search">
+            <div className="flex flex-col items-center text-muted-foreground">
+              <span className="text-sm font-bold">Quick Search</span>
+              <Search className="h-7 w-7" />
+            </div>
+          </Link>
         </div>
 
         <RecentlyPlayed />

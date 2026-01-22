@@ -1,8 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import { Search } from 'lucide-react';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 import { getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
@@ -43,15 +41,7 @@ export function RecentlyPlayed() {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-baseline justify-between">
-        <h2 className="font-headline text-3xl font-bold">Recently Watched</h2>
-        <Link href="/search" className="md:hidden">
-            <div className="flex flex-col items-center text-muted-foreground">
-                <span className="text-sm font-bold">Quick Search</span>
-                <Search className="h-7 w-7" />
-            </div>
-        </Link>
-      </div>
+      <h2 className="font-headline text-3xl font-bold">Recently Watched</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {recentlyPlayedChannels.map(channel => (
             <ChannelCard key={channel.id} channel={channel} />
