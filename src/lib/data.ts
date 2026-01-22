@@ -131,7 +131,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1301/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_740.m3u8',
+    streamUrl: 'https://cdn-4.pishow.tv/live/1143/master.m3u8',
     type: 'hls',
   },
   {
