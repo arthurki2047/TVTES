@@ -1172,7 +1172,7 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
 
 export function getChannels(category?: string): Channel[] {
   if (category) {
-    return channels.filter(channel => channel.category.toLowerCase() === category);
+    return channels.filter(channel => channel.category.toLowerCase() === category.toLowerCase());
   }
   return channels;
 }
