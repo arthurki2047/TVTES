@@ -7,6 +7,7 @@ import { Search } from 'lucide-react';
 
 export default function HomePage() {
   const channels = getChannels();
+  const totalChannels = channels.length;
 
   return (
     <div className="container py-6">
@@ -24,7 +25,10 @@ export default function HomePage() {
         <RecentlyPlayed />
 
         <section className="space-y-4">
-          <h2 className="font-headline text-3xl font-bold">All Channels</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-headline text-3xl font-bold">All Channels</h2>
+            <div className="text-muted-foreground font-bold">{totalChannels} Channels</div>
+          </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {channels.map(channel => (
               <ChannelCard key={channel.id} channel={channel} listType="list" listValue="all" />
