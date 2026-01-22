@@ -1,16 +1,19 @@
 'use client';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
+import { format } from 'date-fns';
 import { getChannelById, getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, Volume2, VolumeX, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { Home, ArrowLeft, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 import { useVideoPlayer } from '@/context/video-player-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -20,8 +23,8 @@ export default function WatchPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
-  const { isMuted, toggleMute } = useVideoPlayer();
   
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const channel = getChannelById(channelId);
   
   useEffect(() => {
@@ -29,6 +32,14 @@ export default function WatchPage() {
       addRecentlyPlayed(channelId);
     }
   }, [channelId, addRecentlyPlayed]);
+
+  useEffect(() => {
+    // This effect runs only on the client, preventing hydration mismatch
+    const timer = setInterval(() => {
+      setDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // New useEffect to handle entering fullscreen from PiP restore
   useEffect(() => {
@@ -113,6 +124,8 @@ export default function WatchPage() {
     );
   }
 
+  const relatedChannels = getChannels(channel.category).filter(c => c.id !== channelId).slice(0, 7);
+
   return (
     <div className="flex h-screen flex-col bg-black">
        <div className="relative aspect-video w-full bg-black">
@@ -160,6 +173,32 @@ export default function WatchPage() {
                   <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
                 )}
             </div>
+            
+            {relatedChannels.length > 0 && (
+              <div className="mt-8">
+                <h2 className="mb-4 font-headline text-2xl font-bold text-primary">Related Channels</h2>
+                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
+                  {relatedChannels.map(relatedChannel => (
+                    <Link
+                      key={relatedChannel.id}
+                      href={`/watch/${relatedChannel.id}?category=${channel.category}`}
+                      className="group block w-24 flex-shrink-0 text-center"
+                      title={relatedChannel.name}
+                    >
+                      <Image
+                        src={relatedChannel.logoUrl}
+                        alt={relatedChannel.name}
+                        width={80}
+                        height={80}
+                        className="mx-auto h-20 w-20 rounded-full border-2 border-primary bg-card object-contain p-1 transition-all duration-300 group-hover:scale-110 group-hover:border-primary group-hover:shadow-lg group-hover:shadow-primary/20"
+                        data-ai-hint={relatedChannel.logoImageHint}
+                      />
+                       <p className="mt-2 w-full truncate text-sm text-muted-foreground">{relatedChannel.name}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {channel.type === 'iframe' && (
               <div className="mt-8 flex items-center justify-center gap-4">
@@ -175,14 +214,21 @@ export default function WatchPage() {
               </div>
             )}
             
-            <div className="mt-8 flex items-center justify-center gap-4 text-center">
-                {channel.type !== 'iframe' && (
-                  <Button variant="outline" size="lg" className="h-auto p-6" onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
-                    {isMuted ? <VolumeX className="h-8 w-8" /> : <Volume2 className="h-8 w-8" />}
-                  </Button>
+            <div className="mt-8 flex w-full items-stretch justify-between gap-4">
+                {dateTime ? (
+                    <div className="flex flex-col justify-center rounded-lg border-2 border-primary bg-card px-4 py-3 text-left">
+                        <p className="font-mono text-sm text-muted-foreground">{format(dateTime, 'eeee, PP')}</p>
+                        <p className="font-mono text-3xl font-bold text-primary">{format(dateTime, 'p')}</p>
+                    </div>
+                ) : (
+                    <div className="flex flex-col justify-center rounded-lg border-2 border-primary bg-card px-4 py-3 text-left">
+                        <Skeleton className="mb-2 h-5 w-36" />
+                        <Skeleton className="h-9 w-28" />
+                    </div>
                 )}
-                <Button size="lg" className="h-auto px-16 py-6 text-2xl font-bold" onClick={handleGoHomeAndPiP}>
-                    <Home className="mr-4 h-8 w-8" />
+
+                <Button variant="outline" size="lg" className="h-auto flex-grow border-2 border-primary text-2xl font-bold text-primary" onClick={handleGoHomeAndPiP} style={{ flexBasis: '50%' }}>
+                    <Home className="mr-3 h-8 w-8" />
                     Home
                 </Button>
             </div>
