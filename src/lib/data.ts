@@ -1159,6 +1159,17 @@ export const channels: Channel[] = [
     type: 'iframe',
   },
   {
+    id: 't2',
+    name: 'T2',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/t2-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/t2-thumb/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://allinonereborn.xyz/filex.m3u8/live2.php?id=37',
+    type: 'iframe',
+  },
+  {
     id: 'sony-max-hd',
     name: 'SONY MAX HD',
     category: 'Movies',
