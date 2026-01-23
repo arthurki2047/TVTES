@@ -454,17 +454,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'sun-bangla',
-    name: 'SUN BANGLA',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/4902/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/4901/600/400',
-    thumbnailImageHint: 'bengali drama',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-www/app/ts_live_1669.m3u8',
-    type: 'hls',
-  },
-  {
     id: 'kids-tv-india',
     name: 'KIDS TV INDIA',
     category: 'Kids',
