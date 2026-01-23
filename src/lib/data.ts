@@ -1003,6 +1003,17 @@ export const channels: Channel[] = [
     streamUrl: 'https://epiconvh.akamaized.net/live/epic/master_1080.m3u8',
     type: 'hls',
   },
+  {
+    id: 'ktv-bangla',
+    name: 'KTV BANGLA',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/ktv-bangla-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/ktv-bangla-thumb/600/400',
+    thumbnailImageHint: 'bengali show',
+    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/tribe-tv/70687f19-bc5b-40ac-84ba-1ceb1a73091a/0.m3u8',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
