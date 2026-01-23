@@ -247,11 +247,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current) {
         const newTime = videoRef.current.currentTime + amount;
-        if (!isLive) {
-            videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-        } else {
-            videoRef.current.currentTime = newTime;
-        }
+        videoRef.current.currentTime = Math.max(0, Math.min(newTime, isLive ? videoRef.current.seekable.end(videoRef.current.seekable.length - 1) : duration));
     }
     resetControlsTimeout();
   }, [resetControlsTimeout, isLive, duration]);
@@ -756,8 +752,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
         </div>
         
-        <div className="flex-1 flex items-center justify-between px-2 md:px-4" onClick={e => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+        <div className="flex-1 flex items-center justify-between px-6 md:px-8" onClick={e => e.stopPropagation()}>
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronLeft size={40} />
           </Button>
 
@@ -775,7 +771,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             </Button>
           </div>
 
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronRight size={40} />
           </Button>
         </div>
