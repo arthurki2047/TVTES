@@ -241,7 +241,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2401/600/400',
     thumbnailImageHint: 'international news',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_202.m3u8',
+    streamUrl: 'https://test-yupptv.cachefly.net/120723/smil:ddindiahd.smil/chunklist_b896000.m3u8',
     type: 'hls',
   },
   {
