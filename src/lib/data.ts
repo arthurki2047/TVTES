@@ -311,17 +311,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'sun-neo',
-    name: 'SUN NEO',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/3102/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/3101/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_3088.m3u8',
-    type: 'hls',
-  },
-  {
     id: 'dangal',
     name: 'DANGAL',
     category: 'Entertainment',
@@ -714,7 +703,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7601/600/400',
     thumbnailImageHint: 'classic movie',
-    streamUrl: 'https://amg00862-amg00862c8-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg00862-amg00862c8-amgplt0173/2dba4327-f79a-11f0-813a-e6fddb8fa482/134/1920x1080_6280560/index.m3u8',
+    streamUrl: 'https://amg00862-amg00862c8-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c8-amgplt0173/playlist.m3u8',
     type: 'hls',
   },
   {
