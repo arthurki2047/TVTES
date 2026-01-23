@@ -703,7 +703,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7501/600/400',
     thumbnailImageHint: 'south indian movie',
-    streamUrl: 'https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg00862-amg00862c9-amgplt0173/b25ff488-f7d6-11f0-a53a-826cb3b8ee18/5/1920x1080_/index.m3u',
+    streamUrl: 'https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c9-amgplt0173/playlist.m3u8',
     type: 'hls',
   },
   {
