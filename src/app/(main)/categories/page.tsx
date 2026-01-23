@@ -1,10 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { categories } from '@/lib/data';
 import { Card } from '@/components/ui/card';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function CategoriesPage() {
+  const router = useRouter();
+
   return (
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">Categories</h1>
@@ -33,6 +39,12 @@ export default function CategoriesPage() {
             </Card>
           </Link>
         ))}
+      </div>
+      <div className="mt-8 flex justify-end">
+        <Button onClick={() => router.back()} variant="outline" size="lg">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
       </div>
     </div>
   );
