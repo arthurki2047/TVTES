@@ -1114,6 +1114,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'bangla-plus',
+    name: 'Bangla Plus',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/bangla-plus-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/bangla-plus-thumb/600/400',
+    thumbnailImageHint: 'bengali show',
+    streamUrl: 'aHR0cHM6Ly9saXZlLXN0cmVhbS51dGthbGJvbmdvLmNvbS9obHMvbGl2ZWJhbmdsYXR2c3RyZWFtLm0zdTg=',
+    type: 'hls',
+  },
+  {
     id: 'joo-music',
     name: 'JOO MUSIC',
     category: 'Music',
