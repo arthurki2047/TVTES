@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject, useMemo } from 'react';
@@ -755,7 +756,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
         </div>
         
-        <div className="flex-1 flex items-center justify-between px-4 md:px-8" onClick={e => e.stopPropagation()}>
+        <div className="flex-1 flex items-center justify-between px-2 md:px-4" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
             <ChevronLeft size={40} />
           </Button>
@@ -780,7 +781,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         </div>
 
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {!isLive && duration > 0 && (
+            {isLive ? (
+                <div className="px-4 md:px-6 mb-2">
+                    <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
+                        <div className="flex items-center gap-1.5">
+                            <div className="relative flex h-2.5 w-2.5">
+                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
+                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
+                            </div>
+                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
+                        </div>
+                    </div>
+                </div>
+            ) : duration > 0 && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
                         value={[progress]}
@@ -807,15 +820,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     <div className="hidden md:flex w-24 items-center">
                         <Slider value={[volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
                     </div>
-                     {isLive && (
-                        <div className="flex items-center gap-1.5 ml-2">
-                            <div className="relative flex h-2.5 w-2.5">
-                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
-                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
-                            </div>
-                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
-                        </div>
-                    )}
                 </div>
                 <div className="flex items-center gap-1 md:gap-2">
                     {uniqueQualityLevels.length > 1 && type === 'hls' && (
