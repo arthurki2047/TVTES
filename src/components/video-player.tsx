@@ -244,9 +244,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const isLive = duration === Infinity || isManifestLive;
 
   const handleSeek = useCallback((amount: number) => {
-    if (videoRef.current && !isLive) {
+    if (videoRef.current) {
         const newTime = videoRef.current.currentTime + amount;
-        videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+        if (!isLive) {
+            videoRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+        } else {
+            videoRef.current.currentTime = newTime;
+        }
     }
     resetControlsTimeout();
   }, [resetControlsTimeout, isLive, duration]);
@@ -286,13 +290,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     navigator.mediaSession.setActionHandler('pause', mediaSessionPause);
     navigator.mediaSession.setActionHandler('nexttrack', () => onSwipe('left'));
     navigator.mediaSession.setActionHandler('previoustrack', () => onSwipe('right'));
-    if (!isLive) {
-      navigator.mediaSession.setActionHandler('seekforward', (details) => handleSeek(details.seekOffset || 30));
-      navigator.mediaSession.setActionHandler('seekbackward', (details) => handleSeek(-(details.seekOffset || 30)));
-    } else {
-      navigator.mediaSession.setActionHandler('seekforward', null);
-      navigator.mediaSession.setActionHandler('seekbackward', null);
-    }
+    navigator.mediaSession.setActionHandler('seekforward', (details) => handleSeek(details.seekOffset || 30));
+    navigator.mediaSession.setActionHandler('seekbackward', (details) => handleSeek(-(details.seekOffset || 30)));
     
     const handlePlay = () => {
       navigator.mediaSession.playbackState = 'playing';
@@ -325,7 +324,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           navigator.mediaSession.playbackState = 'none';
       }
     };
-  }, [channel, onSwipe, playVideo, isLive, handleSeek]);
+  }, [channel, onSwipe, playVideo, handleSeek]);
 
   const resetUnlockTimeout = useCallback(() => {
     if (unlockTimeoutRef.current) {
@@ -762,21 +761,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           </Button>
 
           <div className="flex items-center justify-center gap-2 md:gap-4">
-            {!isLive && (
-                <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-                    <RotateCcw size={32} />
-                </Button>
-            )}
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+                <RotateCcw size={32} />
+            </Button>
 
             <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
               {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
             </Button>
             
-            {!isLive && (
-                <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-                    <RotateCw size={32} />
-                </Button>
-            )}
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
+                <RotateCw size={32} />
+            </Button>
           </div>
 
           <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
