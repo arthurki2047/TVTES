@@ -10,7 +10,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/101/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'https://cbsn-us.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYnNuLXVzLmNic25zdHJlYW0uY2JzbmV3cy5jb20vb3V0L3YxLzU1YTg2NDhlOGYxMzRlODJhNDcwZjgzZDU2MmRlZWNhL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -21,7 +21,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/201/600/400',
     thumbnailImageHint: 'cartoon animation',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1341.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTM0MS5tM3U4',
     type: 'hls',
   },
   {
@@ -32,7 +32,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/401/600/400',
     thumbnailImageHint: 'cartoon characters',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_816.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfODE2Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -43,7 +43,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/501/600/400',
     thumbnailImageHint: 'cartoon fun',
-    streamUrl: 'https://server.zillarbarta.com/zbcatun/video.m3u8',
+    streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3piY2F0dW4vdmlkZW8ubTN1OA==',
     type: 'hls',
   },
   {
@@ -54,7 +54,7 @@ export const channels: Channel[] = [
     logoImageHint: 'discovery logo',
     thumbnailUrl: 'https://picsum.photos/seed/601/600/400',
     thumbnailImageHint: 'nature documentary',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_573.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTczLm0zdTg=',
     type: 'hls',
   },
   {
@@ -65,7 +65,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/701/600/400',
     thumbnailImageHint: 'drama series',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_756.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNzU2Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -76,7 +76,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/801/600/400',
     thumbnailImageHint: 'action cartoon',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1345.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTM0NS5tM3U4',
     type: 'hls',
   },
   {
@@ -87,7 +87,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/901/600/400',
     thumbnailImageHint: 'news report',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1735.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTczNS5tM3U4',
     type: 'hls',
   },
   {
@@ -98,7 +98,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1001/600/400',
     thumbnailImageHint: 'breaking news',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_2780.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjc4MC5tM3U4',
     type: 'hls',
   },
   {
@@ -109,7 +109,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/1101/600/400',
     thumbnailImageHint: 'drama series',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_3005.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMzAwNS5tM3U4',
     type: 'hls',
   },
   {
@@ -120,7 +120,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1201/600/400',
     thumbnailImageHint: 'live news',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_672.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNjcyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -131,7 +131,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1301/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://cdn-4.pishow.tv/live/1143/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xMTQzL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -142,7 +142,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1401/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG5iNHUud2lzZXBsYXlvdXQuY29tL0I0VV9NdXNpYy9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -153,7 +153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://9xjio.wiseplayout.com/9XM/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly85eGppb S53aXNlcGxheW91dC5jb20vOVhNL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -164,7 +164,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
     thumbnailImageHint: 'bollywood music',
-    streamUrl: 'https://9xjio.wiseplayout.com/9XJALWA/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly85eGppb S53aXNlcGxheW91dC5jb20vOVhKQUxXQS9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -175,7 +175,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/1701/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1657.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTY1Ny5tM3U4',
     type: 'hls',
   },
   {
@@ -186,7 +186,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1801/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_464.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNDY0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -197,7 +197,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/2001/600/400',
     thumbnailImageHint: 'colorful pattern',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1667.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTY2Ny5tM3U4',
     type: 'hls',
   },
   {
@@ -208,7 +208,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/2101/600/400',
     thumbnailImageHint: 'reality show',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_144.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTQ0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -219,7 +219,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2201/600/400',
     thumbnailImageHint: 'news headline',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_173.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTczLm0zdTg=',
     type: 'hls',
   },
   {
@@ -230,7 +230,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/2301/600/400',
     thumbnailImageHint: 'classic show',
-    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/40492a64c1db4a1385ba1a397d357d3a/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvNDA0OTJhNjRjMWRiNGExMzg1YmExYTM5N2QzNTdkM2EvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -241,7 +241,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2401/600/400',
     thumbnailImageHint: 'international news',
-    streamUrl: 'https://test-yupptv.cachefly.net/120723/smil:ddindiahd.smil/chunklist_b896000.m3u8',
+    streamUrl: 'aHR0cHM6Ly90ZXN0LXl1cHB0di5jYWNoZWZseS5uZXQvMTIwNzIzL3NtaWw6ZGRpbmRpYWhkLnNtaWwvY2h1bmsbGlzdF9iODk2MDAwLm0zdTg=',
     type: 'hls',
   },
   {
@@ -252,7 +252,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/2501/600/400',
     thumbnailImageHint: 'indian music',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_250.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjUwLm0zdTg=',
     type: 'hls',
   },
   {
@@ -263,7 +263,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/2601/600/400',
     thumbnailImageHint: 'pop music',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_248.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjQ4Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -274,7 +274,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/2701/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_1477.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTQ3Ny5tM3U4',
     type: 'hls',
   },
   {
@@ -285,7 +285,7 @@ export const channels: Channel[] = [
     logoImageHint: 'animal logo',
     thumbnailUrl: 'https://picsum.photos/seed/2801/600/400',
     thumbnailImageHint: 'wildlife',
-    streamUrl: 'https://vodzong.mjunoon.tv:8087/streamtest/Animal-Planet-158-3/live/158-3M/chunks.m3u8?nimblesessionid=585587407',
+    streamUrl: 'aHR0cHM6Ly92b2R6b25nLm1qdW5vb24udHY6ODA4Ny9zdHJlYW10ZXN0L0FuaW1hbC1QbGFuZXQtMTU4LTMvbGl2ZS8xNTgtM00vY2h1bmtzLm0zdTg/bmltYmxlc2Vzc2lvbmlkPTU4NTU4NzQwNw==',
     type: 'hls',
   },
   {
@@ -296,7 +296,7 @@ export const channels: Channel[] = [
     logoImageHint: 'history logo',
     thumbnailUrl: 'https://picsum.photos/seed/2901/600/400',
     thumbnailImageHint: 'historical document',
-    streamUrl: 'https://amg01448-amg01448c16-samsung-in-3495.playouts.now.amagi.tv/playlist/amg01448-samsungindia-historychannelenglish-samsungin/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTQ0OC1hbWcwMTQ0OGMxNi1zYW1zdW5nLWluLTM0OTUucGxheW91dHMubm93LmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAxNDQ4LXNhbXN1bmdpbmRpYS1oaXN0b3J5Y2hhbm5lbGVuZ2xpc2gtc2Ftc3VuZ2luL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -307,7 +307,7 @@ export const channels: Channel[] = [
     logoImageHint: 'farming logo',
     thumbnailUrl: 'https://picsum.photos/seed/3001/600/400',
     thumbnailImageHint: 'agriculture field',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_583.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTgzLm0zdTg=',
     type: 'hls',
   },
   {
@@ -318,7 +318,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/3201/600/400',
     thumbnailImageHint: 'indian drama',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_701.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNzAxLm0zdTg=',
     type: 'hls',
   },
   {
@@ -329,7 +329,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/3301/600/400',
     thumbnailImageHint: 'action movie',
-    streamUrl: 'https://cdnb4u.wiseplayout.com/B4U_Kadak/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG5iNHUud2lzZXBsYXlvdXQuY29tL0I0VV9LYWRhay9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -340,7 +340,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/3401/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_204.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjA0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -351,7 +351,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/dd-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali show',
-    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/7ff57cc9046b4c188b51a0d506f36e7f/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvN2ZmNTdjYzkwNDZiNGMxODhiNTFhMGQ1MDZmMzZlN2YvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -362,7 +362,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/3501/600/400',
     thumbnailImageHint: 'world news',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_412.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNDEyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -373,7 +373,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/3601/600/400',
     thumbnailImageHint: 'kids cartoon',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_559.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTU5Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -384,7 +384,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/3701/600/400',
     thumbnailImageHint: 'bengali drama',
-    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=54161',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovYW1pdC9ob3N0LnBocD9pZD01NDE2MQ==',
     type: 'hls',
   },
   {
@@ -395,7 +395,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/4001/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://cdn-2.pishow.tv/live/1459/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tMi5waXNob3cudHYvbGl2ZS8xNDU5L21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -406,7 +406,7 @@ export const channels: Channel[] = [
     logoImageHint: 'cartoon character',
     thumbnailUrl: 'https://picsum.photos/seed/4101/600/400',
     thumbnailImageHint: 'cartoon character',
-    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-209611/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIwOTYxMS9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
@@ -417,7 +417,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://images.unsplash.com/photo-1758789887939-dea05e990b48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXJ0b29uJTIwc2hvd3xlbnwwfHx8fDE3Njg5MjE0NDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
     thumbnailImageHint: 'cartoon show',
-    streamUrl: 'https://vglivessai.akamaized.net/ptnr-yupptv/title-Green_Gold_India/eu/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/675a37e5-f517-434e-adae-d25ae1706340/48c68bfd-7883-4b85-9d1b-1548b66174a5/1.m3u8',
+    streamUrl: 'aHR0cHM6Ly92Z2xpdmVzc2FpLmFrYW1haXplZC5uZXQvcHRuci15dXBwdHYvdGl0bGVfR3JlZW5fR29sZF9JbmRpYS9ldS92MS9tYW5pZmVzdC82MTFkNzliMTFiNzdlMmY1NzE5MzRmZDgwY2ExNDEzNDUzNzcyYWM3LzY3NWEzN2U1LWY1MTctNDM0ZS1hZGFlLWQyNWFlMTcwNjM0MC80OGM2OGJmZC03ODgzLTRiODUtOWQxYi0xNTQ4YjY2MTc0YTUvMS5tM3U4',
     type: 'hls',
   },
   {
@@ -428,7 +428,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/4401/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/yrf-music/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYXN0ZXIvMGJjOGU4Mzc2YmQ4NDE3YTFiNjc2MTEzOGFhNDFjMjZjNzMwOTMxMi95cmYtbXVzaWMvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -439,7 +439,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/4501/600/400',
     thumbnailImageHint: 'bollywood music',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/shemaroo-filmigaane/2b476436-5d57-472b-9b9d-58ce64878076/1.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWZpbG1pZ2FhbmUvMmI0NzY0MzYtNWQ1Ny00NzJiLTliOWQtNThjZTY0ODc4MDc2LzEubTN1OA==',
     type: 'hls',
   },
   {
@@ -450,7 +450,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/5001/600/400',
     thumbnailImageHint: 'nursery rhymes',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/kids-tv-india-nursery-rhymes-and-baby-songs/6ad12dcb-7c9b-47e0-ad73-cee522f38393/2.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2tpZHMtdHYtaW5kaWEtbnVyc2VyeS1yaHltZXMtYW5kLWJhYnktc29uZ3MvNmFkMTJkY2ItN2M5Yi00N2UwLWFkNzMtY2VlNTIyZjM4MzkzLzIubTN1OA==',
     type: 'hls',
   },
   {
@@ -461,7 +461,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/5201/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/2e31d831f08640ff92f65003bdc89991/index_5.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvMmUzMWQ4MzFmMDg2NDBmZjkyZjY1MDAzYmRjODk5OTEvaW5kZXhfNS5tM3U4',
     type: 'hls',
   },
   {
@@ -472,7 +472,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/5301/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://cdn-4.pishow.tv/live/1293/1293_0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xMjkzLzEyOTNfMC5tM3U4',
     type: 'hls',
   },
   {
@@ -483,7 +483,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/5401/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/zoom-tv/d81b6cd3-f51a-434c-9a6c-73d1a69bbfc0/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3pvb20tdHYvZDgxYjZjZDMtZjUxYS00MzRjLTlhNmMtNzNkMWE2OWJiZmMwLzAubTN1OA==',
     type: 'hls',
   },
   {
@@ -494,7 +494,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/5601/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/shemaroo-bollywood/ca553735-e908-4f75-a8cd-705c3c22fcb2/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWJvbGx5d29vZC9jYTU1MzczNS1lOTA4LTRmNzUtYThjZC03MDVjM2MyMmZjYjIvMC5tM3U4',
     type: 'hls',
   },
   {
@@ -505,7 +505,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/6101/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'https://amg13779-amg13779c1-amgplt0173.playout.now3.amagi.tv/ts-eu-w1-n2/playlist/amg13779-amg13779c1-amgplt0173/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcxMzc3OS1hbWcxMzc3OWMxLWFtZ3BsdDAxNzMucGxheW91dC5ub3czLmFtYWdpLnR2L3RzLWV1LXcxLW4yL3BsYXlsaXN0L2FtZzEzNzc5LWFtZzEzNzc5YzEtYW1ncGx0MDE3My9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -516,7 +516,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/6201/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://cdn-2.pishow.tv/live/1461/1461_1.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tMi5waXNob3cudHYvbGl2ZS8xNDYxLzE0NjFfMS5tM3U4',
     type: 'hls',
   },
   {
@@ -527,7 +527,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/mtunes-thumb/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://ca1.buximedia.com/itv/indian/tracks-v1a1/mono.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYTEuYnV4aW1lZGlhLmNvbS9pdnYvaW5kaWFuL3RyYWNrcy12MWExL21vbm8ubTN1OA==',
     type: 'hls',
   },
   {
@@ -538,7 +538,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/south-station-thumb/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://cc-yw7ztecy8do3q.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-yw7ztecy8do3q/SS_IN.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy15dzd6dGVjeThkbzNxLmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MteXc3enRlY3k4ZG8zcS9TU19JTi5tM3U4',
     type: 'hls',
   },
   {
@@ -549,7 +549,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/hollywood-desi-thumb/600/400',
     thumbnailImageHint: 'hollywood movie',
-    streamUrl: 'https://cc-u6hadnoh0u6td.akamaized.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-u6hadnoh0u6td/c28d872b-db55-4bdd-ab20-ed2e84b650ec/1.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy11NmhhZG5vaDB1NnRoLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy11NmhhZG5vaDB1NnRoL2MyOGQ4NzJiLWRiNTUtNGJkZC1hYjIwLWVkMmU4NGI2NTBlYy8xLm0zdTg=',
     type: 'hls',
   },
   {
@@ -560,7 +560,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/fresh-movies-thumb/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'https://amg02411-vvsfilms-amg02411c1-lg-ca-9654.playouts.now.amagi.tv/playlist/amg02411-vvsfilms-freshmovies-lgca/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMjQxMS12dnNmaWxtcy1hbWcwMjQxMWMxLWxnLWNhLTk2NTQucGxheW91dHMubm93LmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAyNDExLXZ2c2ZpbG1zLWZyZXNobW92aWVzLWxnY2EvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -571,7 +571,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sci-fi logo',
     thumbnailUrl: 'https://picsum.photos/seed/filmrise-sci-fi-thumb/600/400',
     thumbnailImageHint: 'science fiction',
-    streamUrl: 'https://d3f4oii5n0oeqi.cloudfront.net/11701/88814517/hls/master.m3u8?includeAssetTags=true&ads.xumo_channelId=88814517',
+    streamUrl: 'aHR0cHM6Ly9kM2Y0b2lpNW4wbWVxaS5jbG91ZGZyb250Lm5ldC8xMTcwMS84ODgxNDUxNy9obHMvbWFzdGVyLm0zdTg/aW5jbHVkZUFzc2V0VGFncz10cnVlJmFkcy54dW1vX2NoYW5uZWxJZD04ODgxNDUxNw==',
     type: 'hls',
   },
   {
@@ -582,7 +582,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/cine-life-thumb/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg00308-magnoliapicture-cinelife-tcl/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tdXcyLXByb2QudHN2Mi5hbWFnaS50di9saW5lYXIvYW1nMDAzMDgtbWFnbm9saWFwaWN0dXJlLWNpbmVsaWZlLXRjbC9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -593,7 +593,7 @@ export const channels: Channel[] = [
     logoImageHint: 'stories logo',
     thumbnailUrl: 'https://picsum.photos/seed/swastik-stories-thumb/600/400',
     thumbnailImageHint: 'mythological story',
-    streamUrl: 'https://csm-e-cesharedlsgsin2live-87593184.bln1.yospace.com/csm/extlive/runntvprd01,swastikrunn/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jc20tZS1jZXNoYXJlZGxzZ3NpbjJsaXZlLTg3NTkzMTg0LmJsbnEueW9zcGFjZS5jb20vY3NtL2V4dGxpdmUvcnVubnR2cHJkMDEsc3dhc3Rpa3J1bm4vbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -604,7 +604,7 @@ export const channels: Channel[] = [
     logoImageHint: 'cartoon character',
     thumbnailUrl: 'https://picsum.photos/seed/motu-patlu-thumb/600/400',
     thumbnailImageHint: 'cartoon animation',
-    streamUrl: 'https://tplay.live/playlist/kids/motu-patlu/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly90cGxheS5saXZlL3BsYXlsaXN0L2tpZHMvbW90dS1wYXRsdS9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
@@ -615,7 +615,7 @@ export const channels: Channel[] = [
     logoImageHint: 'cartoon character',
     thumbnailUrl: 'https://picsum.photos/seed/oggy-thumb/600/400',
     thumbnailImageHint: 'cartoon animation',
-    streamUrl: 'https://tplay.live/playlist/kids/oggy-and-the-cockroaches/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly90cGxheS5saXZlL3BsYXlsaXN0L2tpZHMvb2dneS1hbmQtdGhlLWNvY2tyb2FjaGVzL2luZGV4Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -626,7 +626,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/bengali-beats-thumb/600/400',
     thumbnailImageHint: 'bengali music',
-    streamUrl: 'https://tplay.live/tplay/playout/209587/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly90cGxheS5saXZlL3RwbGF5L3BsYXlvdXQvMjA5NTg3L21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -637,7 +637,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7001/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'https://airtelapp.shemaroo.com/shemarooChumbakTV/smil:shemarooChumbakTVadp.smil/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9haXJ0ZWxhcHAuc2hlbWFyb28uY29tL3NoZW1hcm9vQ2h1bWJha1RWL3NtaWw6c2hlbWFyb29DaHVtYmFrVFZhZHAuc21pbC9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -648,7 +648,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7101/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/bollywood-hd/cda542b6-c3b4-4b5e-a578-76e41ac35e0d/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2JvbGx5d29vZC1oZC9jZGE1NDJiNi1jM2I0LTRiNWUtYTU3OC03NmU0MWFjMzVlMGQvMC5tM3U4',
     type: 'hls',
   },
   {
@@ -659,7 +659,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7201/600/400',
     thumbnailImageHint: 'hollywood movie',
-    streamUrl: 'https://ml-pull-hwc.myco.io/MixTV/hls/MixTV_H264-1080p.m3u8?pkg_media=video&pkg_hm=index.m3u8&pkg_svc=1&pkg_vcodec=avc1',
+    streamUrl: 'aHR0cHM6Ly9tbC1wdWxsLWh3Yy5teWNvLmlvL01peFRWL2hscy9NaXhUVl9IMjY0LTEwODBwLm0zdTg/cGtnX21lZGlhPXZpZGVvJnBrZ19obT1pbmRleC5tM3U4JnBrZ19zdmM9MSZwa2dfdmNvZGVjPWF2YzE=',
     type: 'hls',
   },
   {
@@ -670,7 +670,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/7301/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://tvsen3.aynaott.com/u3LkNQ7UHhFX/tracks-v1a1/mono.ts.m3u8',
+    streamUrl: 'aHR0cHM6Ly90dnNlbjMuYXluYW90dC5jb20vdTNMa05RN1VIaFhYL3RyYWNrcy12MWExL21vbm8udHMubTN1OA==',
     type: 'hls',
   },
   {
@@ -681,7 +681,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7401/600/400',
     thumbnailImageHint: 'bengali movie',
-    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-209627/tracks-v1a1/mono.ts.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIwOTYyNy90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
   {
@@ -692,7 +692,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7501/600/400',
     thumbnailImageHint: 'south indian movie',
-    streamUrl: 'https://amg00862-amg00862c9-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c9-amgplt0173/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDg2Mi1hbWcwMDg2MmM5LWFtZ3BsdDAxNzMucGxheW91dC5ub3czLmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAwODYyLWFtZzAwODYyYzktYW1ncGx0MDE3My9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -703,7 +703,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7601/600/400',
     thumbnailImageHint: 'classic movie',
-    streamUrl: 'https://amg00862-amg00862c8-amgplt0173.playout.now3.amagi.tv/playlist/amg00862-amg00862c8-amgplt0173/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDg2Mi1hbWcwMDg2MmM4LWFtZ3BsdDAxNzMucGxheW91dC5ub3czLmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAwODYyLWFtZzAwODYyYzgtYW1ncGx0MDE3My9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -714,7 +714,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7701/600/400',
     thumbnailImageHint: 'dubbed movie',
-    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-209593/tracks-v1a1/mono.ts.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIwOTU5My90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
   {
@@ -725,7 +725,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7801/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://mumt03.tangotv.in/GOLDMINESBOLLYWOOD/tracks-v2a1/mono.m3u8',
+    streamUrl: 'aHR0cHM6Ly9tdW10MDMudGFuZ290di5pbi9HT0xETUlORVNOT0xMWVdPT0QvdHJhY2tzLXYyYTEvbW9uby5tM3U4',
     type: 'hls',
   },
   {
@@ -736,7 +736,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/8001/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/bollywood-hd/e244378f-e1bb-4270-94d4-17664a8add18/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2JvbGx5d29vZC1oZC9lMjQ0Mzc4Zi1lMWJiLTQyNzAtOTRkNC0xNzY2NGE4YWRkMTgvMC5tM3U4',
     type: 'hls',
   },
   {
@@ -747,7 +747,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/8101/600/400',
     thumbnailImageHint: 'classic bollywood',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/bollywood-classic/cdee3e72-23d7-4ee0-bafa-b1a62832ee85/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2JvbGx5d29vZC1jbGFzc2ljL2NkZWUzZTcyLTIzZDctNGVlMC1iYWZhLWIxYTYyODMyZWU4NS8wLm0zdTg=',
     type: 'hls',
   },
   {
@@ -758,7 +758,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/8201/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://cc-r5hupcym5oehh.akamaized.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-r5hupcym5oehh/80f92e6f-445d-4395-bdee-3935bd971df1/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy1yNWh1cGN5bTVvZWhoLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy1yNWh1cGN5bTVvZWhoLzgwZjkyZTZmLTQ0NWQtNDM5NS1iZGVlLTNkMzViZDk3MWRmMS8wLm0zdTg=',
     type: 'hls',
   },
   {
@@ -769,7 +769,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/8301/600/400',
     thumbnailImageHint: 'movie club',
-    streamUrl: 'https://pb-dkdpz5so0aqqr.akamaized.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/pb-dkdpz5so0aqqr/6b5488a1-98a1-4d73-9c83-a39bd33799d6/3.m3u8',
+    streamUrl: 'aHR0cHM6Ly9wYi1ka2RwenVzbDBhcXFyLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9wYi1ka2RwenVzbDBhcXFyLzZiNTQ4OGExLTk4YTEtNGQ3My05YzgzLWEzOWJkMzM3OTlkNi8zLm0zdTg=',
     type: 'hls',
   },
   {
@@ -780,7 +780,7 @@ export const channels: Channel[] = [
     logoImageHint: 'classic movies',
     thumbnailUrl: 'https://picsum.photos/seed/8401/600/400',
     thumbnailImageHint: 'classic movie',
-    streamUrl: 'https://mumt03.tangotv.in/ALLTIMEMOVIES/tracks-v2a1/mono.m3u8',
+    streamUrl: 'aHR0cHM6Ly9tdW10MDMudGFuZ290di5pbi9BTExUSU1FTU9WSUVTL3RyYWNrcy12MmExL21vbm8ubTN1OA==',
     type: 'hls',
   },
   {
@@ -791,7 +791,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/gubbare-thumb/600/400',
     thumbnailImageHint: 'kids cartoon',
-    streamUrl: 'https://epiconvh.akamaized.net/live/gubbare/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lcGljb252aC5ha2FtYWl6ZWQubmV0L2xpdmUvZ3ViYmFyZS9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -802,7 +802,7 @@ export const channels: Channel[] = [
     logoImageHint: 'science logo',
     thumbnailUrl: 'https://picsum.photos/seed/pbs-science-thumb/600/400',
     thumbnailImageHint: 'science documentary',
-    streamUrl: 'https://amg02333-pbs-amg02333c13-samsung-au-6858.playouts.now.amagi.tv/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMjMzMy1wYnMtYW1nMDIzMzNjMTMtc2Ftc3VuZy1hdS02ODU4LnBsYXlvdXRzLm5vdy5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -813,7 +813,7 @@ export const channels: Channel[] = [
     logoImageHint: 'nature logo',
     thumbnailUrl: 'https://picsum.photos/seed/nature-time-thumb/600/400',
     thumbnailImageHint: 'nature documentary',
-    streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg00090-blueantllc-lovenature-au-samsungau/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tdXcyLXByb2QudHN2Mi5hbWFnaS50di9saW5lYXIvYW1nMDAwOTAtYmx1ZWFudGxsYy1sb3ZlbmF0dXJlLWF1LXNhbXN1bmdhdS9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -824,7 +824,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/akaash-aath-thumb/600/400',
     thumbnailImageHint: 'bengali show',
-    streamUrl: 'https://cdn-4.pishow.tv/live/969/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS85NjkvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -835,7 +835,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/orange-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali show',
-    streamUrl: 'https://cdn-4.pishow.tv/live/1499/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xNDk5L21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -846,7 +846,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/zb-cinema-thumb/600/400',
     thumbnailImageHint: 'bengali movie',
-    streamUrl: 'https://server.zillarbarta.com/ZBCINEMA/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL1pCQ0lORU1BL2luZGV4Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -857,7 +857,7 @@ export const channels: Channel[] = [
     logoImageHint: 'spiritual logo',
     thumbnailUrl: 'https://picsum.photos/seed/om-bangla-thumb/600/400',
     thumbnailImageHint: 'spiritual program',
-    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-210715/tracks-v1a1/mono.ts.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIxMDcxNS90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
   {
@@ -868,7 +868,7 @@ export const channels: Channel[] = [
     logoImageHint: 'devotional music',
     thumbnailUrl: 'https://picsum.photos/seed/kirtan-tv-thumb/600/400',
     thumbnailImageHint: 'kirtan performance',
-    streamUrl: 'https://live20.bozztv.com/giatvplayout7/giatv-209618/tracks-v1a1/mono.ts.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIwOTYxOC90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
   {
@@ -879,7 +879,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/news-18-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali news',
-    streamUrl: 'https://n18syndication.akamaized.net/bpk-tv/News18_Bangla_NW18_MOB/output01/News18_Bangla_NW18_MOB-audio_108035_ben=108000-video=2297600.m3u8',
+    streamUrl: 'aHR0cHM6Ly9uMThzeW5kaWNhdGlvbi5ha2FtYWl6ZWQubmV0L2Jway10di9OZXdzMThfQmFuZ2xhX05XMTlfTU9CL291dHB1dDAxL05ld3MxOF9CYW5nbGFfTlcxOF9NT0ItYXVkaW9fMTA4MDM1X2Jlbj0xMDgwMDAtdmlkZW89MjI5NzYwMC5tM3U4',
     type: 'hls',
   },
   {
@@ -890,7 +890,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/b4u-movies-thumb/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG5iNHUud2lzZXBsYXlvdXQuY29tL0I0VV9Nb3ZpZXMvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -901,7 +901,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/abzy-movies-thumb/600/400',
     thumbnailImageHint: 'movie poster',
-    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/db8d4eca72d64748a00d0631debf542d/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvZGI4ZDRlY2E3MmQ2NDc0OGEwMGQwNjMxZGViZjU0MmQvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -912,7 +912,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/and-flix-thumb/600/400',
     thumbnailImageHint: 'hollywood movie',
-    streamUrl: 'https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lZGdlMy1tb2JsaXZlLnl1cHBjZG4ubmV0L2RybS9zbWlsOm5mbGl4ZHJtLnNtaWwvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -923,7 +923,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/showbox-thumb/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://epiconvh.akamaized.net/live/showbox/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lcGljb252aC5ha2FtYWl6ZWQubmV0L2xpdmUvc2hvd2JveC9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -934,7 +934,7 @@ export const channels: Channel[] = [
     logoImageHint: 'discovery logo',
     thumbnailUrl: 'https://picsum.photos/seed/discovery-asia-thumb/600/400',
     thumbnailImageHint: 'asia documentary',
-    streamUrl: 'https://cdn1.skygo.mn/live/disk1/Discovery_Asia/HLSv3-FTA/Discovery_Asia-avc1_3000000=67-mp4a_256000_eng=12.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4xLnNreWdvLm1uL2xpdmUvZGlzazEvRGlzY292ZXJ5X0FzaWEvSExTdjMtRlRBL0Rpc2NvdmVyeV9Bc2lhLWF2YzFfMzAwMDAwMD02Ny1tcDRhXzI1NjAwMF9lbmc9MTIubTN1OA==',
     type: 'hls',
   },
   {
@@ -945,7 +945,7 @@ export const channels: Channel[] = [
     logoImageHint: 'wildlife logo',
     thumbnailUrl: 'https://picsum.photos/seed/wild-flix-thumb/600/400',
     thumbnailImageHint: 'wildlife documentary',
-    streamUrl: 'https://cc-qgrxgp51645lw.akamaized.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-qgrxgp51645lw/b3aadad2-3155-413c-aff0-b77eda8404bc/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy1xZ3J4Z3A1MTY0NWx3LmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy1xZ3J4Z3A1MTY0NWx3L2IzYWFkYWQyLTMxNTUtNDEzYy1hZmYwLWI3N2VkYTg0MDRiYy8wLm0zdTg=',
     type: 'hls',
   },
   {
@@ -956,7 +956,7 @@ export const channels: Channel[] = [
     logoImageHint: 'planet earth',
     thumbnailUrl: 'https://picsum.photos/seed/love-planet-thumb/600/400',
     thumbnailImageHint: 'earth documentary',
-    streamUrl: 'https://amg01821-lovetvchannels-lovetheplanetuksamsung-samsunguk.amagi.tv/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -967,7 +967,7 @@ export const channels: Channel[] = [
     logoImageHint: 'earth logo',
     thumbnailUrl: 'https://picsum.photos/seed/bbc-earth-thumb/600/400',
     thumbnailImageHint: 'nature documentary',
-    streamUrl: 'https://d3u3pfhhvuad9k.cloudfront.net/playlist/amg00793-bbcstudios-bbcearta-lgus/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3UzcGZoaHZ1YWQ5ay5jbG91ZGZyb250Lm5ldC9wbGF5bGlzdC9hbWcwMDc5My1iYmNzdHVkaW9zLWJiY2VhcnRhLWxndXMvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -978,7 +978,7 @@ export const channels: Channel[] = [
     logoImageHint: 'food logo',
     thumbnailUrl: 'https://picsum.photos/seed/food-food-thumb/600/400',
     thumbnailImageHint: 'cooking show',
-    streamUrl: 'https://mumt03.tangotv.in/FOODFOOD/tracks-v2a1/mono.m3u8',
+    streamUrl: 'aHR0cHM6Ly9tdW10MDMudGFuZ290di5pbi9GT09ERk9PRC90cmFja3MtdjJhMS9tb25vLm0zdTg=',
     type: 'hls',
   },
   {
@@ -989,7 +989,7 @@ export const channels: Channel[] = [
     logoImageHint: 'epic logo',
     thumbnailUrl: 'https://picsum.photos/seed/epic-thumb/600/400',
     thumbnailImageHint: 'historical epic',
-    streamUrl: 'https://epiconvh.akamaized.net/live/epic/master_1080.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lcGljb252aC5ha2FtYWl6ZWQubmV0L2xpdmUvZXBpYy9tYXN0ZXJfMTA4MC5tM3U4',
     type: 'hls',
   },
   {
@@ -1000,7 +1000,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/ktv-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali show',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/tribe-tv/70687f19-bc5b-40ac-84ba-1ceb1a73091a/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3RyaWJlLXR2LzcwNjg3ZjE5LWJjNWItNDBhYy04NGJhLTFjZWIxYTczMDkxYS8wLm0zdTg=',
     type: 'hls',
   },
   {
@@ -1011,7 +1011,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/zee-bangla-5-thumb/600/400',
     thumbnailImageHint: 'bengali show',
-    streamUrl: 'https://previewsecgire.akamaized.net/v1/manifest/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/pr_live_ire_hd/d1eeb036-fb5e-4cfb-af63-da4a1e371218/0.m3u8',
+    streamUrl: 'aHR0cHM6Ly9wcmV2aWV3c2VjZ2lyZS5ha2FtYWl6ZWQubmV0L3YxL21hbmlmZXN0L2EwZDAwNzMxMmJmZDk5YzQ3Zjc2Yjc3YWUyNmIxY2NkYWFlNzZjYjEvcHJfbGl2ZV9pcmVfaGQvZDFlZWIwMzYtZmI1ZS00Y2ZiLWFmNjMtZGE0YTFlMzcxMjE4LzAubTN1OA==',
     type: 'hls',
   },
   {
@@ -1022,7 +1022,7 @@ export const channels: Channel[] = [
     logoImageHint: 'comedy logo',
     thumbnailUrl: 'https://picsum.photos/seed/kings-comedy-thumb/600/400',
     thumbnailImageHint: 'comedy show',
-    streamUrl: 'https://cc-ejrl4az77gvl4.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ejrl4az77gvl4/OTM/OTM_KINGS_OF_COMEDY_SAMSUNG/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6NzdlZ3ZsNC5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci8zNzIyYzYwYTgxNWMxOTlkOWMwZWYzNmM1YjczZGE2OGE2MmIwOWQxL2NjLWVqcmw0YXo3N2Vndmw0L09UTS9PVE1fS0lOR1NfT0ZfQ09NRURZX1NBTlNVTkcvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -1033,7 +1033,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/alright-thumb/600/400',
     thumbnailImageHint: 'web series',
-    streamUrl: 'https://csm-e-cesharedlsgsin2live-87593135.bln1.yospace.com/csm/extlive/runntvprd01,alrightrunn.m3u8?yo.up=https://ruskmedia.cdn.runn.tv/ruskmedia/stream/alrght/manifest/',
+    streamUrl: 'aHR0cHM6Ly9jc20tZS1jZXNoYXJlZGxzZ3NpbjJsaXZlLTg3NTkzMTM1LmJsbnEueW9zcGFjZS5jb20vY3NtL2V4dGxpdmUvcnVubnR2cHJkMDEsYWxyaWdodHJ1bm4ubTN1OD95by51cD1odHRwczovL3J1c2ttZWRpYS5jZG4ucnVubi50di9ydXNrbWVkaWEvc3RyZWFtL2FscmdodC9tYW5pZmVzdC8=',
     type: 'hls',
   },
   {
@@ -1044,7 +1044,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/nh-bollygold-thumb/600/400',
     thumbnailImageHint: 'bollywood classic',
-    streamUrl: 'https://csm-e-runntvprdlive-eb.runnads.runn.media/csm/extlive/runntvprd01,nhbollygoldottplay.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jc20tZS1ydW5udHZwcmRsaXZlLWViLnJ1bm5hZHMucnVubi5tZWRpYS9jc20vZXh0bGl2ZS9ydW5udHZwcmQwMSxuaGJvbGx5Z29sZG90dHBsYXkubTN1OA==',
     type: 'hls',
   },
   {
@@ -1055,7 +1055,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/runn-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://e07b61696a8e4d6d9bbcb94b15fc8b4e.mediatailor.ap-south-1.amazonaws.com/v1/master/d367f9b863a7a04827f71ecab4cbeeb11f78a827/cinshf-airtel/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lMDdiNjE2OTZhOGU0ZDZkOWJiY2I5NGIxNWZjOGI0ZS5tZWRpYXRhaWxvci5hcC1zb3V0aC0xLmFtYXpvbmF3cy5jb20vdjEvbWFzdGVyL2QzNjdmOWI4NjNhN2EwNDgyN2Y3MWVjYWI0Y2JlZWIxMWY3OGE4MjcvY2luc2hmLWFpcnRlbC9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -1066,7 +1066,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/dhamaka-movies-thumb/600/400',
     thumbnailImageHint: 'action movie',
-    streamUrl: 'https://cdn-1.pishow.tv/live/235/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tMS5waXNob3cudHYvbGl2ZS8yMzUvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -1077,7 +1077,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/xumo-thumb/600/400',
     thumbnailImageHint: 'movie poster',
-    streamUrl: 'https://dbrb49pjoymg4.cloudfront.net/v1/master/3fec3e5cac39a52b2132f9c66c83dae043dc17d4/prod_default_xumo-ams-aws/master.m3u8?ads.xumo_channelId=99991756',
+    streamUrl: 'aHR0cHM6Ly9kYnJiNDlwam95bWc0LmNsb3VkZnJvbnQubmV0L3YxL21hc3Rlci8zZmVjM2U1Y2FjMzlhNTJiMjEzMmY5YzY2YzgzYWFlMDQzZGMxN2Q0L3Byb2RfZGVmYXVsdF94dW1vLWFtcy1hd3MvbWFzdGVyLm0zdTg/YWRzLnh1bW9fY2hhbm5lbElkPTk5OTkxNzU2',
     type: 'hls',
   },
   {
@@ -1088,7 +1088,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/goldmines-2-thumb/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://cdn-2.pishow.tv/live/1460/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tMi5waXNob3cudHYvbGl2ZS8xNDYwL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -1099,7 +1099,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/sony-kal-thumb/600/400',
     thumbnailImageHint: 'tv series',
-    streamUrl: 'https://e77bef9b.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctY2FfU29ueUtBTF9ITFM/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9lNzc2ZWY5Yi53dXJsLmNvbS9tYXN0ZXIvZjM2ZDI1ZTdlNTJmMmJhOGQ3ZTU2ZWI4NTljNjM2NTYzMjE0ZjU0MS9URWN0LVkyRmZVMm9ueUtBTF9ITFMvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -1110,7 +1110,7 @@ export const channels: Channel[] = [
     logoImageHint: 'mystery logo',
     thumbnailUrl: 'https://picsum.photos/seed/mystry-tv-thumb/600/400',
     thumbnailImageHint: 'mystery show',
-    streamUrl: 'https://amg00841-aenetworksukane-mysterytv-samsunguk-mggb7.amagi.tv/ts-eu-w1-n2/playlist/amg00841-aenetworksukane-mysterytv-samsunguk/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay1tZ2diNy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -1121,7 +1121,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/joo-music-thumb/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://livecdn.live247stream.com/joomusic/tv/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9saXZlY2RuLmxpdmUyNDdzdHJlYW0uY29tL2pvb211c2ljL3R2L3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   // Sony Channels and iframe channels at the bottom as requested
@@ -1133,7 +1133,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/301/600/400',
     thumbnailImageHint: 'red carpet',
-    streamUrl: 'https://mini.allinonereborn.fun/jiotv-inn/app/ts_live_551.m3u8',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTUxLm0zdTg=',
     type: 'hls',
   },
   {
@@ -1221,7 +1221,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/star-jalsha-hd-thumb/600/400',
     thumbnailImageHint: 'bengali drama',
-    streamUrl: 'https://tvsen1.aynaott.com/gUX8BJmNc2yF/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly90dnNlbjEuYXluYW90dC5jb20vZ1VYOEJKbU5jMnlGL2luZGV4Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -1232,7 +1232,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://mrzplayin.fun/roarzon/stream.php?id=18283d4f5f13c0cac5cab4433a0ed8f0&e=.m3u8',
+    streamUrl: 'aHR0cHM6Ly9tcnpwbGF5aW4uZnVuL3JvYXJ6b24vc3RyZWFtLnBocD9pZD0xODI4M2Q0ZjVmMTNjMGNhYzVjYWI0NDMzYTBlZDhmMCZlPS5tM3U4',
     type: 'hls',
   },
   {
@@ -1254,7 +1254,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/zee-cinema-usa-thumb/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://amg17931-zee-amg17931c5-kogan-au-9521.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg17931-asiatvusaltdfast-zeecinema-koganau/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcxNzkzMS16ZWUtYW1nMTc5MzFjNS1rb2dhbi1hdS05NTIxLnBsYXlvdXRzLm5vdy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcxNzkzMS1hc2lhdHZ1c2FsdGRmYXN0LXplZWNpbmVtYS1rb2dhbmF1L3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
 ];

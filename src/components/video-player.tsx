@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject, useMemo } from 'react';
 import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -70,6 +70,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
+
+  const decodedSrc = useMemo(() => {
+    if (!src) return '';
+    try {
+      const decoded = atob(src);
+      if (decoded.startsWith('http')) {
+        return decoded;
+      }
+    } catch (e) {
+      // Not a valid base64 string, so use it as is.
+    }
+    return src;
+  }, [src]);
   
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
@@ -164,7 +177,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     liveDurationInfinity: true,
                 });
                 hlsRef.current = hls;
-                hls.loadSource(src);
+                hls.loadSource(decodedSrc);
                 hls.attachMedia(video);
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
                      if (data.details) {
@@ -197,7 +210,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 // Fallback to native HLS support if hls.js is not supported
-                video.src = src;
+                video.src = decodedSrc;
                 playVideo(video);
             }
         });
@@ -206,7 +219,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           hlsRef.current.destroy();
           hlsRef.current = null;
         }
-        video.src = src;
+        video.src = decodedSrc;
         playVideo(video);
     }
     
@@ -226,7 +239,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         }
     }
 
-  }, [src, type, playVideo]);
+  }, [decodedSrc, type, playVideo]);
 
   const isLive = duration === Infinity || isManifestLive;
 
