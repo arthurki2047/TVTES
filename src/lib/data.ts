@@ -1139,13 +1139,13 @@ export const channels: Channel[] = [
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
-  { name: 'News', slug: 'news', imageUrl: 'https://picsum.photos/seed/cat-news/400/500', imageHint: 'news broadcast' },
-  { name: 'Kids', slug: 'kids', imageUrl: 'https://picsum.photos/seed/cat-kids/400/500', imageHint: 'cartoon characters' },
-  { name: 'Entertainment', slug: 'entertainment', imageUrl: 'https://picsum.photos/seed/cat-ent/400/500', imageHint: 'movie set' },
-  { name: 'Movies', slug: 'movies', imageUrl: 'https://picsum.photos/seed/cat-movies/400/500', imageHint: 'film reel' },
-  { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/400/500', imageHint: 'live concert' },
-  { name: 'Sports', slug: 'sports', imageUrl: 'https://picsum.photos/seed/cat-sports/400/500', imageHint: 'stadium lights' },
-  { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/400/500', imageHint: 'nature documentary' },
+  { name: 'News', slug: 'news', imageUrl: 'https://picsum.photos/seed/cat-news/400/400', imageHint: 'news broadcast' },
+  { name: 'Kids', slug: 'kids', imageUrl: 'https://picsum.photos/seed/new-cartoon/400/400', imageHint: 'cartoon characters' },
+  { name: 'Entertainment', slug: 'entertainment', imageUrl: 'https://picsum.photos/seed/cat-ent/400/400', imageHint: 'movie set' },
+  { name: 'Movies', slug: 'movies', imageUrl: 'https://picsum.photos/seed/cat-movies/400/400', imageHint: 'film reel' },
+  { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/400/400', imageHint: 'live concert' },
+  { name: 'Sports', slug: 'sports', imageUrl: 'https://picsum.photos/seed/cat-sports/400/400', imageHint: 'stadium lights' },
+  { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/400/400', imageHint: 'nature documentary' },
 ];
 
 export function getChannels(category?: string): Channel[] {
