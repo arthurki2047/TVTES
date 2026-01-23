@@ -1114,6 +1114,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'mystry-tv',
+    name: 'MYSTRY TV',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/mystry-tv-logo/400/400',
+    logoImageHint: 'mystery logo',
+    thumbnailUrl: 'https://picsum.photos/seed/mystry-tv-thumb/600/400',
+    thumbnailImageHint: 'mystery show',
+    streamUrl: 'https://amg00841-aenetworksukane-mysterytv-samsunguk-mggb7.amagi.tv/ts-eu-w1-n2/playlist/amg00841-aenetworksukane-mysterytv-samsunguk/playlist.m3u8',
+    type: 'hls',
+  },
+  {
     id: 'joo-music',
     name: 'JOO MUSIC',
     category: 'Music',
