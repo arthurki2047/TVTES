@@ -256,6 +256,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'indian-music',
+    name: 'Indian Music',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/indian-music-logo/400/400',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/indian-music-thumb/600/400',
+    thumbnailImageHint: 'indian music',
+    streamUrl: 'aHR0cHM6Ly9ycG4zLmJvenp0di5jb20vZHZyZmwwNy91c2hiYS10NC90cmFja3MtdjFhMS9tb25vLm0zdTg=',
+    type: 'hls',
+  },
+  {
     id: 'mtv',
     name: 'MTV',
     category: 'Music',
