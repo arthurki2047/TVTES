@@ -12,7 +12,7 @@ export default function CategoriesPage() {
         {categories.map(category => (
           <Link key={category.slug} href={`/categories/${category.slug}`} className="group block">
             <Card className="overflow-hidden rounded-lg transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1">
-              <div className="relative aspect-[4/5] w-full">
+              <div className="relative aspect-square w-full">
                 <Image
                   src={category.imageUrl}
                   alt={`An abstract image representing the ${category.name} category`}
