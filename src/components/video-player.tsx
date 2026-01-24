@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isManifestLive, setIsManifestLive] = useState(false);
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [playerError, setPlayerError] = useState<string | null>(null);
+  const [isPiPSupported, setIsPiPSupported] = useState(false);
+  const [isInPiP, setIsInPiP] = useState(false);
   
   const lastTimeUpdate = useRef(Date.now());
   const stallCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -112,6 +114,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   useEffect(() => {
     setIsClient(true);
     setPlayerRef(videoRef);
+    if (typeof document !== 'undefined' && 'pictureInPictureEnabled' in document) {
+      setIsPiPSupported(document.pictureInPictureEnabled);
+    }
     return () => {
       setPlayerRef(null);
     };
@@ -414,6 +419,16 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
 
+  const togglePictureInPicture = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (document.pictureInPictureElement) {
+        document.exitPictureInPicture().catch(err => console.error("Could not exit PiP:", err));
+    } else if (isPiPSupported && videoRef.current) {
+        videoRef.current.requestPictureInPicture().catch(err => console.error("Could not enter PiP:", err));
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout, isPiPSupported]);
+
   useImperativeHandle(ref, () => ({
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
@@ -539,12 +554,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     };
 
+    const handleEnterPiP = () => setIsInPiP(true);
+    const handleLeavePiP = () => setIsInPiP(false);
+
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
+    video.addEventListener('enterpictureinpicture', handleEnterPiP);
+    video.addEventListener('leavepictureinpicture', handleLeavePiP);
     
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
@@ -566,6 +586,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('enterpictureinpicture', handleEnterPiP);
+      video.removeEventListener('leavepictureinpicture', handleLeavePiP);
       
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
@@ -695,7 +717,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
         </div>
         
-        <div className="flex-1 flex items-center justify-between px-6 md:px-8" onClick={e => e.stopPropagation()}>
+        <div className="flex-1 flex items-center justify-around px-6 md:px-8" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronLeft size={40} />
           </Button>
@@ -720,22 +742,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         </div>
 
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {isLive ? (
-                <div className="px-4 md:px-6 mb-2">
-                    <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
-                        <div className="flex items-center gap-1.5">
-                            <div className="relative flex h-2.5 w-2.5">
-                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
-                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
-                            </div>
-                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
-                        </div>
-                    </div>
-                </div>
-            ) : duration > 0 && (
+            {(isLive || duration > 0) && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
-                        value={[progress]}
+                        value={[isLive ? duration : progress]}
                         max={duration}
                         onValueChange={(value) => {
                             if (videoRef.current) videoRef.current.currentTime = value[0];
@@ -743,7 +753,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         className="w-full"
                     />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
+                      {isLive ? (
+                        <div className="flex items-center gap-1.5">
+                            <div className="relative flex h-2.5 w-2.5">
+                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
+                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
+                            </div>
+                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
+                        </div>
+                      ) : (
                         <span>{formatTime(progress)}</span>
+                      )}
                         <span>{formatTime(duration)}</span>
                     </div>
                 </div>
@@ -835,6 +855,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                 </div>
                             </PopoverContent>
                         </Popover>
+                    )}
+                    {isPiPSupported && (
+                        <Button variant="ghost" size="icon" onClick={togglePictureInPicture}>
+                            <PictureInPicture2 />
+                        </Button>
                     )}
                     <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
                         {isFullscreen ? <Minimize /> : <Maximize />}
