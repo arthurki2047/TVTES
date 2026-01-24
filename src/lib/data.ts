@@ -256,17 +256,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'indian-music',
-    name: 'Indian Music',
-    category: 'Music',
-    logoUrl: 'https://picsum.photos/seed/indian-music-logo/400/400',
-    logoImageHint: 'music logo',
-    thumbnailUrl: 'https://picsum.photos/seed/indian-music-thumb/600/400',
-    thumbnailImageHint: 'indian music',
-    streamUrl: 'aHR0cHM6Ly9ycG4zLmJvenp0di5jb20vZHZyZmwwNy91c2hiYS10NC90cmFja3MtdjFhMS9tb25vLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'hindi-music',
     name: 'HINDI MUSIC',
     category: 'Music',
@@ -313,7 +302,7 @@ export const channels: Channel[] = [
   {
     id: 'history-tv-18-hd',
     name: 'HISTORY TV18 HD',
-    category: 'Infotainment',
+    category: 'Educational',
     logoUrl: 'https://picsum.photos/seed/2902/400/400',
     logoImageHint: 'history logo',
     thumbnailUrl: 'https://picsum.photos/seed/2901/600/400',
@@ -588,7 +577,7 @@ export const channels: Channel[] = [
   {
     id: 'swastik-stories',
     name: 'Swastik Stories',
-    category: 'Entertainment',
+    category: 'Devotional',
     logoUrl: 'https://picsum.photos/seed/swastik-stories-logo/400/400',
     logoImageHint: 'stories logo',
     thumbnailUrl: 'https://picsum.photos/seed/swastik-stories-thumb/600/400',
@@ -797,7 +786,7 @@ export const channels: Channel[] = [
   {
     id: 'pbs-science',
     name: 'PBS SCIENCE',
-    category: 'Infotainment',
+    category: 'Educational',
     logoUrl: 'https://picsum.photos/seed/pbs-science-logo/400/400',
     logoImageHint: 'science logo',
     thumbnailUrl: 'https://picsum.photos/seed/pbs-science-thumb/600/400',
@@ -852,7 +841,7 @@ export const channels: Channel[] = [
   {
     id: 'om-bangla',
     name: 'OM BANGLA',
-    category: 'Entertainment',
+    category: 'Devotional',
     logoUrl: 'https://picsum.photos/seed/om-bangla-logo/400/400',
     logoImageHint: 'spiritual logo',
     thumbnailUrl: 'https://picsum.photos/seed/om-bangla-thumb/600/400',
@@ -863,7 +852,7 @@ export const channels: Channel[] = [
   {
     id: 'kirtan-tv',
     name: 'KIRTAN TV',
-    category: 'Music',
+    category: 'Devotional',
     logoUrl: 'https://picsum.photos/seed/kirtan-tv-logo/400/400',
     logoImageHint: 'devotional music',
     thumbnailUrl: 'https://picsum.photos/seed/kirtan-tv-thumb/600/400',
@@ -973,7 +962,7 @@ export const channels: Channel[] = [
   {
     id: 'food-food',
     name: 'FOOD FOOD',
-    category: 'Infotainment',
+    category: 'Lifestyle',
     logoUrl: 'https://picsum.photos/seed/food-food-logo/400/400',
     logoImageHint: 'food logo',
     thumbnailUrl: 'https://picsum.photos/seed/food-food-thumb/600/400',
@@ -984,7 +973,7 @@ export const channels: Channel[] = [
   {
     id: 'epic',
     name: 'EPIC',
-    category: 'Infotainment',
+    category: 'Educational',
     logoUrl: 'https://picsum.photos/seed/epic-logo/400/400',
     logoImageHint: 'epic logo',
     thumbnailUrl: 'https://picsum.photos/seed/epic-thumb/600/400',
@@ -1267,6 +1256,9 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
   { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/400/400', imageHint: 'live concert' },
   { name: 'Sports', slug: 'sports', imageUrl: 'https://picsum.photos/seed/cat-sports/400/400', imageHint: 'stadium lights' },
   { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/400/400', imageHint: 'nature documentary' },
+  { name: 'Devotional', slug: 'devotional', imageUrl: 'https://picsum.photos/seed/cat-devotional/400/400', imageHint: 'spiritual temple' },
+  { name: 'Educational', slug: 'educational', imageUrl: 'https://picsum.photos/seed/cat-educational/400/400', imageHint: 'books library' },
+  { name: 'Lifestyle', slug: 'lifestyle', imageUrl: 'https://picsum.photos/seed/cat-lifestyle/400/400', imageHint: 'healthy living' },
 ];
 
 export function getChannels(category?: string): Channel[] {
