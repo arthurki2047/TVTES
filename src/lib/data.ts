@@ -1214,17 +1214,6 @@ export const channels: Channel[] = [
     type: 'iframe',
   },
   {
-    id: 'willow-hd',
-    name: 'Willow HD',
-    category: 'Sports',
-    logoUrl: 'https://picsum.photos/seed/3902/400/400',
-    logoImageHint: 'sports logo',
-    thumbnailUrl: 'https://picsum.photos/seed/3901/600/400',
-    thumbnailImageHint: 'cricket sport',
-    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovYW1pdC9ob3N0LnBocD9pZD01ODExNw==',
-    type: 'iframe',
-  },
-  {
     id: 'star-jalsha-hd',
     name: 'Star Jalsha HD',
     category: 'Entertainment',
