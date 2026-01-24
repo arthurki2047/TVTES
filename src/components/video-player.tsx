@@ -1,8 +1,8 @@
 
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, RefObject, useMemo } from 'react';
-import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, useMemo } from 'react';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,6 @@ interface VideoPlayerProps {
 }
 
 export interface VideoPlayerHandles {
-  requestPictureInPicture: () => Promise<void>;
   getVideoElement: () => HTMLVideoElement | null;
   requestFullscreen: () => void;
 }
@@ -45,7 +44,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const playerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<any>(null);
   const wakeLockRef = useRef<any>(null);
-  const { setPlayerRef, setPipPlayerRef, isMuted, toggleMute: contextToggleMute, setPipChannelId, setPipHlsRef } = useVideoPlayer();
+  const { setPlayerRef, isMuted, toggleMute: contextToggleMute } = useVideoPlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const previousVolume = useRef(1);
@@ -114,45 +113,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     setIsClient(true);
     setPlayerRef(videoRef);
     return () => {
-      // Don't clear the ref if we are in PiP mode, so the context can still control it.
-      if (document.pictureInPictureElement !== videoRef.current) {
-        setPlayerRef(null);
-      }
+      setPlayerRef(null);
     };
   }, [setPlayerRef]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    const handleEnterPiP = () => {
-      setPipPlayerRef(videoRef);
-      if (hlsRef.current && setPipHlsRef) {
-        setPipHlsRef(hlsRef as RefObject<any>);
-      }
-       if (video.dataset.channelId && setPipChannelId) {
-        setPipChannelId(video.dataset.channelId);
-      }
-    };
-
-    video.addEventListener('enterpictureinpicture', handleEnterPiP);
-
-    return () => {
-      if (video) {
-        video.removeEventListener('enterpictureinpicture', handleEnterPiP);
-      }
-    };
-  }, [setPipPlayerRef, setPipChannelId, setPipHlsRef]);
-
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Don't re-initialize if it's the video in PiP
-    if (document.pictureInPictureElement === video) {
-      return;
-    }
 
     setPlayerError(null);
     setQualityLevels([]);
@@ -225,10 +192,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     
     return () => {
-        if (video && document.pictureInPictureElement === video) {
-            return;
-        }
-
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
@@ -450,31 +413,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       resetControlsTimeout();
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
-  
-  const enterPiP = useCallback(async () => {
-    if (videoRef.current && document.pictureInPictureEnabled && !videoRef.current.disablePictureInPicture) {
-       if (!document.pictureInPictureElement) {
-           await videoRef.current.requestPictureInPicture();
-       }
-    }
-  }, []);
 
   useImperativeHandle(ref, () => ({
-    requestPictureInPicture: enterPiP,
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
   }));
-
-  const togglePiP = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    if (document.pictureInPictureElement) {
-        document.exitPictureInPicture();
-    } else {
-        videoRef.current?.requestPictureInPicture().catch(console.error);
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout]);
 
   const handleNextChannel = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -892,11 +835,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                 </div>
                             </PopoverContent>
                         </Popover>
-                    )}
-                    {isClient && document.pictureInPictureEnabled && (
-                        <Button variant="ghost" size="icon" onClick={togglePiP}>
-                            <PictureInPicture2 />
-                        </Button>
                     )}
                     <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
                         {isFullscreen ? <Minimize /> : <Maximize />}

@@ -6,7 +6,6 @@ import { Home, ListVideo, Search, Star, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SiteLogo } from './site-logo';
 import { Button } from './ui/button';
-import { useVideoPlayer } from '@/context/video-player-context';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -19,22 +18,6 @@ const navItems = [
 export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { playerRef } = useVideoPlayer();
-
-  const handleHomeClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname.startsWith('/watch/') && playerRef?.current && document.pictureInPictureEnabled && !playerRef.current.disablePictureInPicture) {
-      e.preventDefault();
-      try {
-        if (document.pictureInPictureElement !== playerRef.current) {
-          await playerRef.current.requestPictureInPicture();
-        }
-      } catch (err) {
-        console.error("PiP request failed", err);
-      } finally {
-        router.push('/');
-      }
-    }
-  };
 
 
   return (
@@ -48,7 +31,7 @@ export function BottomNav() {
                 const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
                 return (
                     <Button key={item.label} variant={isActive ? "secondary" : "ghost"} asChild>
-                        <Link href={item.href} onClick={item.href === '/' ? handleHomeClick : undefined}>
+                        <Link href={item.href}>
                             <item.icon className="mr-2 h-4 w-4" />
                             {item.label}
                         </Link>
@@ -68,7 +51,6 @@ export function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={item.href === '/' ? handleHomeClick : undefined}
                 className={cn(
                   'flex flex-col items-center gap-1 p-2 text-muted-foreground transition-colors hover:text-primary',
                   isActive && 'text-primary'

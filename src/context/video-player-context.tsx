@@ -1,96 +1,30 @@
 'use client';
 
 import React, { createContext, useContext, useState, RefObject, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface VideoPlayerContextType {
   playerRef: RefObject<HTMLVideoElement> | null;
   setPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
-  pipPlayerRef: RefObject<HTMLVideoElement> | null;
-  setPipPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
-  pipHlsRef: RefObject<any> | null;
-  setPipHlsRef: (ref: RefObject<any> | null) => void;
   isMuted: boolean;
   toggleMute: () => void;
-  pipChannelId: string | null;
-  setPipChannelId: (id: string | null) => void;
 }
 
 const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
-  const [pipPlayerRef, setPipPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
-  const [pipHlsRef, setPipHlsRef] = useState<RefObject<any> | null>(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [pipChannelId, setPipChannelId] = useState<string | null>(null);
-  const isSwitchingChannelsRef = React.useRef(false);
 
   const toggleMute = useCallback(() => {
-    const video = playerRef?.current || pipPlayerRef?.current;
+    const video = playerRef?.current;
     if (video) {
         video.muted = !video.muted;
     }
-  }, [playerRef, pipPlayerRef]);
-
-  // This effect handles closing an old PiP window when a new player is created on a watch page.
-  useEffect(() => {
-    if (playerRef && pipPlayerRef && playerRef.current !== pipPlayerRef.current) {
-      if (document.pictureInPictureElement === pipPlayerRef.current) {
-        isSwitchingChannelsRef.current = true;
-        document.exitPictureInPicture().catch((err) => {
-            console.error("Failed to exit Picture-in-Picture mode automatically.", err);
-        });
-      }
-    }
-  }, [playerRef, pipPlayerRef]);
-
-  // This effect handles user exiting PiP.
-  useEffect(() => {
-    const videoElement = pipPlayerRef?.current;
-    if (!videoElement) return;
-
-    const handleLeavePiP = () => {
-      // Always destroy the HLS instance of the old PiP player to prevent dual audio.
-      if (pipHlsRef?.current) {
-        pipHlsRef.current.destroy();
-      }
-
-      // Check if we are programmatically closing PiP to switch channels.
-      if (isSwitchingChannelsRef.current) {
-        isSwitchingChannelsRef.current = false; // Reset the flag
-      } else {
-        // This is a heuristic. When a user closes the PiP window via the 'X' button,
-        // the browser often tears down the video element, setting its readyState to 0.
-        // When restoring by clicking the "back to tab" icon, the video element is
-        // kept alive and its readyState remains greater than 0.
-        const isLikelyRestore = videoElement && videoElement.readyState > 0 && !videoElement.ended;
-        
-        // Only navigate if it's a restore action.
-        if (isLikelyRestore && pipChannelId) {
-          router.push(`/watch/${pipChannelId}?fullscreen=true`);
-        }
-      }
-      
-      // Clean up the PiP ref once it's no longer in PiP, regardless of the action.
-      setPipPlayerRef(null);
-      setPipHlsRef(null);
-      setPipChannelId(null);
-    };
-
-    videoElement.addEventListener('leavepictureinpicture', handleLeavePiP);
-
-    return () => {
-      if (videoElement) {
-        videoElement.removeEventListener('leavepictureinpicture', handleLeavePiP);
-      }
-    };
-  }, [pipPlayerRef, pipHlsRef, pipChannelId, router]);
+  }, [playerRef]);
   
   // Effect to sync mute state from video element to context
   useEffect(() => {
-    const video = playerRef?.current || pipPlayerRef?.current;
+    const video = playerRef?.current;
     if (!video) return;
 
     const handleVolumeChange = () => {
@@ -111,11 +45,11 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
             video.removeEventListener('volumechange', handleVolumeChange);
         }
     };
-  }, [playerRef, pipPlayerRef, isMuted]);
+  }, [playerRef, isMuted]);
 
 
   return (
-    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, pipPlayerRef, setPipPlayerRef, isMuted, toggleMute, pipChannelId, setPipChannelId, pipHlsRef, setPipHlsRef }}>
+    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, isMuted, toggleMute }}>
       {children}
     </VideoPlayerContext.Provider>
   );

@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Home, ArrowLeft, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
-import { useVideoPlayer } from '@/context/video-player-context';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function WatchPage() {
@@ -41,26 +40,9 @@ export default function WatchPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // New useEffect to handle entering fullscreen from PiP restore
-  useEffect(() => {
-    const shouldEnterFullscreen = searchParams.get('fullscreen') === 'true';
-    if (shouldEnterFullscreen) {
-      const timer = setTimeout(() => {
-        videoPlayerRef.current?.requestFullscreen();
-        // Clean up the URL to avoid re-triggering on refresh/back
-        router.replace(`/watch/${channelId}`, { scroll: false });
-      }, 300); // Small delay to ensure component is ready
-
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams, channelId, router]);
-
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
-    }
-    if (document.pictureInPictureElement) {
-      document.exitPictureInPicture();
     }
     router.push('/');
   }, [router]);
@@ -71,15 +53,7 @@ export default function WatchPage() {
     }
   }, [channel, router]);
 
-  const handleGoHomeAndPiP = async () => {
-    if (videoPlayerRef.current) {
-      try {
-        await videoPlayerRef.current.requestPictureInPicture();
-      } catch (error) {
-        console.error("Failed to enter Picture-in-Picture mode", error);
-        // Still navigate home even if PiP fails
-      }
-    }
+  const handleGoHome = () => {
     router.push('/');
   };
 
@@ -227,7 +201,7 @@ export default function WatchPage() {
                     </div>
                 )}
 
-                <Button variant="outline" size="lg" className="h-auto flex-grow border-2 border-primary text-2xl font-bold text-primary" onClick={handleGoHomeAndPiP} style={{ flexBasis: '50%' }}>
+                <Button variant="outline" size="lg" className="h-auto flex-grow border-2 border-primary text-2xl font-bold text-primary" onClick={handleGoHome} style={{ flexBasis: '50%' }}>
                     <Home className="mr-3 h-8 w-8" />
                     Home
                 </Button>
