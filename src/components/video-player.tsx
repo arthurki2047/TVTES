@@ -160,15 +160,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
                   hls.on(Hls.default.Events.ERROR, (event, data) => {
                       if (data.fatal) {
-                          console.error(`HLS.js fatal error: type: ${data.type}, details: ${data.details}`);
-                          if (retryAttempt.current < maxRetries) {
-                              retryAttempt.current++;
-                              const delay = Math.pow(2, retryAttempt.current) * 1000;
-                              setTimeout(() => {
-                                  initializeHls();
-                              }, delay);
+                          if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
+                              if (retryAttempt.current < maxRetries) {
+                                  retryAttempt.current++;
+                                  const delay = Math.pow(2, retryAttempt.current) * 1000;
+                                  setTimeout(() => {
+                                      initializeHls();
+                                  }, delay);
+                              } else {
+                                  setPlayerError(`Stream failed to load after multiple retries. Please check the stream source. Details: ${data.details}.`);
+                              }
+                          } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR) {
+                              if (hlsRef.current) {
+                                  hlsRef.current.recoverMediaError();
+                              }
                           } else {
-                              setPlayerError(`Stream failed to load after multiple retries: ${data.details}.`);
+                             setPlayerError(`An unrecoverable error occurred: ${data.details}`);
                           }
                       }
                   });
