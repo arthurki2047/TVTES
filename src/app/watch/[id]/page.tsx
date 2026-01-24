@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,6 +26,19 @@ export default function WatchPage() {
   const [dateTime, setDateTime] = useState<Date | null>(null);
   const channel = getChannelById(channelId);
   
+  const decodedStreamUrl = useMemo(() => {
+    if (!channel || channel.type !== 'iframe') return channel?.streamUrl || '';
+    try {
+      const decoded = atob(channel.streamUrl);
+      if (decoded.startsWith('http')) {
+        return decoded;
+      }
+    } catch (e) {
+      // Not a valid base64 string, so use it as is.
+    }
+    return channel.streamUrl;
+  }, [channel]);
+
   useEffect(() => {
     if (channelId) {
       addRecentlyPlayed(channelId);
@@ -107,7 +120,7 @@ export default function WatchPage() {
            <>
              <iframe
                ref={iframeRef}
-               src={channel.streamUrl}
+               src={decodedStreamUrl}
                className="h-full w-full border-0"
                allow="autoplay; encrypted-media; fullscreen"
                allowFullScreen
@@ -175,14 +188,11 @@ export default function WatchPage() {
             )}
 
             {channel.type === 'iframe' && (
-              <div className="mt-8 flex items-center justify-center gap-4">
-                <Button variant="outline" size="lg" className="h-auto p-4" onClick={() => switchChannel('prev')}>
+              <div className="absolute inset-x-0 bottom-1/2 flex translate-y-1/2 items-center justify-between px-2">
+                <Button variant="ghost" size="icon" onClick={() => switchChannel('prev')} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110">
                   <ChevronLeft className="h-8 w-8" />
                 </Button>
-                <Button variant="outline" size="lg" className="h-auto p-4 opacity-50 cursor-not-allowed" title="Playback for this stream is controlled by the provider.">
-                  <Play className="h-8 w-8" />
-                </Button>
-                <Button variant="outline" size="lg" className="h-auto p-4" onClick={() => switchChannel('next')}>
+                <Button variant="ghost" size="icon" onClick={() => switchChannel('next')} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110">
                   <ChevronRight className="h-8 w-8" />
                 </Button>
               </div>

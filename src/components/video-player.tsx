@@ -255,8 +255,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     navigator.mediaSession.setActionHandler('pause', mediaSessionPause);
     navigator.mediaSession.setActionHandler('nexttrack', () => onSwipe('left'));
     navigator.mediaSession.setActionHandler('previoustrack', () => onSwipe('right'));
-    navigator.mediaSession.setActionHandler('seekforward', (details) => handleSeek(details.seekOffset || 30));
-    navigator.mediaSession.setActionHandler('seekbackward', (details) => handleSeek(-(details.seekOffset || 30)));
+    
+    if (!isLive) {
+        navigator.mediaSession.setActionHandler('seekforward', (details) => handleSeek(details.seekOffset || 30));
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => handleSeek(-(details.seekOffset || 30)));
+    } else {
+        navigator.mediaSession.setActionHandler('seekforward', null);
+        navigator.mediaSession.setActionHandler('seekbackward', null);
+    }
     
     const handlePlay = () => {
       navigator.mediaSession.playbackState = 'playing';
@@ -289,7 +295,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           navigator.mediaSession.playbackState = 'none';
       }
     };
-  }, [channel, onSwipe, playVideo, handleSeek]);
+  }, [channel, onSwipe, playVideo, handleSeek, isLive]);
 
   const resetUnlockTimeout = useCallback(() => {
     if (unlockTimeoutRef.current) {
@@ -717,8 +723,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
         </div>
         
-        <div className="flex-1 flex items-center justify-around px-6 md:px-8" onClick={e => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
+        <div className="flex-1 flex items-center justify-between px-6 md:px-8" onClick={e => e.stopPropagation()}>
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronLeft size={40} />
           </Button>
 
@@ -736,13 +742,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             </Button>
           </div>
 
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronRight size={40} />
           </Button>
         </div>
 
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {(isLive || duration > 0) && (
+            {(duration > 0) && (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider
                         value={[isLive ? duration : progress]}
