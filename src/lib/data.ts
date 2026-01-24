@@ -1124,6 +1124,17 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9saXZlY2RuLmxpdmUyNDdzdHJlYW0uY29tL2pvb211c2ljL3R2L3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
+  {
+    id: 'enterr-10-bangla',
+    name: 'Enterr 10 Bangla',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/enterr-10-bangla-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/enterr-10-bangla-thumb/600/400',
+    thumbnailImageHint: 'bengali show',
+    streamUrl: 'aHR0cHM6Ly9saXZlLWJhbmdsYS5ha2FtYWl6ZWQubmV0L2xpdmVhYnIvcGxheWxpc3QubTN1OA==',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'sony',
