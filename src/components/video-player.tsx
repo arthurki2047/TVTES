@@ -174,22 +174,32 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     setCurrentQuality(data.level)
                 });
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
+                    console.error(`HLS.js error: type: ${data.type}, details: ${data.details}, fatal: ${data.fatal}`);
+                    
                     if (data.details === 'bufferStalledError' && video) {
                         video.currentTime = video.currentTime; // Nudge the player
                         return;
                     }
                     if (data.fatal) {
-                        setPlayerError(data.details);
+                        setPlayerError(`${data.details}`); // Keep it simple for the user
                         switch (data.type) {
                             case Hls.default.ErrorTypes.NETWORK_ERROR:
                                 // try to recover network error
+                                console.log('HLS.js: trying to recover from network error...');
                                 hls.startLoad();
                                 break;
                             case Hls.default.ErrorTypes.MEDIA_ERROR:
+                                console.log('HLS.js: trying to recover from media error...');
                                 hls.recoverMediaError();
                                 break;
+                            case Hls.default.ErrorTypes.OTHER_ERROR:
+                                // This includes levelParsingError. Attempt to recover by restarting the load.
+                                console.log('HLS.js: trying to recover from other error...');
+                                hls.startLoad();
+                                break;
                             default:
-                                // cannot recover
+                                // If it is some other fatal error, we cannot recover.
+                                console.log('HLS.js: unrecoverable error, destroying instance.');
                                 hls.destroy();
                                 break;
                         }
@@ -898,4 +908,5 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
 VideoPlayer.displayName = 'VideoPlayer';
 
+    
     
