@@ -1114,17 +1114,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'ctvn',
-    name: 'CTVN',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/ctvn-logo/400/400',
-    logoImageHint: 'tv logo',
-    thumbnailUrl: 'https://picsum.photos/seed/ctvn-thumb/600/400',
-    thumbnailImageHint: 'live show',
-    streamUrl: 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvLWtMQWNtckNtS00=',
-    type: 'iframe',
-  },
-  {
     id: 'khushboo-bangla',
     name: 'KHUSHBOO BANGLA',
     category: 'Entertainment',
@@ -1177,6 +1166,17 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/hi-dost-thumb/600/400',
     thumbnailImageHint: 'tv show',
     streamUrl: 'aHR0cHM6Ly9jZG4tMS5waXNob3cudHYvbGl2ZS8yMjQvbWFzdGVyLm0zdTg=',
+    type: 'hls',
+  },
+  {
+    id: 'discovery-hd',
+    name: 'Discovery HD',
+    category: 'Infotainment',
+    logoUrl: 'https://picsum.photos/seed/discovery-hd-logo/400/400',
+    logoImageHint: 'discovery logo',
+    thumbnailUrl: 'https://picsum.photos/seed/discovery-hd-thumb/600/400',
+    thumbnailImageHint: 'nature documentary',
+    streamUrl: 'aHR0cHM6Ly9mbDMxLm1vdmVvbmpveS5jb20vRGlzY292ZXJ5X0NoYW5uZWwvdHJhY2tzLXYxYTEvbW9uby50cy5tM3U4',
     type: 'hls',
   },
   // Sony Channels and iframe channels at the bottom as requested
@@ -1322,6 +1322,17 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bengali show',
     streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvN2ZmNTdjYzkwNDZiNGMxODhiNTFhMGQ1MDZmMzZlN2YvaW5kZXgubTN1OA==',
     type: 'hls',
+  },
+  {
+    id: 'ctvn',
+    name: 'CTVN',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/ctvn-logo/400/400',
+    logoImageHint: 'tv logo',
+    thumbnailUrl: 'https://picsum.photos/seed/ctvn-thumb/600/400',
+    thumbnailImageHint: 'live show',
+    streamUrl: 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvLWtMQWNtckNtS00=',
+    type: 'iframe',
   },
 ];
 
