@@ -162,6 +162,8 @@ export const channels: Channel[] = [
     category: 'Music',
     logoUrl: 'https://picsum.photos/seed/1602/400/400',
     logoImageHint: 'bollywood music',
+    thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
+    thumbnailImageHint: 'bollywood music',
     streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyLzl4LWphbHdhLzNiNTQ2MDk4LWNjNzItNDYzZi1hMWY3LTQ4ODBkMDgxMWVmZS8zLm0zdTg=',
     type: 'hls',
   },
@@ -239,7 +241,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2401/600/400',
     thumbnailImageHint: 'international news',
-    streamUrl: 'aHR0cHM6Ly90ZXN0LXl1cHB0di5jYWNoZWZseS5uZXQvMTIwNzIzL3NtaWw6ZGRpbmRpYWhkLnNtaWwvY2h1bmsbGlzdF9iODk2MDAwLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly90ZXN0LXl1cHB0di5jYWNoZWZseS5uZXQvMTIwNzIzL3NtaWw6ZGRpbmRpYWhkLnNtaWwvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -1265,17 +1267,6 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bollywood movie',
     streamUrl: 'aHR0cHM6Ly9hbWcxNzkzMS16ZWUtYW1nMTc5MzFjNS1rb2dhbi1hdS05NTIxLnBsYXlvdXRzLm5vdy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcxNzkzMS1hc2lhdHZ1c2FsdGRmYXN0LXplZWNpbmVtYS1rb2dhbmF1L3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
-  },
-  {
-    id: 't2',
-    name: 'T2',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/t2-logo/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/t2-thumb/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovZmlsZXgubTN1OC9saXZlMi5waHA/aWQ9Mzc=',
-    type: 'iframe',
   },
 ];
 
