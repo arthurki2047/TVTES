@@ -267,6 +267,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'hindi-music',
+    name: 'HINDI MUSIC',
+    category: 'Music',
+    logoUrl: 'https://picsum.photos/seed/hindi-music-logo/400/400',
+    logoImageHint: 'music logo',
+    thumbnailUrl: 'https://picsum.photos/seed/hindi-music-thumb/600/400',
+    thumbnailImageHint: 'music video',
+    streamUrl: 'aHR0cHM6Ly9jYTEuYnV4aW1lZGlhLmNvbS9pdHYvaW5kaWFuL2luZGV4Lm0zdTg=',
+    type: 'hls',
+  },
+  {
     id: 'mtv',
     name: 'MTV',
     category: 'Music',
@@ -417,7 +428,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://images.unsplash.com/photo-1758789887939-dea05e990b48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXJ0b29uJTIwc2hvd3xlbnwwfHx8fDE3Njg5MjE0NDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
     thumbnailImageHint: 'cartoon show',
-    streamUrl: 'aHR0cHM6Ly92Z2xpdmVzc2FpLmFrYW1haXplZC5uZXQvcHRuci15dXBwdHYvdGl0bGVfR3JlZW5fR29sZF9JbmRpYS9ldS92MS9tYW5pZmVzdC82MTFkNzliMTFiNzdlMmY1NzE5MzRmZDgwY2ExNDEzNDUzNzcyYWM3LzY3NWEzN2U1LWY1MTctNDM0ZS1hZGFlLWQyNWFlMTcwNjM0MC80OGM2OGJmZC03ODgzLTRiODUtOWQxYi0xNTQ4YjY2MTc0YTUvMS5tM3U4',
+    streamUrl: 'aHR0cHM6Ly92Z2xpdmVzc2FpLmFrYW1haXplZC5uZXQvcHRuci15dXBwdHYvdGl0bGUtR3JlZW5fR29sZF9JbmRpYS9ldS92MS9tYXN0ZXIvNjExZDc5YjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy82NzVhMzdlNS1mNTE3LTQzNGUtYWRhZS1kMjVhZTE3MDYzNDAvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
