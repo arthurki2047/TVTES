@@ -67,6 +67,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   
   const lastTimeUpdate = useRef(Date.now());
   const stallCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const retryAttempt = useRef(0);
+  const maxRetries = 5;
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -126,98 +128,90 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const video = videoRef.current;
     if (!video) return;
 
-    setPlayerError(null);
-    setQualityLevels([]);
-    setCurrentQuality(-1);
-    setIsManifestLive(false);
-    if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-    }
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
+    retryAttempt.current = 0;
 
-    if (type === 'hls') {
-        import('hls.js').then(Hls => {
-            if (Hls.default.isSupported()) {
-                if (hlsRef.current) {
-                    hlsRef.current.destroy();
-                }
-                const hls = new Hls.default({
-                    liveSyncDurationCount: 3,
-                    maxMaxBufferLength: 30,
-                    liveDurationInfinity: true,
-                    // More robust settings for unstable streams
-                    fragLoadingTimeOut: 20000,
-                    manifestLoadingTimeOut: 10000,
-                    levelLoadingTimeOut: 10000,
-                    fragLoadingMaxRetry: 4,
-                    manifestLoadingMaxRetry: 2,
-                    levelLoadingMaxRetry: 4,
-                    backBufferLength: 90
-                });
-                hlsRef.current = hls;
-                hls.loadSource(decodedSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
-                     if (data.details) {
-                        const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
-                        setIsManifestLive(isStreamLive);
-                     }
-                     playVideo(video);
-                     if (hls.levels && hls.levels.length > 1) {
-                        setQualityLevels(hls.levels);
-                     }
-                });
-                hls.on(Hls.default.Events.LEVEL_SWITCHED, (event, data) => {
-                    setCurrentQuality(data.level)
-                });
-                hls.on(Hls.default.Events.ERROR, (event, data) => {
-                    console.error(`HLS.js error: type: ${data.type}, details: ${data.details}, fatal: ${data.fatal}`);
-                    
-                    if (data.details === 'bufferStalledError' && video) {
-                        video.currentTime = video.currentTime; // Nudge the player
-                        return;
-                    }
-                    if (data.fatal) {
-                        setPlayerError(`${data.details}`); // Keep it simple for the user
-                        switch (data.type) {
-                            case Hls.default.ErrorTypes.NETWORK_ERROR:
-                                // try to recover network error
-                                console.log('HLS.js: trying to recover from network error...');
-                                hls.startLoad();
-                                break;
-                            case Hls.default.ErrorTypes.MEDIA_ERROR:
-                                console.log('HLS.js: trying to recover from media error...');
-                                hls.recoverMediaError();
-                                break;
-                            case Hls.default.ErrorTypes.OTHER_ERROR:
-                                // This includes levelParsingError. Attempt to recover by restarting the load.
-                                console.log('HLS.js: trying to recover from other error...');
-                                hls.startLoad();
-                                break;
-                            default:
-                                // If it is some other fatal error, we cannot recover.
-                                console.log('HLS.js: unrecoverable error, destroying instance.');
-                                hls.destroy();
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Fallback to native HLS support if hls.js is not supported
-                video.src = decodedSrc;
-                playVideo(video);
-            }
-        });
-    } else if (type === 'mp4') {
+    const initializeHls = () => {
         if (hlsRef.current) {
-          hlsRef.current.destroy();
-          hlsRef.current = null;
+            hlsRef.current.destroy();
         }
-        video.src = decodedSrc;
-        playVideo(video);
+        
+        setPlayerError(null);
+        setQualityLevels([]);
+        setCurrentQuality(-1);
+        setIsManifestLive(false);
+
+        if (type === 'hls') {
+            import('hls.js').then(Hls => {
+                if (Hls.default.isSupported()) {
+                    const hls = new Hls.default({
+                        liveSyncDurationCount: 3,
+                        maxMaxBufferLength: 30,
+                        liveDurationInfinity: true,
+                        fragLoadingTimeOut: 20000,
+                        manifestLoadingTimeOut: 10000,
+                        levelLoadingTimeOut: 10000,
+                        fragLoadingMaxRetry: 4,
+                        manifestLoadingMaxRetry: 2,
+                        levelLoadingMaxRetry: 4,
+                        backBufferLength: 90
+                    });
+                    hlsRef.current = hls;
+
+                    hls.on(Hls.default.Events.ERROR, (event, data) => {
+                        console.error(`HLS.js error: type: ${data.type}, details: ${data.details}, fatal: ${data.fatal}`);
+                        if (data.fatal) {
+                            if (retryAttempt.current < maxRetries) {
+                                retryAttempt.current++;
+                                console.warn(`HLS.js: fatal error detected. Attempting retry ${retryAttempt.current}/${maxRetries}...`);
+                                setPlayerError(`Stream error: ${data.details}. Retrying (${retryAttempt.current}/${maxRetries})...`);
+                                const delay = Math.pow(2, retryAttempt.current) * 1000;
+                                setTimeout(() => initializeHls(), delay);
+                            } else {
+                                console.error(`HLS.js: Max retries reached. Could not recover from fatal error: ${data.details}`);
+                                setPlayerError(`Stream failed to load after multiple retries: ${data.details}.`);
+                            }
+                        } else if (data.details === 'bufferStalledError' && video) {
+                            video.currentTime = video.currentTime; // Nudge the player
+                        }
+                    });
+
+                    hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
+                         if (data.details) {
+                            const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
+                            setIsManifestLive(isStreamLive);
+                         }
+                         retryAttempt.current = 0; // Reset on success
+                         setPlayerError(null);
+                         playVideo(video);
+                         if (hls.levels && hls.levels.length > 1) {
+                            setQualityLevels(hls.levels);
+                         }
+                    });
+
+                    hls.on(Hls.default.Events.LEVEL_SWITCHED, (event, data) => {
+                        setCurrentQuality(data.level)
+                    });
+                    
+                    hls.loadSource(decodedSrc);
+                    hls.attachMedia(video);
+
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = decodedSrc;
+                    playVideo(video);
+                }
+            });
+        } else if (type === 'mp4') {
+            video.src = decodedSrc;
+            playVideo(video);
+        }
+    };
+    
+    // Initial load
+    if(video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        initializeHls();
     }
     
     return () => {
@@ -719,11 +713,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       {playerError && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-4 text-center">
             <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
-            <h3 className="text-xl font-bold">Stream Unavailable</h3>
+            <h3 className="text-xl font-bold">Stream Error</h3>
             <p className="mt-2 text-muted-foreground">
-                Could not load the video for this channel.
+                {playerError}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground/60">({playerError})</p>
         </div>
       )}
 
@@ -909,4 +902,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 VideoPlayer.displayName = 'VideoPlayer';
 
     
+    
+
     
