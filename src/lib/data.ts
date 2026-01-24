@@ -161,10 +161,8 @@ export const channels: Channel[] = [
     name: '9X Jalwa',
     category: 'Music',
     logoUrl: 'https://picsum.photos/seed/1602/400/400',
-    logoImageHint: 'music logo',
-    thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
-    thumbnailImageHint: 'bollywood music',
-    streamUrl: 'aHR0cHM6Ly85eGppbS53aXNlcGxheW91dC5jb20vOVhKQUxXQS9tYXN0ZXIubTN1OA==',
+    logoImageHint: 'bollywood music',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyLzl4LWphbHdhLzNiNTQ2MDk4LWNjNzItNDYzZi1hMWY3LTQ4ODBkMDgxMWVmZS8zLm0zdTg=',
     type: 'hls',
   },
   {
@@ -1110,7 +1108,7 @@ export const channels: Channel[] = [
     logoImageHint: 'mystery logo',
     thumbnailUrl: 'https://picsum.photos/seed/mystry-tv-thumb/600/400',
     thumbnailImageHint: 'mystery show',
-    streamUrl: 'aHR0cHM6Ly9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay1tZ2diNy5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -1155,7 +1153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/1901/600/400',
     thumbnailImageHint: 'drama series',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-aath',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS1hYXRo',
     type: 'iframe',
   },
   {
@@ -1166,7 +1164,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/5501/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-max-hd',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS1tYXgtaGQ=',
     type: 'iframe',
   },
   {
@@ -1177,7 +1175,7 @@ export const channels: Channel[] = [
     logoImageHint: 'kids logo',
     thumbnailUrl: 'https://picsum.photos/seed/5701/600/400',
     thumbnailImageHint: 'kids cartoon',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-yay',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS15YXk=',
     type: 'iframe',
   },
   {
@@ -1188,7 +1186,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/5801/600/400',
     thumbnailImageHint: 'live sports',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-ten-1-hd',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS10ZW4tMS1oZA==',
     type: 'iframe',
   },
   {
@@ -1199,7 +1197,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/5901/600/400',
     thumbnailImageHint: 'cricket game',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-ten-3-hd',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS10ZW4tMy1oZA==',
     type: 'iframe',
   },
   {
@@ -1210,7 +1208,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/6001/600/400',
     thumbnailImageHint: 'hollywood movie',
-    streamUrl: 'https://allinonereborn.xyz/sony/ptest.php?id=sony-pix-hd',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovc29ueS9wdGVzdC5waHA/aWQ9c29ueS1waXgtaGQ=',
     type: 'iframe',
   },
   {
@@ -1221,7 +1219,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/3901/600/400',
     thumbnailImageHint: 'cricket sport',
-    streamUrl: 'https://allinonereborn.xyz/amit/host.php?id=58117',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovYW1pdC9ob3N0LnBocD9pZD01ODExNw==',
     type: 'iframe',
   },
   {
@@ -1254,7 +1252,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/4701/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'https://streamcrichd.com/update/star1hi.php',
+    streamUrl: 'aHR0cHM6Ly9zdHJlYW1jcmljaGQuY29tL3VwZGF0ZS9zdGFyMWhpLnBocA==',
     type: 'iframe',
   },
   {
@@ -1276,7 +1274,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/t2-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://allinonereborn.xyz/filex.m3u8/live2.php?id=37',
+    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovZmlsZXgubTN1OC9saXZlMi5waHA/aWQ9Mzc=',
     type: 'iframe',
   },
 ];
