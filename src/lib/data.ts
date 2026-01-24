@@ -153,7 +153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly85eGppb S53aXNlcGxheW91dC5jb20vOVhNL21hc3Rlci5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyLzl4bS9iZDRmYjZjNS1hNDk1LTQ0ODEtOWE0Ni1hOGFmNGJkNmEyMjYvMy5tM3U4',
     type: 'hls',
   },
   {
@@ -164,7 +164,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
     thumbnailImageHint: 'bollywood music',
-    streamUrl: 'aHR0cHM6Ly85eGppb S53aXNlcGxheW91dC5jb20vOVhKQUxXQS9tYXN0ZXIubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly85eGppbS53aXNlcGxheW91dC5jb20vOVhKQUxXQS9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -385,17 +385,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/3601/600/400',
     thumbnailImageHint: 'kids cartoon',
     streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTU5Lm0zdTg=',
-    type: 'hls',
-  },
-  {
-    id: 'star-jalsha',
-    name: 'Star Jalsha',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/3702/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/3701/600/400',
-    thumbnailImageHint: 'bengali drama',
-    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovYW1pdC9ob3N0LnBocD9pZD01NDE2MQ==',
     type: 'hls',
   },
   {
@@ -1121,7 +1110,7 @@ export const channels: Channel[] = [
     logoImageHint: 'mystery logo',
     thumbnailUrl: 'https://picsum.photos/seed/mystry-tv-thumb/600/400',
     thumbnailImageHint: 'mystery show',
-    streamUrl: 'aHR0cHM6Ly9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay1tZ2diNy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay9wbGF5bGlzdC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDg0MS1hZW5ldHdvcmtzdWthbmUtbXlzdGVyeXR2LXNhbXN1bmd1ay1tZ2diNy5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -1278,6 +1267,17 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bollywood movie',
     streamUrl: 'aHR0cHM6Ly9hbWcxNzkzMS16ZWUtYW1nMTc5MzFjNS1rb2dhbi1hdS05NTIxLnBsYXlvdXRzLm5vdy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcxNzkzMS1hc2lhdHZ1c2FsdGRmYXN0LXplZWNpbmVtYS1rb2dhbmF1L3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
+  },
+  {
+    id: 't2',
+    name: 'T2',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/t2-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/t2-thumb/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://allinonereborn.xyz/filex.m3u8/live2.php?id=37',
+    type: 'iframe',
   },
 ];
 
