@@ -520,17 +520,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'm-tunes',
-    name: 'M Tunes',
-    category: 'Music',
-    logoUrl: 'https://picsum.photos/seed/mtunes-logo/400/400',
-    logoImageHint: 'music logo',
-    thumbnailUrl: 'https://picsum.photos/seed/mtunes-thumb/600/400',
-    thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly9jYTEuYnV4aW1lZGlhLmNvbS9pdnYvaW5kaWFuL2luZGV4Lm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'south-station',
     name: 'SOUTH STATION',
     category: 'Music',
