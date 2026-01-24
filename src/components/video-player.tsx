@@ -145,9 +145,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     hlsRef.current.destroy();
                 }
                 const hls = new Hls.default({
-                    liveSyncDurationCount: 3, 
+                    liveSyncDurationCount: 3,
                     maxMaxBufferLength: 30,
                     liveDurationInfinity: true,
+                    // More robust settings for unstable streams
+                    fragLoadingTimeOut: 20000,
+                    manifestLoadingTimeOut: 10000,
+                    levelLoadingTimeOut: 10000,
+                    fragLoadingMaxRetry: 4,
+                    manifestLoadingMaxRetry: 2,
+                    levelLoadingMaxRetry: 4,
+                    backBufferLength: 90
                 });
                 hlsRef.current = hls;
                 hls.loadSource(decodedSrc);
@@ -166,16 +174,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     setCurrentQuality(data.level)
                 });
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
+                    if (data.details === 'bufferStalledError' && video) {
+                        video.currentTime = video.currentTime; // Nudge the player
+                        return;
+                    }
                     if (data.fatal) {
                         setPlayerError(data.details);
                         switch (data.type) {
                             case Hls.default.ErrorTypes.NETWORK_ERROR:
+                                // try to recover network error
                                 hls.startLoad();
                                 break;
                             case Hls.default.ErrorTypes.MEDIA_ERROR:
                                 hls.recoverMediaError();
                                 break;
                             default:
+                                // cannot recover
                                 hls.destroy();
                                 break;
                         }
@@ -491,11 +505,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     };
 
     const handleStallCheck = () => {
-        if (video && !video.paused && (Date.now() - lastTimeUpdate.current > 4000)) {
+        const video = videoRef.current;
+        if (video && !video.paused && (Date.now() - lastTimeUpdate.current > 5000)) {
             if (hlsRef.current) {
-                if (isLive && hlsRef.current.liveSyncPosition) {
-                    video.currentTime = hlsRef.current.liveSyncPosition;
-                    playVideo(video);
+                if (isLive) {
+                    const liveEdge = video.seekable.length > 0 ? video.seekable.end(video.seekable.length - 1) : 0;
+                    if (liveEdge > 0 && Math.abs(video.currentTime - liveEdge) > 10) {
+                         video.currentTime = liveEdge - 5;
+                    }
+                    hlsRef.current.startLoad();
                 } else {
                     hlsRef.current.startLoad();
                 }
@@ -723,7 +741,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             )}
         </div>
         
-        <div className="flex-1 flex items-center justify-between px-6 md:px-8" onClick={e => e.stopPropagation()}>
+        <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
             <ChevronLeft size={40} />
           </Button>
@@ -879,3 +897,5 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
