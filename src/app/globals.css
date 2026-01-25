@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --background: 240 14% 97%;
+    --background: 0 0% 100% / 0;
     --foreground: 240 10% 3.9%;
-    --card: 240 14% 97%;
+    --card: 0 0% 100% / 0;
     --card-foreground: 240 10% 3.9%;
     --popover: 240 14% 97%;
     --popover-foreground: 240 10% 3.9%;
@@ -53,6 +53,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: linear-gradient(to bottom, #FF9933, #FFFFFF, #138808);
+    background-attachment: fixed;
   }
 }
