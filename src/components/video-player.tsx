@@ -65,11 +65,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isPiPSupported, setIsPiPSupported] = useState(false);
   const [isInPiP, setIsInPiP] = useState(false);
   
-  const lastTimeUpdate = useRef(Date.now());
-  const stallCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const retryAttempt = useRef(0);
-  const maxRetries = 5;
-
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
@@ -161,15 +156,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                   hls.on(Hls.default.Events.ERROR, (event, data) => {
                       if (data.fatal) {
                           if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
-                              if (retryAttempt.current < maxRetries) {
-                                  retryAttempt.current++;
-                                  const delay = Math.pow(2, retryAttempt.current) * 1000;
-                                  setTimeout(() => {
-                                      initializeHls();
-                                  }, delay);
-                              } else {
-                                  setPlayerError(`Stream failed to load after multiple retries. Please check the stream source. Details: ${data.details}.`);
-                              }
+                              setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
                           } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR) {
                               if (hlsRef.current) {
                                   hlsRef.current.recoverMediaError();
@@ -185,7 +172,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                           const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
                           setIsManifestLive(isStreamLive);
                        }
-                       retryAttempt.current = 0; // Reset on success
                        setPlayerError(null);
                        playVideo(currentVideo);
                        if (hls.levels && hls.levels.length > 1) {
@@ -211,12 +197,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     };
     
-    retryAttempt.current = 0;
-    
     // Initial load
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
     initializeHls();
     
     return () => {
@@ -513,59 +494,26 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     };
 
-    const handleStallCheck = () => {
-        const video = videoRef.current;
-        if (video && !video.paused && (Date.now() - lastTimeUpdate.current > 5000)) {
-            if (hlsRef.current) {
-                if (isLive) {
-                    const liveEdge = video.seekable.length > 0 ? video.seekable.end(video.seekable.length - 1) : 0;
-                    if (liveEdge > 0 && Math.abs(video.currentTime - liveEdge) > 10) {
-                         video.currentTime = liveEdge - 5;
-                    }
-                    hlsRef.current.startLoad();
-                } else {
-                    hlsRef.current.startLoad();
-                }
-            } else {
-                const currentTime = video.currentTime;
-                video.load();
-                video.currentTime = currentTime;
-                playVideo(video);
-            }
-            lastTimeUpdate.current = Date.now();
-        }
-    };
-
     const handlePlay = () => {
         setIsPlaying(true);
         requestWakeLock();
-        lastTimeUpdate.current = Date.now();
-        if (!stallCheckIntervalRef.current) {
-            stallCheckIntervalRef.current = setInterval(handleStallCheck, 2000);
-        }
     };
     const handlePause = () => {
         setIsPlaying(false);
         releaseWakeLock();
-        if (stallCheckIntervalRef.current) {
-            clearInterval(stallCheckIntervalRef.current);
-            stallCheckIntervalRef.current = null;
-        }
     };
 
     const handleTimeUpdate = () => {
         if (video) {
             setProgress(video.currentTime);
-            lastTimeUpdate.current = Date.now();
         }
     };
     const handleDurationChange = () => video && setDuration(video.duration);
     const handleWaiting = () => {
-        lastTimeUpdate.current = Date.now();
+        // This is where a spinner could be shown
     };
     const handlePlaying = () => {
       resetControlsTimeout();
-      lastTimeUpdate.current = Date.now();
     };
     
     const handleFullscreenChange = () => {
@@ -633,12 +581,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
-      if (stallCheckIntervalRef.current) {
-        clearInterval(stallCheckIntervalRef.current);
-        stallCheckIntervalRef.current = null;
-      }
     };
-  }, [resetControlsTimeout, isLocked, isLive, playVideo]);
+  }, [resetControlsTimeout, isLocked, playVideo]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -905,3 +849,5 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
