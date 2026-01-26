@@ -169,19 +169,20 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
                             // Attempt to recover from network errors.
+                            setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
                             if (hlsRef.current) {
                               hlsRef.current.startLoad();
                             }
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
-                            // Attempt to recover from media errors.
+                            setPlayerError('A media error occurred. Trying to recover...');
                             if (hlsRef.current) {
                               hlsRef.current.recoverMediaError();
                             }
                             break;
                           default:
                             // For other fatal errors, show a message and stop playback.
-                            setPlayerError(`An unrecoverable playback error occurred.`);
+                            setPlayerError(`An unrecoverable playback error occurred. Details: ${data.details}.`);
                             if (hlsRef.current) {
                               hlsRef.current.destroy();
                             }
@@ -230,6 +231,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   useEffect(() => {
     setIsClient(true);
     setPlayerRef(videoRef);
+    // --- PiP FEATURE DETECTION ---
+    // Check if PiP is enabled in the browser. This is the first step for progressive enhancement.
+    // The UI button for PiP will only be rendered if this is true.
     if (typeof document !== 'undefined' && 'pictureInPictureEnabled' in document) {
       setIsPiPSupported(document.pictureInPictureEnabled);
     }
@@ -246,18 +250,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
    * begins to load automatically as soon as the player is on the screen.
    */
   useEffect(() => {
-    // Initial load
     initializeHls();
-    
     const video = videoRef.current;
-
     return () => {
-        // Cleanup function: ensures we stop the stream and release resources
-        // when the component is unmounted or the source changes.
-        if (hlsRef.current) {
-          hlsRef.current.destroy();
-          hlsRef.current = null;
-        }
+        if (hlsRef.current) hlsRef.current.destroy();
         if (video) {
             video.pause();
             video.removeAttribute('src');
@@ -282,17 +278,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       return;
     }
 
-    const mediaSessionPlay = () => {
-      if (video.paused) {
-        playVideo(video);
-      }
-    };
-
-    const mediaSessionPause = () => {
-      if (!video.paused) {
-        video.pause();
-      }
-    };
+    const mediaSessionPlay = () => video.paused && playVideo(video);
+    const mediaSessionPause = () => !video.paused && video.pause();
     
     navigator.mediaSession.metadata = new MediaMetadata({
       title: channel.name,
@@ -320,27 +307,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         navigator.mediaSession.setActionHandler('seekbackward', null);
     }
     
-    const handlePlay = () => {
-      navigator.mediaSession.playbackState = 'playing';
+    const handlePlaybackState = () => {
+        navigator.mediaSession.playbackState = video.paused ? 'paused' : 'playing';
     };
-    const handlePause = () => {
-      navigator.mediaSession.playbackState = 'paused';
-    };
-
-    video.addEventListener('play', handlePlay);
-    video.addEventListener('pause', handlePause);
-
-    if (video.paused) {
-      handlePause();
-    } else {
-      handlePlay();
-    }
+    video.addEventListener('play', handlePlaybackState);
+    video.addEventListener('pause', handlePlaybackState);
+    handlePlaybackState();
 
     return () => {
-      if ('mediaSession' in navigator) {
-          video.removeEventListener('play', handlePlay);
-          video.removeEventListener('pause', handlePause);
-          
+        video.removeEventListener('play', handlePlaybackState);
+        video.removeEventListener('pause', handlePlaybackState);
+        if ('mediaSession' in navigator) {
           navigator.mediaSession.metadata = null;
           navigator.mediaSession.setActionHandler('play', null);
           navigator.mediaSession.setActionHandler('pause', null);
@@ -354,36 +331,24 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [channel, onSwipe, playVideo, handleSeek, isLive]);
 
   const resetUnlockTimeout = useCallback(() => {
-    if (unlockTimeoutRef.current) {
-      clearTimeout(unlockTimeoutRef.current);
-    }
+    if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     setShowUnlock(true);
-    unlockTimeoutRef.current = setTimeout(() => {
-      setShowUnlock(false);
-    }, 5000);
+    unlockTimeoutRef.current = setTimeout(() => setShowUnlock(false), 5000);
   }, []);
   
   const toggleControls = useCallback(() => {
     if (isLocked) return;
     setShowControls(s => {
       const nextState = !s;
-      if (nextState) {
-        resetControlsTimeout();
-      } else {
-        if (controlsTimeoutRef.current) {
-          clearTimeout(controlsTimeoutRef.current);
-        }
-      }
+      if (nextState) resetControlsTimeout();
+      else if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       return nextState;
     });
   }, [resetControlsTimeout, isLocked]);
 
   const handleTap = () => {
-    if (isLocked) {
-        resetUnlockTimeout();
-    } else {
-        toggleControls();
-    }
+    if (isLocked) resetUnlockTimeout();
+    else toggleControls();
   };
 
   /**
@@ -393,11 +358,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
    */
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (videoRef.current?.paused) {
-      playVideo(videoRef.current);
-    } else {
-      videoRef.current?.pause();
-    }
+    if (videoRef.current?.paused) playVideo(videoRef.current);
+    else videoRef.current?.pause();
     resetControlsTimeout();
   }, [resetControlsTimeout, playVideo]);
 
@@ -419,22 +381,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   useEffect(() => {
     if (isMuted) {
-      if (volume > 0) {
-        previousVolume.current = volume;
-      }
+      if (volume > 0) previousVolume.current = volume;
       setVolume(0);
-    } else {
-      if (volume === 0) {
-        setVolume(previousVolume.current);
-      }
+    } else if (volume === 0) {
+      setVolume(previousVolume.current);
     }
   }, [isMuted, volume]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-        video.volume = volume;
-    }
+    if (videoRef.current) videoRef.current.volume = volume;
   }, [volume]);
   
   const toggleFullscreen = useCallback((e?: React.MouseEvent) => {
@@ -443,29 +398,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (!player) return;
 
     if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
-        if (player.requestFullscreen) {
-            player.requestFullscreen().catch(err => {});
-        } else if ((player as any).webkitRequestFullscreen) {
-            (player as any).webkitRequestFullscreen();
-        } else if ((player as any).msRequestFullscreen) {
-            (player as any).msRequestFullscreen();
-        }
+        const promise = player.requestFullscreen ? player.requestFullscreen()
+          : (player as any).webkitRequestFullscreen ? (player as any).webkitRequestFullscreen()
+          : (player as any).msRequestFullscreen ? (player as any).msRequestFullscreen()
+          : null;
+        if (promise) promise.catch(err => {});
         if (screen.orientation && typeof screen.orientation.lock === 'function') {
-          try {
-            screen.orientation.lock('landscape').catch(() => {});
-          } catch(e) {}
+          try { screen.orientation.lock('landscape').catch(() => {}); } catch(e) {}
         }
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-            (document as any).webkitExitFullscreen();
-        } else if ((document as any).msExitFullscreen) {
-            (document as any).msExitFullscreen();
-        }
-        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-          screen.orientation.unlock();
-        }
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
+        else if ((document as any).msExitFullscreen) (document as any).msExitFullscreen();
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') screen.orientation.unlock();
     }
     resetControlsTimeout();
   }, [resetControlsTimeout]);
@@ -485,46 +430,73 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       resetControlsTimeout();
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
+  
+  /**
+   * --- PICTURE-IN-PICTURE (PIP) IMPLEMENTATION ---
+   * This section follows best practices for implementing PiP mode.
+   */
 
-  const togglePictureInPicture = useCallback((e?: React.MouseEvent) => {
+  /**
+   * Toggles Picture-in-Picture mode.
+   * This function is designed to be robust and cross-browser compatible,
+   * handling entering/exiting PiP and common errors.
+   */
+  const togglePictureInPicture = useCallback((e?: React.MouseEvent | KeyboardEvent) => {
     e?.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+
+    // 1. Check for browser support AND if PiP is disabled on the video element.
+    // 'video.disablePictureInPicture' allows disabling PiP on a per-video basis.
+    if (!isPiPSupported || video.disablePictureInPicture) {
+        console.warn('Picture-in-Picture is not supported or is disabled for this video.');
+        return;
+    }
+
+    // 2. Toggle PiP state.
+    // 'document.pictureInPictureElement' securely checks if an element is currently in PiP.
     if (document.pictureInPictureElement) {
-        document.exitPictureInPicture().catch(err => console.error("Could not exit PiP:", err));
-    } else if (isPiPSupported && videoRef.current) {
-        videoRef.current.requestPictureInPicture().catch(err => console.error("Could not enter PiP:", err));
+        document.exitPictureInPicture()
+          .catch(err => console.error("Error exiting Picture-in-Picture mode:", err));
+    } else {
+        // Request PiP for the current video. This can be done even if paused.
+        video.requestPictureInPicture()
+          .catch(err => {
+            // 3. Handle common errors, like 'NotAllowedError' if the user hasn't
+            // interacted with the page, or if it's blocked by browser policies.
+            console.error("Error entering Picture-in-Picture mode:", err);
+            if (err.name === 'NotAllowedError') {
+                setPlayerError('PiP was not allowed. Please click on the player first.');
+            }
+          });
     }
     resetControlsTimeout();
   }, [resetControlsTimeout, isPiPSupported]);
+
+  // Adds a keyboard shortcut ('P' key) for toggling Picture-in-Picture.
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if modifier keys are pressed or if input fields are focused.
+      const target = e.target as HTMLElement;
+      if (e.key.toLowerCase() === 'p' && !e.metaKey && !e.ctrlKey && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        togglePictureInPicture(e);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [togglePictureInPicture]);
+
 
   useImperativeHandle(ref, () => ({
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
   }));
 
-  const handleNextChannel = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSwipe('left');
-    resetControlsTimeout();
-  }, [onSwipe, resetControlsTimeout]);
-
-  const handlePrevChannel = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSwipe('right');
-    resetControlsTimeout();
-  }, [onSwipe, resetControlsTimeout]);
-
-  const handleQualityChange = useCallback((levelIndex: number) => {
-    if (hlsRef.current) {
-        hlsRef.current.currentLevel = levelIndex;
-        setCurrentQuality(levelIndex);
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout]);
-
-  const handleFitModeChange = useCallback((mode: FitMode) => {
-    setFitMode(mode);
-    resetControlsTimeout();
-  }, [resetControlsTimeout]);
+  const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
+  const handlePrevChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('right'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
+  const handleQualityChange = useCallback((levelIndex: number) => { if (hlsRef.current) { hlsRef.current.currentLevel = levelIndex; setCurrentQuality(levelIndex); } resetControlsTimeout(); }, [resetControlsTimeout]);
+  const handleFitModeChange = useCallback((mode: FitMode) => { setFitMode(mode); resetControlsTimeout(); }, [resetControlsTimeout]);
   
   useEffect(() => {
     const video = videoRef.current;
@@ -533,68 +505,39 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
     const requestWakeLock = async () => {
       if ('wakeLock' in navigator) {
-        try {
-          wakeLockRef.current = await navigator.wakeLock.request('screen');
-        } catch (err: any) {
-          if (err.name !== 'NotAllowedError') {
-            console.error('Could not acquire wake lock:', err);
-          }
+        try { wakeLockRef.current = await navigator.wakeLock.request('screen'); } catch (err: any) {
+          if (err.name !== 'NotAllowedError') console.error('Could not acquire wake lock:', err);
         }
       }
     };
-    const releaseWakeLock = async () => {
-      if (wakeLockRef.current) {
-        try {
-            await wakeLockRef.current.release();
-            wakeLockRef.current = null;
-        } catch(e) {}
-      }
-    };
+    const releaseWakeLock = async () => { if (wakeLockRef.current) { try { await wakeLockRef.current.release(); wakeLockRef.current = null; } catch(e) {} } };
 
-    const handlePlay = () => {
-        setIsPlaying(true);
-        requestWakeLock();
-    };
-    const handlePause = () => {
-        setIsPlaying(false);
-        releaseWakeLock();
-    };
-
-    const handleTimeUpdate = () => {
-        if (video) {
-            setProgress(video.currentTime);
-        }
-    };
-    const handleDurationChange = () => video && setDuration(video.duration);
-    const handleWaiting = () => {
-        // This is where a spinner could be shown
-    };
-    const handlePlaying = () => {
-      resetControlsTimeout();
-    };
+    const handlePlay = () => { setIsPlaying(true); requestWakeLock(); };
+    const handlePause = () => { setIsPlaying(false); releaseWakeLock(); };
+    const handleTimeUpdate = () => setProgress(video.currentTime);
+    const handleDurationChange = () => setDuration(video.duration);
+    const handleWaiting = () => {}; // Could show a spinner
+    const handlePlaying = () => resetControlsTimeout();
     
     const handleFullscreenChange = () => {
         const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
         setIsFullscreen(isCurrentlyFullscreen);
         if (!isCurrentlyFullscreen) {
             setIsLocked(false);
-            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-                screen.orientation.unlock();
-            }
+            if (screen.orientation && typeof screen.orientation.unlock === 'function') screen.orientation.unlock();
         }
     };
     
-    const handleMouseLeave = () => {
-      if (isLocked) return;
-      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-      if (videoRef.current && !videoRef.current.paused) {
-        setShowControls(false);
-      }
-    };
-
+    const handleMouseLeave = () => { if (!isLocked && videoRef.current && !videoRef.current.paused) { if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current); setShowControls(false); } };
+    
+    // --- Picture-in-Picture Event Handling ---
+    // These events are crucial for updating the UI based on PiP state.
+    // They fire automatically, ensuring smooth UI transitions.
+    // Performance: Using requestAnimationFrame is unnecessary here as we're just
+    // setting state, and the browser handles the transition animation itself.
     const handleEnterPiP = () => setIsInPiP(true);
     const handleLeavePiP = () => setIsInPiP(false);
-
+    
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('timeupdate', handleTimeUpdate);
@@ -603,18 +546,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('enterpictureinpicture', handleEnterPiP);
     video.addEventListener('leavepictureinpicture', handleLeavePiP);
-    
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
-    
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && video && !video.paused) {
-        requestWakeLock();
-      }
-    };
+    const handleVisibilityChange = () => { if (document.visibilityState === 'visible' && !video.paused) requestWakeLock(); };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
@@ -626,16 +562,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('playing', handlePlaying);
       video.removeEventListener('enterpictureinpicture', handleEnterPiP);
       video.removeEventListener('leavepictureinpicture', handleLeavePiP);
-      
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
-
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       releaseWakeLock();
-
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
@@ -644,261 +576,112 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) {
-        touchStartX.current = 0;
-        touchEndX.current = 0;
-        return;
+        touchStartX.current = 0; touchEndX.current = 0; return;
     }
-    touchStartX.current = e.targetTouches[0].clientX;
-    touchStartY.current = e.targetTouches[0].clientY;
+    touchStartX.current = e.targetTouches[0].clientX; touchStartY.current = e.targetTouches[0].clientY;
   };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartX.current === 0) return;
-    touchEndX.current = e.targetTouches[0].clientX;
-    touchEndY.current = e.targetTouches[0].clientY;
-  };
-
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => { if (touchStartX.current === 0) return; touchEndX.current = e.targetTouches[0].clientX; touchEndY.current = e.targetTouches[0].clientY; };
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) {
-      return;
-    }
-    
-    const xDiff = touchStartX.current - touchEndX.current;
-    const yDiff = touchStartY.current - touchEndY.current;
-    
+    if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) return;
+    const xDiff = touchStartX.current - touchEndX.current; const yDiff = touchStartY.current - touchEndY.current;
     const isSwipe = touchEndX.current !== 0 && Math.abs(xDiff) > 50 && Math.abs(xDiff) > Math.abs(yDiff);
-
-    if (!isLocked && isSwipe) {
-      onSwipe(xDiff > 0 ? 'left' : 'right');
-    } else if (!isSwipe && touchStartX.current !== 0) {
-      handleTap();
-    }
-    
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-    touchStartY.current = 0;
-    touchEndY.current = 0;
+    if (!isLocked && isSwipe) onSwipe(xDiff > 0 ? 'left' : 'right');
+    else if (!isSwipe && touchStartX.current !== 0) handleTap();
+    touchStartX.current = 0; touchEndX.current = 0; touchStartY.current = 0; touchEndY.current = 0;
   };
 
   const uniqueQualityLevels = React.useMemo(() => {
     if (qualityLevels.length === 0) return [];
-    // hls.js provides levels sorted by bitrate ascending. We want to show highest quality first.
     const reversedLevels = [...qualityLevels].reverse();
-    // Get unique levels by height, preferring the one with higher bitrate (which comes first in reversedLevels)
-    const uniqueByHeight = reversedLevels.filter((level, index, self) =>
-      index === self.findIndex((l) => l.height === level.height)
-    );
+    const uniqueByHeight = reversedLevels.filter((level, index, self) => index === self.findIndex((l) => l.height === level.height));
     return uniqueByHeight;
   }, [qualityLevels]);
 
   return (
-    <div
-      ref={playerRef}
-      className="group relative w-full aspect-video bg-black text-white"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseMove={resetControlsTimeout}
-    >
-      <video
-        ref={videoRef}
-        className={cn(
-          "h-full w-full",
-          {
-            'object-contain': fitMode === 'contain',
-            'object-cover': fitMode === 'cover',
-            'object-fill': fitMode === 'fill',
-          }
-        )}
-        playsInline
-        onClick={handleTap}
-        data-channel-id={channel.id}
-      />
+    <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
+      <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline onClick={handleTap} data-channel-id={channel.id} />
       
-      {playerError && (
+      {playerError && !isInPiP && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-4 text-center">
             <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
             <h3 className="text-xl font-bold">Stream Error</h3>
-            <p className="mt-2 text-muted-foreground">
-                {playerError}
-            </p>
+            <p className="mt-2 text-muted-foreground">{playerError}</p>
         </div>
       )}
 
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
-            <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110">
-                <Unlock size={48} />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110"><Unlock size={48} /></Button>
         </div>
       )}
 
-      <div
-        className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
-        
+      <div className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked && !isInPiP) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
 
         <div className="p-2 md:p-4 flex justify-between items-center">
-            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}>
-                <ArrowLeft />
-            </Button>
-            {isFullscreen && (
-                <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleLock}>
-                    <Lock />
-                </Button>
-            )}
+            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}><ArrowLeft /></Button>
+            {isFullscreen && (<Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleLock}><Lock /></Button>)}
         </div>
         
         <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
-            <ChevronLeft size={40} />
-          </Button>
-
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronLeft size={40} /></Button>
           <div className="flex items-center justify-center gap-2 md:gap-4">
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-                <RotateCcw size={32} />
-            </Button>
-
-            {/* --- PLAY/PAUSE UI --- */}
-            {/* This button calls the `togglePlay` function to control playback. */}
-            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-              {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
-            </Button>
-            
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
-                <RotateCw size={32} />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110"><RotateCcw size={32} /></Button>
+            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">{isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}</Button>
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110"><RotateCw size={32} /></Button>
           </div>
-
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20">
-            <ChevronRight size={40} />
-          </Button>
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronRight size={40} /></Button>
         </div>
 
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
             {(duration > 0) && (
                 <div className="px-4 md:px-6 mb-2">
-                    <Slider
-                        value={[isLive ? duration : progress]}
-                        max={duration}
-                        onValueChange={(value) => {
-                            if (videoRef.current) videoRef.current.currentTime = value[0];
-                        }}
-                        className="w-full"
-                    />
+                    <Slider value={[isLive ? duration : progress]} max={duration} onValueChange={(value) => { if (videoRef.current) videoRef.current.currentTime = value[0]; }} className="w-full" />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
                       {isLive ? (
                         <div className="flex items-center gap-1.5">
-                            <div className="relative flex h-2.5 w-2.5">
-                                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div>
-                                <div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div>
-                            </div>
+                            <div className="relative flex h-2.5 w-2.5"><div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div><div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div></div>
                             <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
                         </div>
-                      ) : (
-                        <span>{formatTime(progress)}</span>
-                      )}
+                      ) : (<span>{formatTime(progress)}</span>)}
                         <span>{formatTime(duration)}</span>
                     </div>
                 </div>
             )}
             <div className="flex items-center justify-between gap-4 px-2 md:px-4">
                 <div className="flex items-center gap-1 md:gap-2">
-                    <Button variant="ghost" size="icon" onClick={togglePlay}>
-                        {isPlaying ? <Pause /> : <Play />}
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={toggleMute}>
-                        {isMuted ? <VolumeX /> : <Volume2 />}
-                    </Button>
-                    <div className="hidden md:flex w-24 items-center">
-                        <Slider value={[volume]} onValueChange={handleVolumeChange} max={1} step={0.1} />
-                    </div>
+                    <Button variant="ghost" size="icon" onClick={togglePlay}>{isPlaying ? <Pause /> : <Play />}</Button>
+                    <Button variant="ghost" size="icon" onClick={toggleMute}>{isMuted ? <VolumeX /> : <Volume2 />}</Button>
+                    <div className="hidden md:flex w-24 items-center"><Slider value={[volume]} onValueChange={handleVolumeChange} max={1} step={0.1} /></div>
                 </div>
                 <div className="flex items-center gap-1 md:gap-2">
                     {uniqueQualityLevels.length > 1 && type === 'hls' && (
                         <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                    <Settings />
-                                </Button>
-                            </PopoverTrigger>
+                            <PopoverTrigger asChild><Button variant="ghost" size="icon"><Settings /></Button></PopoverTrigger>
                             <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
-                                    <div
-                                        key={-1}
-                                        onClick={() => handleQualityChange(-1)}
-                                        className={cn(
-                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
-                                            currentQuality === -1 && "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        )}
-                                    >
-                                        Auto
-                                    </div>
-                                    {uniqueQualityLevels.map((level, i) => (
-                                        <div
-                                            key={level.height}
-                                            onClick={() => handleQualityChange(qualityLevels.indexOf(level))}
-                                            className={cn(
-                                                "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
-                                                currentQuality === qualityLevels.indexOf(level) && "bg-primary text-primary-foreground hover:bg-primary/90"
-                                            )}
-                                        >
-                                            {level.height}p
-                                        </div>
-                                    ))}
+                                    <div key={-1} onClick={() => handleQualityChange(-1)} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", currentQuality === -1 && "bg-primary text-primary-foreground hover:bg-primary/90")}>Auto</div>
+                                    {uniqueQualityLevels.map((level) => (<div key={level.height} onClick={() => handleQualityChange(qualityLevels.indexOf(level))} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", currentQuality === qualityLevels.indexOf(level) && "bg-primary text-primary-foreground hover:bg-primary/90")}>{level.height}p</div>))}
                                 </div>
                             </PopoverContent>
                         </Popover>
                     )}
                     {isFullscreen && (
                         <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                    <Crop />
-                                </Button>
-                            </PopoverTrigger>
+                            <PopoverTrigger asChild><Button variant="ghost" size="icon"><Crop /></Button></PopoverTrigger>
                             <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
-                                    <div
-                                        onClick={() => handleFitModeChange('contain')}
-                                        className={cn(
-                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
-                                            fitMode === 'contain' && "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        )}
-                                    >
-                                        Original
-                                    </div>
-                                    <div
-                                        onClick={() => handleFitModeChange('cover')}
-                                        className={cn(
-                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
-                                            fitMode === 'cover' && "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        )}
-                                    >
-                                        Fit to Screen
-                                    </div>
-                                    <div
-                                        onClick={() => handleFitModeChange('fill')}
-                                        className={cn(
-                                            "p-2 text-sm rounded-md cursor-pointer hover:bg-white/10",
-                                            fitMode === 'fill' && "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        )}
-                                    >
-                                        Stretch
-                                    </div>
+                                    <div onClick={() => handleFitModeChange('contain')} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", fitMode === 'contain' && "bg-primary text-primary-foreground hover:bg-primary/90")}>Original</div>
+                                    <div onClick={() => handleFitModeChange('cover')} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", fitMode === 'cover' && "bg-primary text-primary-foreground hover:bg-primary/90")}>Fit to Screen</div>
+                                    <div onClick={() => handleFitModeChange('fill')} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", fitMode === 'fill' && "bg-primary text-primary-foreground hover:bg-primary/90")}>Stretch</div>
                                 </div>
                             </PopoverContent>
                         </Popover>
                     )}
-                    {isPiPSupported && (
-                        <Button variant="ghost" size="icon" onClick={togglePictureInPicture}>
-                            <PictureInPicture2 />
-                        </Button>
-                    )}
-                    <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
-                        {isFullscreen ? <Minimize /> : <Maximize />}
-                    </Button>
+                    {/* The PiP button is only rendered if the browser supports the API. */}
+                    {isPiPSupported && (<Button variant="ghost" size="icon" onClick={togglePictureInPicture}><PictureInPicture2 /></Button>)}
+                    <Button variant="ghost" size="icon" onClick={toggleFullscreen}>{isFullscreen ? <Minimize /> : <Maximize />}</Button>
                 </div>
             </div>
         </div>
@@ -908,8 +691,3 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
-
-    
-
-    
-
