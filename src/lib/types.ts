@@ -10,4 +10,5 @@ export interface Channel {
   thumbnailImageHint: string;
   streamUrl: string;
   type: 'hls' | 'mp4' | 'iframe';
+  autoReloadInMinutes?: number;
 }

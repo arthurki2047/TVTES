@@ -45,6 +45,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'cartoon fun',
     streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3piY2F0dW4vdmlkZW8ubTN1OA==',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'discovery-bengali',
@@ -619,17 +620,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'bollywood-tv',
-    name: 'BOLLYWOOD TV',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/7102/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/7101/600/400',
-    thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2JvbGx5d29vZC1oZC9jZGE1NDJiNi1jM2I0LTRiNWUtYTU3OC03NmU0MWFjMzVlMGQvMC5tM3U4',
-    type: 'hls',
-  },
-  {
     id: 'mix-hollywood',
     name: 'MIX HOLLYWOOD',
     category: 'Movies',
@@ -1101,6 +1091,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bengali show',
     streamUrl: 'aHR0cHM6Ly9saXZlLWJhbmdsYS5ha2FtYWl6ZWQubmV0L2xpdmVhYnIvcGxheWxpc3QubTN1OA==',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'hi-dost',
@@ -1112,6 +1103,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'tv show',
     streamUrl: 'aHR0cHM6Ly9jZG4tMS5waXNob3cudHYvbGl2ZS8yMjQvbWFzdGVyLm0zdTg=',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'discovery-hd',
@@ -1123,6 +1115,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'nature documentary',
     streamUrl: 'aHR0cHM6Ly9mbDMxLm1vdmVvbmpveS5jb20vRGlzY292ZXJ5X0NoYW5uZWwvdHJhY2tzLXYxYTEvbW9uby50cy5tM3U4',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'khushboo-bangla',
@@ -1134,6 +1127,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bengali show',
     streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xNDczL21hc3Rlci5tM3U4',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'zb-music',
@@ -1145,6 +1139,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'music video',
     streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3pibXVzaWMvdHJhY2tzLXYxYTEvbW9uby50cy5tM3U4',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'zb-bhakti',
@@ -1156,6 +1151,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'devotional music',
     streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3piYmhhY3RpL2luZGV4Lm0zdTg=',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'ananda-barta',
@@ -1167,6 +1163,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'news broadcast',
     streamUrl: 'aHR0cHM6Ly9hY2NvdW50MTkubGl2ZWJveC5jby5pbi9BbmFuZGFiYXJ0YTJobHMvbGl2ZS5tM3U4',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'sun-tv',
@@ -1178,6 +1175,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'tv show',
     streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTY2OS5tM3U4',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   // Sony Channels and iframe channels at the bottom as requested
   {
@@ -1322,6 +1320,7 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'bengali movie',
     streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL1pCQ0lORU1BL2luZGV4Lm0zdTg=',
     type: 'hls',
+    autoReloadInMinutes: 1,
   },
   {
     id: 'dd-bangla',

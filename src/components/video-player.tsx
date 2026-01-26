@@ -108,6 +108,89 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   },[]);
   
+  const initializeHls = useCallback(() => {
+    const currentVideo = videoRef.current;
+    if (!currentVideo) return;
+
+    if (hlsRef.current) {
+        hlsRef.current.destroy();
+    }
+    
+    setPlayerError(null);
+    setQualityLevels([]);
+    setCurrentQuality(-1);
+    setIsManifestLive(false);
+
+    if (type === 'hls') {
+        import('hls.js').then(Hls => {
+            if (Hls.default.isSupported()) {
+                const hls = new Hls.default({
+                    liveSyncDurationCount: 3,
+                    maxMaxBufferLength: 30,
+                    liveDurationInfinity: true,
+                    fragLoadingTimeOut: 20000,
+                    manifestLoadingTimeOut: 10000,
+                    levelLoadingTimeOut: 10000,
+                    fragLoadingMaxRetry: 4,
+                    manifestLoadingMaxRetry: 2,
+                    levelLoadingMaxRetry: 4,
+                    backBufferLength: 90
+                });
+                hlsRef.current = hls;
+
+                hls.on(Hls.default.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        switch(data.type) {
+                          case Hls.default.ErrorTypes.NETWORK_ERROR:
+                            if (hlsRef.current) {
+                              hlsRef.current.startLoad();
+                            }
+                            break;
+                          case Hls.default.ErrorTypes.MEDIA_ERROR:
+                            if (hlsRef.current) {
+                              hlsRef.current.recoverMediaError();
+                            }
+                            break;
+                          default:
+                            setPlayerError(`An unrecoverable playback error occurred.`);
+                            if (hlsRef.current) {
+                              hlsRef.current.destroy();
+                            }
+                            break;
+                        }
+                    }
+                });
+
+                hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
+                     if (data.details) {
+                        const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
+                        setIsManifestLive(isStreamLive);
+                     }
+                     setPlayerError(null);
+                     playVideo(currentVideo);
+                     if (hls.levels && hls.levels.length > 1) {
+                        setQualityLevels(hls.levels);
+                     }
+                });
+
+                hls.on(Hls.default.Events.LEVEL_SWITCHED, (event, data) => {
+                    setCurrentQuality(data.level)
+                });
+                
+                hls.loadSource(decodedSrc);
+                hls.attachMedia(currentVideo);
+
+            } else if (currentVideo.canPlayType('application/vnd.apple.mpegurl')) {
+                currentVideo.src = decodedSrc;
+                playVideo(currentVideo);
+            }
+        });
+    } else if (type === 'mp4') {
+        currentVideo.src = decodedSrc;
+        playVideo(currentVideo);
+    }
+  }, [decodedSrc, type, playVideo]);
+
   useEffect(() => {
     setIsClient(true);
     setPlayerRef(videoRef);
@@ -120,108 +203,35 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [setPlayerRef]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const initializeHls = () => {
-      const currentVideo = videoRef.current;
-      if (!currentVideo) return;
-
-      if (hlsRef.current) {
-          hlsRef.current.destroy();
-      }
-      
-      setPlayerError(null);
-      setQualityLevels([]);
-      setCurrentQuality(-1);
-      setIsManifestLive(false);
-
-      if (type === 'hls') {
-          import('hls.js').then(Hls => {
-              if (Hls.default.isSupported()) {
-                  const hls = new Hls.default({
-                      liveSyncDurationCount: 3,
-                      maxMaxBufferLength: 30,
-                      liveDurationInfinity: true,
-                      fragLoadingTimeOut: 20000,
-                      manifestLoadingTimeOut: 10000,
-                      levelLoadingTimeOut: 10000,
-                      fragLoadingMaxRetry: 4,
-                      manifestLoadingMaxRetry: 2,
-                      levelLoadingMaxRetry: 4,
-                      backBufferLength: 90
-                  });
-                  hlsRef.current = hls;
-
-                  hls.on(Hls.default.Events.ERROR, (event, data) => {
-                      if (data.fatal) {
-                          switch(data.type) {
-                            case Hls.default.ErrorTypes.NETWORK_ERROR:
-                              if (hlsRef.current) {
-                                hlsRef.current.startLoad();
-                              }
-                              break;
-                            case Hls.default.ErrorTypes.MEDIA_ERROR:
-                              if (hlsRef.current) {
-                                hlsRef.current.recoverMediaError();
-                              }
-                              break;
-                            default:
-                              setPlayerError(`An unrecoverable playback error occurred.`);
-                              if (hlsRef.current) {
-                                hlsRef.current.destroy();
-                              }
-                              break;
-                          }
-                      }
-                  });
-
-                  hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
-                       if (data.details) {
-                          const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
-                          setIsManifestLive(isStreamLive);
-                       }
-                       setPlayerError(null);
-                       playVideo(currentVideo);
-                       if (hls.levels && hls.levels.length > 1) {
-                          setQualityLevels(hls.levels);
-                       }
-                  });
-
-                  hls.on(Hls.default.Events.LEVEL_SWITCHED, (event, data) => {
-                      setCurrentQuality(data.level)
-                  });
-                  
-                  hls.loadSource(decodedSrc);
-                  hls.attachMedia(currentVideo);
-
-              } else if (currentVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                  currentVideo.src = decodedSrc;
-                  playVideo(currentVideo);
-              }
-          });
-      } else if (type === 'mp4') {
-          currentVideo.src = decodedSrc;
-          playVideo(currentVideo);
-      }
-    };
-    
     // Initial load
     initializeHls();
     
+    const video = videoRef.current;
+
     return () => {
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
         }
-        if (videoRef.current) {
-            const currentVideo = videoRef.current;
-            currentVideo.pause();
-            currentVideo.removeAttribute('src');
-            currentVideo.load();
+        if (video) {
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
         }
     }
-  }, [decodedSrc, type, playVideo]);
+  }, [initializeHls]);
+
+  useEffect(() => {
+    if (channel.autoReloadInMinutes && channel.autoReloadInMinutes > 0 && type === 'hls') {
+      const reloadInterval = setInterval(() => {
+        if (videoRef.current && !document.hidden && isPlaying) {
+          initializeHls();
+        }
+      }, channel.autoReloadInMinutes * 60 * 1000);
+
+      return () => clearInterval(reloadInterval);
+    }
+  }, [channel, type, initializeHls, isPlaying]);
 
   const isLive = duration === Infinity || isManifestLive;
 
