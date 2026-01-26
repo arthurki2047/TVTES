@@ -143,19 +143,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (type === 'hls') {
         import('hls.js').then(Hls => {
             if (Hls.default.isSupported()) {
-                const hls = new Hls.default({
-                    // HLS.js configuration for better live stream performance and error recovery.
-                    liveSyncDurationCount: 3,
-                    maxMaxBufferLength: 30,
-                    liveDurationInfinity: true,
-                    fragLoadingTimeOut: 20000,
-                    manifestLoadingTimeOut: 10000,
-                    levelLoadingTimeOut: 10000,
-                    fragLoadingMaxRetry: 4,
-                    manifestLoadingMaxRetry: 2,
-                    levelLoadingMaxRetry: 4,
-                    backBufferLength: 90
-                });
+                const hls = new Hls.default(); // Use default configuration for simplicity and stability
                 hlsRef.current = hls;
 
                 /**
@@ -168,14 +156,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
-                            // Attempt to recover from network errors.
-                            setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
+                            // Attempt to recover from network errors silently
                             if (hlsRef.current) {
                               hlsRef.current.startLoad();
                             }
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
-                            setPlayerError('A media error occurred. Trying to recover...');
+                            // Attempt to recover from media errors silently
                             if (hlsRef.current) {
                               hlsRef.current.recoverMediaError();
                             }
@@ -691,3 +678,5 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
