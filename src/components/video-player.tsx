@@ -155,14 +155,23 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
                   hls.on(Hls.default.Events.ERROR, (event, data) => {
                       if (data.fatal) {
-                          if (data.type === Hls.default.ErrorTypes.NETWORK_ERROR) {
-                              setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
-                          } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR) {
+                          switch(data.type) {
+                            case Hls.default.ErrorTypes.NETWORK_ERROR:
                               if (hlsRef.current) {
-                                  hlsRef.current.recoverMediaError();
+                                hlsRef.current.startLoad();
                               }
-                          } else {
-                             setPlayerError(`An unrecoverable error occurred: ${data.details}`);
+                              break;
+                            case Hls.default.ErrorTypes.MEDIA_ERROR:
+                              if (hlsRef.current) {
+                                hlsRef.current.recoverMediaError();
+                              }
+                              break;
+                            default:
+                              setPlayerError(`An unrecoverable playback error occurred.`);
+                              if (hlsRef.current) {
+                                hlsRef.current.destroy();
+                              }
+                              break;
                           }
                       }
                   });
@@ -849,5 +858,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
 
     
