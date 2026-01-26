@@ -1179,6 +1179,17 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9hY2NvdW50MTkubGl2ZWJveC5jby5pbi9BbmFuZGFiYXJ0YTJobHMvbGl2ZS5tM3U4',
     type: 'hls',
   },
+  {
+    id: 'sun-tv',
+    name: 'Sun TV',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/sun-tv-logo/400/400',
+    logoImageHint: 'entertainment logo',
+    thumbnailUrl: 'https://picsum.photos/seed/sun-tv-thumb/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTY2OS5tM3U4',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'discovery-science',
