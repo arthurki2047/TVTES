@@ -736,7 +736,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/8201/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'aHR0cHM6Ly9jYy1yNWh1cGN5bTVvZWhoLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy1yNWh1cGN5bTVvZWhoLzgwZjkyZTZmLTQ0NWQtNDM5NS1iZGVlLTNkMzViZDk3MWRmMS8wLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jYy1yNWh1cGN5bTVvZWhoLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy1yNWh1cGN5bTVvZWhoLzhmMGE5M2ExLThkMTYtNDhlOS04OGViLTU0ZGViMmJjM2M0Zi8wLm0zdTg=',
     type: 'hls',
   },
   {
