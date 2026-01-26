@@ -24,7 +24,7 @@ export interface VideoPlayerHandles {
 }
 
 function formatTime(seconds: number) {
-    if (isNaN(seconds) || seconds === Infinity || seconds < 0) {
+    if (isNaN(seconds) || !isFinite(seconds) || seconds < 0) {
         return '00:00';
     }
     const date = new Date(seconds * 1000);
@@ -73,6 +73,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
+
+  const isLive = useMemo(() => duration === Infinity || isManifestLive, [duration, isManifestLive]);
 
   const decodedSrc = useMemo(() => {
     if (!src) return '';
@@ -265,8 +267,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         }
     }
   }, [initializeHls]);
-
-  const isLive = duration === Infinity || isManifestLive;
 
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current) {
@@ -539,6 +539,24 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     // They fire automatically, ensuring smooth UI transitions.
     const handleEnterPiP = () => setIsInPiP(true);
     const handleLeavePiP = () => setIsInPiP(false);
+
+    /**
+     * --- LIVE STREAM 'ended' EVENT HANDLING ---
+     * For live streams, the 'ended' event can sometimes fire when the player reaches the end of the current
+     * buffer, even though the stream is still ongoing. This handler catches that event, seeks to the live
+     * edge of the stream, and resumes playback to ensure a continuous viewing experience.
+     */
+    const handleEnded = () => {
+        if (isLive) {
+            console.log("Live stream 'ended' event detected. Attempting to seek to live edge...");
+            const seekableEnd = video.seekable.length > 0 ? video.seekable.end(video.seekable.length - 1) : 0;
+            if (isFinite(seekableEnd) && seekableEnd > 0) {
+                // Seek slightly behind the live edge to allow for some buffer.
+                video.currentTime = Math.max(seekableEnd - 10, 0); 
+                playVideo(video);
+            }
+        }
+    };
     
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
@@ -548,6 +566,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('enterpictureinpicture', handleEnterPiP);
     video.addEventListener('leavepictureinpicture', handleLeavePiP);
+    video.addEventListener('ended', handleEnded);
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -564,6 +583,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('playing', handlePlaying);
       video.removeEventListener('enterpictureinpicture', handleEnterPiP);
       video.removeEventListener('leavepictureinpicture', handleLeavePiP);
+      video.removeEventListener('ended', handleEnded);
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -573,7 +593,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, playVideo]);
+  }, [resetControlsTimeout, isLocked, playVideo, isLive]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -644,17 +664,20 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
         {/* Bottom controls: Progress bar, volume, settings, PiP, and fullscreen */}
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {(duration > 0) && (
+            {(duration > 0 && !isLive) && (
                 <div className="px-4 md:px-6 mb-2">
-                    <Slider value={[isLive ? duration : progress]} max={duration} onValueChange={(value) => { if (videoRef.current) videoRef.current.currentTime = value[0]; }} className="w-full" />
+                    <Slider value={[progress]} max={duration} onValueChange={(value) => { if (videoRef.current) videoRef.current.currentTime = value[0]; }} className="w-full" />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
-                      {isLive ? (
-                        <div className="flex items-center gap-1.5">
-                            <div className="relative flex h-2.5 w-2.5"><div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div><div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div></div>
-                            <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
-                        </div>
-                      ) : (<span>{formatTime(progress)}</span>)}
-                        <span>{formatTime(duration)}</span>
+                      <span>{formatTime(progress)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                </div>
+            )}
+            {isLive && (
+                <div className="px-4 md:px-6 mb-2 flex items-end" style={{ height: '34px' }}>
+                    <div className="flex items-center gap-1.5">
+                        <div className="relative flex h-2.5 w-2.5"><div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div><div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div></div>
+                        <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
                     </div>
                 </div>
             )}
