@@ -221,18 +221,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   }, [initializeHls]);
 
-  useEffect(() => {
-    if (channel.autoReloadInMinutes && channel.autoReloadInMinutes > 0 && type === 'hls') {
-      const reloadInterval = setInterval(() => {
-        if (videoRef.current && !document.hidden && isPlaying) {
-          initializeHls();
-        }
-      }, channel.autoReloadInMinutes * 60 * 1000);
-
-      return () => clearInterval(reloadInterval);
-    }
-  }, [channel, type, initializeHls, isPlaying]);
-
   const isLive = duration === Infinity || isManifestLive;
 
   const handleSeek = useCallback((amount: number) => {
