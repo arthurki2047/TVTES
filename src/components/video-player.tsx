@@ -39,6 +39,10 @@ function formatTime(seconds: number) {
 
 type FitMode = 'contain' | 'cover' | 'fill';
 
+/**
+ * A robust, responsive video player component for HLS and MP4 streams.
+ * It features auto-loading, muted autoplay, error recovery, and a full suite of UI controls.
+ */
 export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ src, type, onSwipe, onBack, channel }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
@@ -102,8 +106,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
    * Modern browsers have strict autoplay policies. Playback will usually only start if:
    * 1. The video is muted.
    * 2. The user has interacted with the site before (e.g., clicked a button).
-   * This component relies on the user navigating to this page, which counts as an interaction.
-   * If autoplay fails, the user can manually start playback with the play button.
+   * This component ensures the video is muted on initial load to meet this requirement.
    */
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -114,14 +117,16 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         // Other errors (like NotAllowedError for autoplay) are logged but don't crash the app.
         if (error.name !== 'AbortError') {
           console.error("Video play failed:", error);
+          setPlayerError('Playback was prevented by the browser. Please click the play button.');
         }
       });
     }
   },[]);
   
   /**
-   * --- STREAM LOADING & ERROR HANDLING ---
-   * This function initializes the video player based on the stream type (HLS or MP4).
+   * --- STREAM LOADING & ERROR HANDLING (AUTO-LOAD LOGIC) ---
+   * This function is called on component mount to automatically load the stream.
+   * It initializes the player based on the stream type (HLS or MP4).
    * For HLS streams, it uses the hls.js library to handle playback.
    * For MP4, it uses the native HTML5 <video> element.
    */
@@ -140,39 +145,49 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     setCurrentQuality(-1);
     setIsManifestLive(false);
 
+    // --- AUTOPLAY POLICY: START MUTED ---
+    // To comply with modern browser autoplay policies, we mute the video
+    // before attempting to play it for the first time. This significantly increases
+    // the chance of autoplay succeeding without prior user interaction on the page.
+    currentVideo.muted = true;
+
     if (type === 'hls') {
         import('hls.js').then(Hls => {
+            // --- NATIVE HLS FALLBACK ---
+            // Check if HLS.js is supported. If not, but the browser can play HLS natively (like Safari),
+            // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
-                const hls = new Hls.default(); // Use default configuration for simplicity and stability
+                const hls = new Hls.default({
+                    // Use default configuration for stability and broad compatibility.
+                    // This allows hls.js to manage buffering and rendition switching automatically.
+                });
                 hlsRef.current = hls;
 
                 /**
-                 * --- ERROR HANDLING ---
+                 * --- HLS.js ERROR RECOVERY LOGIC ---
                  * HLS.js provides an error event listener. We hook into it to detect
-                 * fatal errors (e.g., manifest not found, network issues) and either
-                 * attempt to recover or display an error message to the user.
+                 * fatal errors and attempt to recover automatically, creating a more resilient stream.
                  */
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
-                            // Attempt to recover from network errors silently
-                            if (hlsRef.current) {
-                              hlsRef.current.startLoad();
-                            }
+                            // For network errors (e.g., a temporary connection drop),
+                            // we attempt to recover by restarting the stream load.
+                            console.warn('HLS.js network error occurred, attempting to recover...');
+                            hls.startLoad();
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
-                            // Attempt to recover from media errors silently
-                            if (hlsRef.current) {
-                              hlsRef.current.recoverMediaError();
-                            }
+                            // For media errors (e.g., a corrupted segment),
+                            // we attempt a more aggressive recovery.
+                            console.warn('HLS.js media error occurred, attempting to recover...');
+                            hls.recoverMediaError();
                             break;
                           default:
-                            // For other fatal errors, show a message and stop playback.
-                            setPlayerError(`An unrecoverable playback error occurred. Details: ${data.details}.`);
-                            if (hlsRef.current) {
-                              hlsRef.current.destroy();
-                            }
+                            // For other fatal errors (e.g., manifest parsing error), recovery is not possible.
+                            // We destroy the HLS instance and display an error to the user.
+                            setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
+                            hls.destroy();
                             break;
                         }
                     }
@@ -187,6 +202,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                      setPlayerError(null);
                      // --- AUTOPLAY ---
                      // Once the manifest is ready, we attempt to play the video automatically.
+                     // Since we muted it earlier, this is highly likely to succeed.
                      playVideo(currentVideo);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -197,21 +213,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     setCurrentQuality(data.level)
                 });
                 
-                // --- AUTO-LOAD ---
+                // --- AUTO-LOAD TRIGGER ---
                 // This is the call that starts loading the HLS stream source.
                 hls.loadSource(decodedSrc);
                 hls.attachMedia(currentVideo);
 
             } else if (currentVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                // For browsers that support HLS natively (like Safari).
+                // This is the NATIVE HLS FALLBACK for browsers like Safari.
+                // We set the src directly and let the browser handle playback.
                 currentVideo.src = decodedSrc;
-                playVideo(currentVideo);
+                playVideo(currentVideo); // Attempt to play (already muted).
             }
         });
     } else if (type === 'mp4') {
         // For direct MP4 links, we just set the src and play.
         currentVideo.src = decodedSrc;
-        playVideo(currentVideo);
+        playVideo(currentVideo); // Attempt to play (already muted).
     }
   }, [decodedSrc, type, playVideo]);
 
@@ -230,7 +247,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [setPlayerRef]);
 
   /**
-   * --- AUTO-LOAD TRIGGER ---
+   * --- AUTO-LOAD EFFECT ---
    * This `useEffect` hook runs when the component mounts or when the `initializeHls`
    * function changes (which happens if the `src` prop changes).
    * By calling `initializeHls()` here, we ensure that the video stream
@@ -434,7 +451,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (!video) return;
 
     // 1. Check for browser support AND if PiP is disabled on the video element.
-    // 'video.disablePictureInPicture' allows disabling PiP on a per-video basis.
+    // 'document.pictureInPictureEnabled' and 'video.disablePictureInPicture' ensure compatibility.
     if (!isPiPSupported || video.disablePictureInPicture) {
         console.warn('Picture-in-Picture is not supported or is disabled for this video.');
         return;
@@ -460,7 +477,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     resetControlsTimeout();
   }, [resetControlsTimeout, isPiPSupported]);
 
-  // Adds a keyboard shortcut ('P' key) for toggling Picture-in-Picture.
+  // Adds a keyboard shortcut ('P' key) for toggling Picture-in-Picture for accessibility.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if modifier keys are pressed or if input fields are focused.
@@ -520,8 +537,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     // --- Picture-in-Picture Event Handling ---
     // These events are crucial for updating the UI based on PiP state.
     // They fire automatically, ensuring smooth UI transitions.
-    // Performance: Using requestAnimationFrame is unnecessary here as we're just
-    // setting state, and the browser handles the transition animation itself.
     const handleEnterPiP = () => setIsInPiP(true);
     const handleLeavePiP = () => setIsInPiP(false);
     
@@ -587,8 +602,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   return (
     <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
+      {/* The native video element that will be controlled by React and hls.js */}
       <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline onClick={handleTap} data-channel-id={channel.id} />
       
+      {/* UI for displaying fatal playback errors */}
       {playerError && !isInPiP && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-4 text-center">
             <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
@@ -602,15 +619,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110"><Unlock size={48} /></Button>
         </div>
       )}
-
+      
+      {/* Container for all player controls. Visibility is toggled based on user interaction. */}
       <div className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked && !isInPiP) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+        {/* Gradient overlays to ensure control visibility against various video content */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
 
+        {/* Top controls: Back button and Lock button (in fullscreen) */}
         <div className="p-2 md:p-4 flex justify-between items-center">
             <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}><ArrowLeft /></Button>
             {isFullscreen && (<Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleLock}><Lock /></Button>)}
         </div>
         
+        {/* Center controls: Channel switching and main Play/Pause button */}
         <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronLeft size={40} /></Button>
           <div className="flex items-center justify-center gap-2 md:gap-4">
@@ -621,6 +642,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronRight size={40} /></Button>
         </div>
 
+        {/* Bottom controls: Progress bar, volume, settings, PiP, and fullscreen */}
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
             {(duration > 0) && (
                 <div className="px-4 md:px-6 mb-2">
@@ -678,5 +700,3 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
-
-    
