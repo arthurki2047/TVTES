@@ -148,8 +148,8 @@ export default function WatchPage() {
                     data-ai-hint={channel.logoImageHint}
                 />
                 <div>
-                    <h1 className="font-headline text-3xl font-bold">{channel.name}</h1>
-                    <p className="text-muted-foreground">{channel.category}</p>
+                    <h1 className="font-headline text-3xl font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">{channel.name}</h1>
+                    <p className="text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">{channel.category}</p>
                 </div>
                 <FavoriteToggleButton channelId={channel.id} channelName={channel.name} className="h-12 w-12 shrink-0"/>
             </div>
@@ -222,3 +222,4 @@ export default function WatchPage() {
     </div>
   );
 }
+    
