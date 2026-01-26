@@ -6,6 +6,7 @@ import { Home, ListVideo, Search, Star, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SiteLogo } from './site-logo';
 import { Button } from './ui/button';
+import { NotificationsButton } from './notifications-button';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -26,19 +27,22 @@ export function BottomNav() {
       <header className="sticky top-0 z-40 hidden w-full border-b bg-background/80 backdrop-blur-sm md:block">
         <div className="container flex h-16 items-center justify-between">
           <SiteLogo />
-          <nav className="flex items-center space-x-1">
-             {navItems.map((item) => {
-                const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
-                return (
-                    <Button key={item.label} variant={isActive ? "secondary" : "ghost"} asChild>
-                        <Link href={item.href}>
-                            <item.icon className="mr-2 h-4 w-4" />
-                            {item.label}
-                        </Link>
-                    </Button>
-                );
-            })}
-          </nav>
+          <div className="flex items-center gap-1">
+            <nav className="flex items-center space-x-1">
+               {navItems.map((item) => {
+                  const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
+                  return (
+                      <Button key={item.label} variant={isActive ? "secondary" : "ghost"} asChild>
+                          <Link href={item.href}>
+                              <item.icon className="mr-2 h-4 w-4" />
+                              {item.label}
+                          </Link>
+                      </Button>
+                  );
+              })}
+            </nav>
+            <NotificationsButton />
+          </div>
         </div>
       </header>
 
