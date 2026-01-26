@@ -159,10 +159,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             // Check if HLS.js is supported. If not, but the browser can play HLS natively (like Safari),
             // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
-                const hls = new Hls.default({
-                    // Use default configuration for stability and broad compatibility.
-                    // This allows hls.js to manage buffering and rendition switching automatically.
-                });
+                
+                // --- LIVE STREAM CONFIGURATION ---
+                // This configuration is specifically tuned for live streaming.
+                // `liveDurationInfinity: true` tells HLS.js to treat streams without an
+                // ENDLIST tag as truly live (infinite duration). This is the key to preventing
+                // the player from "ending" when it reaches the end of a temporary manifest.
+                const hlsConfig = {
+                  liveDurationInfinity: true,
+                  liveSyncDurationCount: 3, // A robust buffer for live playback.
+                  liveMaxLatencyDurationCount: 5, // A higher tolerance for latency.
+                };
+
+                const hls = new Hls.default(hlsConfig);
                 hlsRef.current = hls;
 
                 /**
