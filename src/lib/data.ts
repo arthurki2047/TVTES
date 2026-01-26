@@ -723,10 +723,10 @@ export const channels: Channel[] = [
     name: 'THE MOVIE CLUB',
     category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/8302/400/400',
-    logoImageHint: 'movie logo',
+    logoImageHint: 'movie club',
     thumbnailUrl: 'https://picsum.photos/seed/8301/600/400',
     thumbnailImageHint: 'movie club',
-    streamUrl: 'aHR0cHM6Ly9wYi1ka2RwenVzbDBhcXFyLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9wYi1ka2RwenVzbDBhcXFyLzZiNTQ4OGExLTk4YTEtNGQ3My05YzgzLWEzOWJkMzM3OTlkNi8zLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
     type: 'hls',
   },
   {
