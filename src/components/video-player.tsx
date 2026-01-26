@@ -96,11 +96,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }, 5000);
   }, [isLocked]);
   
+  /**
+   * --- AUTOPLAY HANDLING ---
+   * This function attempts to play the video.
+   * Modern browsers have strict autoplay policies. Playback will usually only start if:
+   * 1. The video is muted.
+   * 2. The user has interacted with the site before (e.g., clicked a button).
+   * This component relies on the user navigating to this page, which counts as an interaction.
+   * If autoplay fails, the user can manually start playback with the play button.
+   */
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
     const promise = video.play();
     if (promise !== undefined) {
       promise.catch(error => {
+        // We catch the AbortError which can happen if the user navigates away quickly.
+        // Other errors (like NotAllowedError for autoplay) are logged but don't crash the app.
         if (error.name !== 'AbortError') {
           console.error("Video play failed:", error);
         }
@@ -108,14 +119,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   },[]);
   
+  /**
+   * --- STREAM LOADING & ERROR HANDLING ---
+   * This function initializes the video player based on the stream type (HLS or MP4).
+   * For HLS streams, it uses the hls.js library to handle playback.
+   * For MP4, it uses the native HTML5 <video> element.
+   */
   const initializeHls = useCallback(() => {
     const currentVideo = videoRef.current;
     if (!currentVideo) return;
 
+    // Clean up any existing HLS instance before initializing a new one.
     if (hlsRef.current) {
         hlsRef.current.destroy();
     }
     
+    // Reset player state for the new stream.
     setPlayerError(null);
     setQualityLevels([]);
     setCurrentQuality(-1);
@@ -125,6 +144,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         import('hls.js').then(Hls => {
             if (Hls.default.isSupported()) {
                 const hls = new Hls.default({
+                    // HLS.js configuration for better live stream performance and error recovery.
                     liveSyncDurationCount: 3,
                     maxMaxBufferLength: 30,
                     liveDurationInfinity: true,
@@ -138,20 +158,29 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 });
                 hlsRef.current = hls;
 
+                /**
+                 * --- ERROR HANDLING ---
+                 * HLS.js provides an error event listener. We hook into it to detect
+                 * fatal errors (e.g., manifest not found, network issues) and either
+                 * attempt to recover or display an error message to the user.
+                 */
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
+                            // Attempt to recover from network errors.
                             if (hlsRef.current) {
                               hlsRef.current.startLoad();
                             }
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
+                            // Attempt to recover from media errors.
                             if (hlsRef.current) {
                               hlsRef.current.recoverMediaError();
                             }
                             break;
                           default:
+                            // For other fatal errors, show a message and stop playback.
                             setPlayerError(`An unrecoverable playback error occurred.`);
                             if (hlsRef.current) {
                               hlsRef.current.destroy();
@@ -161,12 +190,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     }
                 });
 
+                // This event fires when the HLS manifest has been successfully loaded and parsed.
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
                      if (data.details) {
                         const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
                         setIsManifestLive(isStreamLive);
                      }
                      setPlayerError(null);
+                     // --- AUTOPLAY ---
+                     // Once the manifest is ready, we attempt to play the video automatically.
                      playVideo(currentVideo);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -177,15 +209,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     setCurrentQuality(data.level)
                 });
                 
+                // --- AUTO-LOAD ---
+                // This is the call that starts loading the HLS stream source.
                 hls.loadSource(decodedSrc);
                 hls.attachMedia(currentVideo);
 
             } else if (currentVideo.canPlayType('application/vnd.apple.mpegurl')) {
+                // For browsers that support HLS natively (like Safari).
                 currentVideo.src = decodedSrc;
                 playVideo(currentVideo);
             }
         });
     } else if (type === 'mp4') {
+        // For direct MP4 links, we just set the src and play.
         currentVideo.src = decodedSrc;
         playVideo(currentVideo);
     }
@@ -202,6 +238,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     };
   }, [setPlayerRef]);
 
+  /**
+   * --- AUTO-LOAD TRIGGER ---
+   * This `useEffect` hook runs when the component mounts or when the `initializeHls`
+   * function changes (which happens if the `src` prop changes).
+   * By calling `initializeHls()` here, we ensure that the video stream
+   * begins to load automatically as soon as the player is on the screen.
+   */
   useEffect(() => {
     // Initial load
     initializeHls();
@@ -209,6 +252,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const video = videoRef.current;
 
     return () => {
+        // Cleanup function: ensures we stop the stream and release resources
+        // when the component is unmounted or the source changes.
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
@@ -341,6 +386,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   };
 
+  /**
+   * --- PLAY/PAUSE CONTROL ---
+   * This function is called when the user clicks the main play/pause button in the UI.
+   * It toggles the playback state of the video.
+   */
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (videoRef.current?.paused) {
@@ -710,6 +760,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 <RotateCcw size={32} />
             </Button>
 
+            {/* --- PLAY/PAUSE UI --- */}
+            {/* This button calls the `togglePlay` function to control playback. */}
             <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">
               {isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}
             </Button>
@@ -860,3 +912,4 @@ VideoPlayer.displayName = 'VideoPlayer';
     
 
     
+
