@@ -39,6 +39,9 @@ function formatTime(seconds: number) {
 
 type FitMode = 'contain' | 'cover' | 'fill';
 
+const MAX_RETRIES = 5;
+const RETRY_DELAY = 1000; // 1 second base
+
 /**
  * A robust, responsive video player component for HLS and MP4 streams.
  * It features auto-loading, muted autoplay, error recovery, and a full suite of UI controls.
@@ -69,6 +72,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isPiPSupported, setIsPiPSupported] = useState(false);
   const [isInPiP, setIsInPiP] = useState(false);
   
+  // Smart Reload states
+  const [retryVersion, setRetryVersion] = useState(0);
+  const retryCountRef = useRef(0);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
@@ -140,6 +148,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (hlsRef.current) {
         hlsRef.current.destroy();
     }
+    if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+    }
     
     // Reset player state for the new stream.
     setPlayerError(null);
@@ -160,16 +171,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
                 
-                const hlsConfig = {
-                  // --- LIVE STREAM CONFIGURATION ---
-                  // This configuration is specifically tuned for live streaming.
-                  // `liveDurationInfinity: true` tells HLS.js to treat streams without an
-                  // ENDLIST tag as truly live (infinite duration). This is the key to preventing
-                  // the player from "ending" when it reaches the end of a temporary manifest.
-                  liveDurationInfinity: true,
-                };
-
-                const hls = new Hls.default(hlsConfig);
+                const hls = new Hls.default();
                 hlsRef.current = hls;
 
                 /**
@@ -179,31 +181,31 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                  * This is also where we handle buffer stalls, which cause live streams to "get stuck."
                  */
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
-                    const video = videoRef.current;
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
-                            // For network errors (e.g., a temporary connection drop),
-                            // we attempt to recover by restarting the stream load.
-                            console.warn('HLS.js fatal network error occurred, attempting to recover...');
-                            hls.startLoad();
+                             console.warn(`HLS.js fatal network error. Retry ${retryCountRef.current + 1}/${MAX_RETRIES}...`);
+                            if (retryCountRef.current < MAX_RETRIES) {
+                                const delay = RETRY_DELAY * Math.pow(2, retryCountRef.current); // Exponential backoff
+                                retryCountRef.current++;
+                                retryTimeoutRef.current = setTimeout(() => setRetryVersion(v => v + 1), delay);
+                            } else {
+                                console.error('HLS.js recovery failed after max retries.');
+                                setPlayerError(`Stream failed to load after multiple retries. Please check your network.`);
+                                hls.destroy();
+                            }
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
-                            // For media errors (e.g., a corrupted segment),
-                            // we attempt a more aggressive recovery.
                             console.warn('HLS.js fatal media error occurred, attempting to recover...');
                             hls.recoverMediaError();
                             break;
                           default:
-                            // For other fatal errors (e.g., manifest parsing error), recovery is not possible.
-                            // We destroy the HLS instance and display an error to the user.
-                            setPlayerError(`Stream failed to load. Please check your network connection or the stream source. Details: ${data.details}.`);
+                            setPlayerError(`A fatal error occurred. Details: ${data.details}.`);
                             hls.destroy();
                             break;
                         }
                     } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR && data.details === 'bufferStalledError') {
-                        // This is the key fix for stuck live streams.
-                        // When the buffer stalls, we jump to the live edge to resume playback.
+                        const video = videoRef.current;
                         console.warn('HLS.js buffer stalled, attempting to jump to live edge.');
                         if (video && hls.media) {
                             const liveSyncPosition = hls.liveSyncPosition;
@@ -218,6 +220,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
                 // This event fires when the HLS manifest has been successfully loaded and parsed.
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
+                     retryCountRef.current = 0; // Reset retry count on successful load
+                     if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+
                      if (data.details) {
                         const isStreamLive = data.details.live || data.details.type?.toUpperCase() === 'LIVE';
                         setIsManifestLive(isStreamLive);
@@ -287,7 +292,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             video.load();
         }
     }
-  }, [initializeHls]);
+  }, [initializeHls, retryVersion]);
 
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current) {
@@ -593,6 +598,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       releaseWakeLock();
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
+      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
     };
   }, [resetControlsTimeout, isLocked, playVideo]);
 
@@ -724,3 +730,5 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
