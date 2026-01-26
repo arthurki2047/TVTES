@@ -971,6 +971,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'the-movie-club',
+    name: 'The Movie Club 😀',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
+    type: 'hls',
+  },
+  {
     id: 'goldmines-2',
     name: 'GOLDMINES 2',
     category: 'Movies',
