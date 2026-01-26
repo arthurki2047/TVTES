@@ -160,15 +160,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
                 
-                // --- LIVE STREAM CONFIGURATION ---
-                // This configuration is specifically tuned for live streaming.
-                // `liveDurationInfinity: true` tells HLS.js to treat streams without an
-                // ENDLIST tag as truly live (infinite duration). This is the key to preventing
-                // the player from "ending" when it reaches the end of a temporary manifest.
                 const hlsConfig = {
+                  // --- LIVE STREAM CONFIGURATION ---
+                  // This configuration is specifically tuned for live streaming.
+                  // `liveDurationInfinity: true` tells HLS.js to treat streams without an
+                  // ENDLIST tag as truly live (infinite duration). This is the key to preventing
+                  // the player from "ending" when it reaches the end of a temporary manifest.
                   liveDurationInfinity: true,
-                  liveSyncDurationCount: 3, // A robust buffer for live playback.
-                  liveMaxLatencyDurationCount: 5, // A higher tolerance for latency.
                 };
 
                 const hls = new Hls.default(hlsConfig);
@@ -178,20 +176,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                  * --- HLS.js ERROR RECOVERY LOGIC ---
                  * HLS.js provides an error event listener. We hook into it to detect
                  * fatal errors and attempt to recover automatically, creating a more resilient stream.
+                 * This is also where we handle buffer stalls, which cause live streams to "get stuck."
                  */
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
+                    const video = videoRef.current;
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
                             // For network errors (e.g., a temporary connection drop),
                             // we attempt to recover by restarting the stream load.
-                            console.warn('HLS.js network error occurred, attempting to recover...');
+                            console.warn('HLS.js fatal network error occurred, attempting to recover...');
                             hls.startLoad();
                             break;
                           case Hls.default.ErrorTypes.MEDIA_ERROR:
                             // For media errors (e.g., a corrupted segment),
                             // we attempt a more aggressive recovery.
-                            console.warn('HLS.js media error occurred, attempting to recover...');
+                            console.warn('HLS.js fatal media error occurred, attempting to recover...');
                             hls.recoverMediaError();
                             break;
                           default:
@@ -201,8 +201,20 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                             hls.destroy();
                             break;
                         }
+                    } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR && data.details === 'bufferStalledError') {
+                        // This is the key fix for stuck live streams.
+                        // When the buffer stalls, we jump to the live edge to resume playback.
+                        console.warn('HLS.js buffer stalled, attempting to jump to live edge.');
+                        if (video && hls.media) {
+                            const liveSyncPosition = hls.liveSyncPosition;
+                            if (liveSyncPosition && isFinite(liveSyncPosition)) {
+                                video.currentTime = liveSyncPosition;
+                                playVideo(video);
+                            }
+                        }
                     }
                 });
+
 
                 // This event fires when the HLS manifest has been successfully loaded and parsed.
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
@@ -549,24 +561,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const handleEnterPiP = () => setIsInPiP(true);
     const handleLeavePiP = () => setIsInPiP(false);
 
-    /**
-     * --- LIVE STREAM 'ended' EVENT HANDLING ---
-     * For live streams, the 'ended' event can sometimes fire when the player reaches the end of the current
-     * buffer, even though the stream is still ongoing. This handler catches that event, seeks to the live
-     * edge of the stream, and resumes playback to ensure a continuous viewing experience.
-     */
-    const handleEnded = () => {
-        if (isLive) {
-            console.log("Live stream 'ended' event detected. Attempting to seek to live edge...");
-            const seekableEnd = video.seekable.length > 0 ? video.seekable.end(video.seekable.length - 1) : 0;
-            if (isFinite(seekableEnd) && seekableEnd > 0) {
-                // Seek slightly behind the live edge to allow for some buffer.
-                video.currentTime = Math.max(seekableEnd - 10, 0); 
-                playVideo(video);
-            }
-        }
-    };
-    
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('timeupdate', handleTimeUpdate);
@@ -575,7 +569,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('enterpictureinpicture', handleEnterPiP);
     video.addEventListener('leavepictureinpicture', handleLeavePiP);
-    video.addEventListener('ended', handleEnded);
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -592,7 +585,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('playing', handlePlaying);
       video.removeEventListener('enterpictureinpicture', handleEnterPiP);
       video.removeEventListener('leavepictureinpicture', handleLeavePiP);
-      video.removeEventListener('ended', handleEnded);
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -602,7 +594,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, playVideo, isLive]);
+  }, [resetControlsTimeout, isLocked, playVideo]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
