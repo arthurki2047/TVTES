@@ -296,7 +296,7 @@ export const channels: Channel[] = [
     logoImageHint: 'animal logo',
     thumbnailUrl: 'https://picsum.photos/seed/2801/600/400',
     thumbnailImageHint: 'wildlife',
-    streamUrl: 'aHR0cHM6Ly92b2R6b25nLm1qdW5vb24udHY6ODA4Ny9zdHJlYW10ZXN0L0FuaW1hbC1QbGFuZXQtMTU4LTMvbGl2ZS8xNTgtM00vY2h1bmtzLm0zdTg/bmltYmxlc2Vzc2lvbmlkPTU4NTU4NzQwNw==',
+    streamUrl: 'aHR0cHM6Ly92b2R6b25nLm1qdW5vb24udHY6ODA4Ny9zdHJlYW10ZXN0L0FuaW1hbC1QbGFuZXQtMTU4LTMvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -429,17 +429,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/4501/600/400',
     thumbnailImageHint: 'bollywood music',
     streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWZpbG1pZ2FhbmUvMmI0NzY0MzYtNWQ1Ny00NzJiLTliOWQtNThjZTY0ODc4MDc2LzEubTN1OA==',
-    type: 'hls',
-  },
-  {
-    id: 'star-sports-1-hd',
-    name: 'Star Sports 1 HD',
-    category: 'Sports',
-    logoUrl: 'https://picsum.photos/seed/4602/400/400',
-    logoImageHint: 'sports logo',
-    thumbnailUrl: 'https://picsum.photos/seed/4601/600/400',
-    thumbnailImageHint: 'cricket match',
-    streamUrl: 'aHR0cHM6Ly9tcnpwbGF5aW4uZnVuL3JvYXJ6b24vc3RyZWFtLnBocD9pZD0xODI4M2Q0ZjVmMTNjMGNhYzVjYWI0NDMzYTBlZDhmMCZlPS5tM3U4',
     type: 'hls',
   },
   {
@@ -1267,6 +1256,17 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9hLWNkbi5rbG93ZHR2LmNvbS9saXZlMS9zbWNfNzIwcC9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
+  {
+    id: 'the-movie-club',
+    name: 'The Movie Club',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
+    type: 'hls',
+  },
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'discovery-science',
@@ -1420,17 +1420,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/high-news-2-thumb/600/400',
     thumbnailImageHint: 'news broadcast',
     streamUrl: 'aHR0cHM6Ly9oaWdobWVkaWEubGl2ZWJveC5jby5pbi9ISUdITkVXU2hscy9MSVZFLm0zdTg=',
-    type: 'hls',
-  },
-  {
-    id: 'the-movie-club',
-    name: 'The Movie Club',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
-    thumbnailImageHint: 'movie scene',
-    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
     type: 'hls',
   },
 ];
