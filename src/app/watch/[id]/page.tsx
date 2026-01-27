@@ -1,18 +1,16 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { getChannelById, getChannels } from '@/lib/data';
 import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { Home, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -23,7 +21,6 @@ export default function WatchPage() {
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
   
-  const [dateTime, setDateTime] = useState<Date | null>(null);
   const channel = getChannelById(channelId);
   
   const decodedStreamUrl = useMemo(() => {
@@ -44,14 +41,6 @@ export default function WatchPage() {
       addRecentlyPlayed(channelId);
     }
   }, [channelId, addRecentlyPlayed]);
-
-  useEffect(() => {
-    // This effect runs only on the client, preventing hydration mismatch
-    const timer = setInterval(() => {
-      setDateTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {
@@ -198,20 +187,8 @@ export default function WatchPage() {
               </div>
             )}
             
-            <div className="mt-8 flex w-full items-stretch justify-between gap-4">
-                {dateTime ? (
-                    <div className="flex flex-col justify-center rounded-lg border-2 border-primary bg-card px-4 py-3 text-left">
-                        <p className="font-mono text-sm text-muted-foreground">{format(dateTime, 'eeee, PP')}</p>
-                        <p className="font-mono text-3xl font-bold text-primary">{format(dateTime, 'p')}</p>
-                    </div>
-                ) : (
-                    <div className="flex flex-col justify-center rounded-lg border-2 border-primary bg-card px-4 py-3 text-left">
-                        <Skeleton className="mb-2 h-5 w-36" />
-                        <Skeleton className="h-9 w-28" />
-                    </div>
-                )}
-
-                <Button variant="outline" size="lg" className="h-auto flex-grow border-2 border-primary text-2xl font-bold text-primary" onClick={handleGoHome} style={{ flexBasis: '50%' }}>
+            <div className="mt-8">
+                <Button variant="outline" size="lg" className="h-auto w-full border-2 border-primary text-2xl font-bold text-primary" onClick={handleGoHome}>
                     <Home className="mr-3 h-8 w-8" />
                     Home
                 </Button>
