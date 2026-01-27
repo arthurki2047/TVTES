@@ -553,17 +553,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'swastik-stories',
-    name: 'Swastik Stories',
-    category: 'Devotional',
-    logoUrl: 'https://picsum.photos/seed/swastik-stories-logo/400/400',
-    logoImageHint: 'stories logo',
-    thumbnailUrl: 'https://picsum.photos/seed/swastik-stories-thumb/600/400',
-    thumbnailImageHint: 'mythological story',
-    streamUrl: 'aHR0cHM6Ly9jc20tZS1jZXNoYXJlZGxzZ3NpbjJsaXZlLTg3NTkzMTg0LmJsbnEueW9zcGFjZS5jb20vY3NtL2V4dGxpdmUvcnVubnR2cHJkMDEsc3dhc3Rpa3J1bm4vbWFzdGVyLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'motu-patlu',
     name: 'Motu Patlu',
     category: 'Kids',
@@ -791,7 +780,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/news-18-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali news',
-    streamUrl: 'aHR0cHM6Ly9uMThzeW5kaWNhdGlvbi5ha2FtYWl6ZWQubmV0L2Jway10di9OZXdzMThfQmFuZ2xhX05XMTlfTU9CL291dHB1dDAxL05ld3MxOF9CYW5nbGFfTlcxOF9NT0ItYXVkaW9fMTA4MDM1X2Jlbj0xMDgwMDAtdmlkZW89MjI5NzYwMC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9udzE4bGl2ZS5jZG4uamlvLmNvbS9icGstdHYvTmV3czE4X0JhbmdsYV9OVzE4X01PQi9vdXRwdXQwMS9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
