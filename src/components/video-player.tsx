@@ -630,7 +630,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   return (
     <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
       {/* The native video element that will be controlled by React and hls.js */}
-      <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline onClick={handleTap} data-channel-id={channel.id} />
+      <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline autoPlay muted onClick={handleTap} data-channel-id={channel.id} />
       
       {/* UI for displaying fatal playback errors */}
       {playerError && !isInPiP && (
