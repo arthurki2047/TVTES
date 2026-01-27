@@ -671,7 +671,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
         {/* Bottom controls: Progress bar, volume, settings, PiP, and fullscreen */}
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {(duration > 0 && !isLive) && (
+            {type === 'mp4' && duration > 0 ? (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider value={[progress]} max={duration} onValueChange={(value) => { if (videoRef.current) videoRef.current.currentTime = value[0]; }} className="w-full" />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
@@ -679,15 +679,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                       <span>{formatTime(duration)}</span>
                     </div>
                 </div>
-            )}
-            {isLive && (
+            ) : type === 'hls' ? (
                 <div className="px-4 md:px-6 mb-2 flex items-end" style={{ height: '34px' }}>
                     <div className="flex items-center gap-1.5">
                         <div className="relative flex h-2.5 w-2.5"><div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div><div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div></div>
                         <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
                     </div>
                 </div>
-            )}
+            ) : <div style={{ height: '34px' }} className="mb-2"></div>
+            }
             <div className="flex items-center justify-between gap-4 px-2 md:px-4">
                 <div className="flex items-center gap-1 md:gap-2">
                     <Button variant="ghost" size="icon" onClick={togglePlay}>{isPlaying ? <Pause /> : <Play />}</Button>
