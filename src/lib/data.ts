@@ -894,17 +894,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'ktv-bangla',
-    name: 'KTV BANGLA',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/ktv-bangla-logo/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/ktv-bangla-thumb/600/400',
-    thumbnailImageHint: 'bengali show',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYXN0ZXIvMGJjOGU4Mzc2YmQ4NDE3YTFiNjc2MTEzOGFhNDFjMjZjNzMwOTMxMi90cmliZS10di9pbmRleC5tM3U4',
-    type: 'hls',
-  },
-  {
     id: 'zee-bangla-5',
     name: 'Zee Bangla 5',
     category: 'Entertainment',
@@ -968,17 +957,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/dhamaka-movies-thumb/600/400',
     thumbnailImageHint: 'action movie',
     streamUrl: 'aHR0cHM6Ly9jZG4tMS5waXNob3cudHYvbGl2ZS8yMzUvbWFzdGVyLm0zdTg=',
-    type: 'hls',
-  },
-  {
-    id: 'the-movie-club',
-    name: 'The Movie Club 😀',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
-    thumbnailImageHint: 'movie scene',
-    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
     type: 'hls',
   },
   {
@@ -1388,7 +1366,29 @@ export const channels: Channel[] = [
     thumbnailImageHint: 'tv screen',
     streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovZmlsZXgubTN1OC9saXZlMi5waHA/aWQ9Mzc=',
     type: 'iframe',
-  }
+  },
+  {
+    id: 'high-news',
+    name: 'High News',
+    category: 'News',
+    logoUrl: 'https://picsum.photos/seed/high-news-2-logo/400/400',
+    logoImageHint: 'news logo',
+    thumbnailUrl: 'https://picsum.photos/seed/high-news-2-thumb/600/400',
+    thumbnailImageHint: 'news broadcast',
+    streamUrl: 'aHR0cHM6Ly9oaWdobWVkaWEubGl2ZWJveC5jby5pbi9ISUdITkVXU2hscy9MSVZFLm0zdTg=',
+    type: 'hls',
+  },
+  {
+    id: 'the-movie-club',
+    name: 'The Movie Club 😀',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
