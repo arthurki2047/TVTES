@@ -13,20 +13,23 @@ const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Start muted to allow initial autoplay
 
+  // This is the single source of truth for the user's mute preference.
   const toggleMute = useCallback(() => {
-    const video = playerRef?.current;
-    if (video) {
-        video.muted = !video.muted;
-    }
-  }, [playerRef]);
+    setIsMuted(prev => !prev);
+  }, []);
   
-  // Effect to sync mute state from video element to context
+  // This effect syncs the user's mute preference (from context state) to the video element.
   useEffect(() => {
     const video = playerRef?.current;
     if (!video) return;
 
+    // Apply the global mute state to the video element.
+    video.muted = isMuted;
+
+    // This listener handles cases where the video's mute state might be changed externally
+    // (e.g., by browser controls) and syncs it back to our context state.
     const handleVolumeChange = () => {
         if (video.muted !== isMuted) {
             setIsMuted(video.muted);
@@ -34,11 +37,6 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     };
 
     video.addEventListener('volumechange', handleVolumeChange);
-
-    // Initial sync
-    if (video.muted !== isMuted) {
-        setIsMuted(video.muted);
-    }
 
     return () => {
         if (video) {

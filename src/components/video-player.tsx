@@ -96,13 +96,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     return src;
   }, [src]);
-
-  // This ref tracks if we've performed the initial, muted autoplay for the current video source.
-  // It's reset only when the video source (src) prop changes.
-  const isInitialLoadForSrc = useRef(true);
-  useEffect(() => {
-      isInitialLoadForSrc.current = true;
-  }, [src]);
   
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
@@ -123,7 +116,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
    * Modern browsers have strict autoplay policies. Playback will usually only start if:
    * 1. The video is muted.
    * 2. The user has interacted with the site before (e.g., clicked a button).
-   * This component ensures the video is muted on initial load to meet this requirement.
+   * This component's mute state is controlled by a global context to ensure autoplay on first load
+   * while respecting user's preference on subsequent loads.
    */
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -165,13 +159,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     setCurrentQuality(-1);
     setIsManifestLive(false);
 
-    // --- AUTOPLAY POLICY: START MUTED on initial load for a new source ---
-    // This ensures autoplay works reliably. On retries for the same stream,
-    // the user's mute preference is respected because this block is skipped.
-    if (isInitialLoadForSrc.current) {
-        currentVideo.muted = true;
-        isInitialLoadForSrc.current = false; // Flag that initial autoplay has been handled for this source
-    }
+    // Mute state is now handled globally by VideoPlayerContext to preserve user preference across channels.
+    // The context ensures the first playback is muted for autoplay, and subsequent ones respect the user's choice.
 
     if (type === 'hls') {
         import('hls.js').then(Hls => {
@@ -241,7 +230,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                      setPlayerError(null);
                      // --- AUTOPLAY ---
                      // Once the manifest is ready, we attempt to play the video automatically.
-                     // Since we muted it earlier, this is highly likely to succeed.
+                     // The global context has handled the mute state for us.
                      playVideo(currentVideo);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -261,13 +250,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                 // This is the NATIVE HLS FALLBACK for browsers like Safari.
                 // We set the src directly and let the browser handle playback.
                 currentVideo.src = decodedSrc;
-                playVideo(currentVideo); // Attempt to play (already muted).
+                playVideo(currentVideo); // Attempt to play.
             }
         });
     } else if (type === 'mp4') {
         // For direct MP4 links, we just set the src and play.
         currentVideo.src = decodedSrc;
-        playVideo(currentVideo); // Attempt to play (already muted).
+        playVideo(currentVideo); // Attempt to play.
     }
   }, [decodedSrc, type, playVideo]);
 
@@ -304,7 +293,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         }
     }
   }, [initializeHls, retryVersion]);
-
+  
   const handleSeek = useCallback((amount: number) => {
     if (videoRef.current) {
         const newTime = videoRef.current.currentTime + amount;
