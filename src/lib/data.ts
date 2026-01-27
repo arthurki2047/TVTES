@@ -1424,7 +1424,7 @@ export const channels: Channel[] = [
   },
   {
     id: 'the-movie-club',
-    name: 'The Movie Club 😀',
+    name: 'The Movie Club',
     category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
     logoImageHint: 'movie logo',
