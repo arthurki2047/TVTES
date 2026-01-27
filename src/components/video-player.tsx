@@ -29,7 +29,7 @@ function formatTime(seconds: number) {
     }
     const date = new Date(seconds * 1000);
     const hh = date.getUTCHours();
-    const mm = date.getUTCMinutes();
+    const mm = date.getUTCMins();
     const ss = date.getUTCSeconds().toString().padStart(2, '0');
     if (hh) {
         return `${hh}:${mm.toString().padStart(2, '0')}:${ss}`;
@@ -96,6 +96,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
     return src;
   }, [src]);
+
+  // This ref tracks if we've performed the initial, muted autoplay for the current video source.
+  // It's reset only when the video source (src) prop changes.
+  const isInitialLoadForSrc = useRef(true);
+  useEffect(() => {
+      isInitialLoadForSrc.current = true;
+  }, [src]);
   
   const resetControlsTimeout = useCallback(() => {
     if (isLocked) return;
@@ -158,11 +165,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     setCurrentQuality(-1);
     setIsManifestLive(false);
 
-    // --- AUTOPLAY POLICY: START MUTED ---
-    // To comply with modern browser autoplay policies, we mute the video
-    // before attempting to play it for the first time. This significantly increases
-    // the chance of autoplay succeeding without prior user interaction on the page.
-    currentVideo.muted = true;
+    // --- AUTOPLAY POLICY: START MUTED on initial load for a new source ---
+    // This ensures autoplay works reliably. On retries for the same stream,
+    // the user's mute preference is respected because this block is skipped.
+    if (isInitialLoadForSrc.current) {
+        currentVideo.muted = true;
+        isInitialLoadForSrc.current = false; // Flag that initial autoplay has been handled for this source
+    }
 
     if (type === 'hls') {
         import('hls.js').then(Hls => {
@@ -171,7 +180,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
             // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
                 
-                const hls = new Hls.default();
+                const hls = new Hls.default({
+                  // Use default hls.js config for robust, battle-tested streaming
+                });
                 hlsRef.current = hls;
 
                 /**
@@ -671,7 +682,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
         {/* Bottom controls: Progress bar, volume, settings, PiP, and fullscreen */}
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
-            {type === 'mp4' && duration > 0 ? (
+            {type === 'mp4' && !isLive ? (
                 <div className="px-4 md:px-6 mb-2">
                     <Slider value={[progress]} max={duration} onValueChange={(value) => { if (videoRef.current) videoRef.current.currentTime = value[0]; }} className="w-full" />
                     <div className="flex justify-between text-xs font-mono text-white/80 mt-1">
@@ -679,14 +690,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                       <span>{formatTime(duration)}</span>
                     </div>
                 </div>
-            ) : type === 'hls' ? (
+            ) : (
                 <div className="px-4 md:px-6 mb-2 flex items-end" style={{ height: '34px' }}>
                     <div className="flex items-center gap-1.5">
                         <div className="relative flex h-2.5 w-2.5"><div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></div><div className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></div></div>
                         <span className="text-sm font-medium uppercase text-red-400 tracking-wider">Live</span>
                     </div>
                 </div>
-            ) : <div style={{ height: '34px' }} className="mb-2"></div>
+            )
             }
             <div className="flex items-center justify-between gap-4 px-2 md:px-4">
                 <div className="flex items-center gap-1 md:gap-2">
