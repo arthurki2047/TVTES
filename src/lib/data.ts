@@ -1423,17 +1423,6 @@ export const channels: Channel[] = [
     type: 'iframe',
   },
   {
-    id: 'z-test-1',
-    name: 'Z TEST 1',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/z-test-1-logo/400/400',
-    logoImageHint: 'tv logo',
-    thumbnailUrl: 'https://picsum.photos/seed/z-test-1-thumb/600/400',
-    thumbnailImageHint: 'tv screen',
-    streamUrl: 'aHR0cHM6Ly9hbGxpbm9uZXJlYm9ybi54eXovZmlsZXgubTN1OC9saXZlMi5waHA/aWQ9Mzc=',
-    type: 'iframe',
-  },
-  {
     id: 'high-news',
     name: 'High News',
     category: 'News',
