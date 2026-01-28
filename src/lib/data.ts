@@ -872,17 +872,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'zee-bangla-5',
-    name: 'Zee Bangla 5',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/zee-bangla-5-logo/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/zee-bangla-5-thumb/600/400',
-    thumbnailImageHint: 'bengali show',
-    streamUrl: 'aHR0cHM6Ly9wcmV2aWV3c2VjZ2lyZS5ha2FtYWl6ZWQubmV0L3YxL21hbmlmZXN0L2EwZDAwNzMxMmJmZDk5YzQ3Zjc2Yjc3YWUyNmIxY2NkYWFlNzZjYjEvcHJfbGl2ZV9pcmVfaGQvZDFlZWIwMzYtZmI1ZS00Y2ZiLWFmNjMtZGE0YTFlMzcxMjE4LzAubTN1OA==',
-    type: 'hls',
-  },
-  {
     id: 'kings-comedy',
     name: 'KINGS COMEDY',
     category: 'Entertainment',
@@ -1192,7 +1181,7 @@ export const channels: Channel[] = [
   },
   {
     id: 'xumo-tv',
-    name: 'Xumo TV',
+    name: 'Xumo Tv',
     category: 'Movies',
     logoUrl: 'https://picsum.photos/seed/xumo-tv-logo/400/400',
     logoImageHint: 'movie logo',
