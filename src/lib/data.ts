@@ -835,7 +835,7 @@ export const channels: Channel[] = [
     logoImageHint: 'planet earth',
     thumbnailUrl: 'https://picsum.photos/seed/love-planet-thumb/600/400',
     thumbnailImageHint: 'earth documentary',
-    streamUrl: 'aHR0cHM6Ly9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay5hbWFnaS50di9wbGF5bGlzdC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay1hcG9wdy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
