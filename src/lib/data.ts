@@ -296,7 +296,7 @@ export const channels: Channel[] = [
     logoImageHint: 'animal logo',
     thumbnailUrl: 'https://picsum.photos/seed/2801/600/400',
     thumbnailImageHint: 'wildlife',
-    streamUrl: 'https://vodzong.mjunoon.tv:8087/streamtest/Animal-Planet-158-3/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly92b2R6b25nLm1qdW5vb24udHY6ODA4Ny9zdHJlYW10ZXN0L0FuaW1hbC1QbGFuZXQtMTU4LTMvcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   {
@@ -648,7 +648,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7801/600/400',
     thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'https://mumt03.tangotv.in/GOLDMINESBOLLYWOOD/tracks-v2a1/mono.m3u8',
+    streamUrl: 'aHR0cHM6Ly9tdW10MDMudGFuZ290di5pbi9HT0xETUlORVNET0xMWVdPT0QvdHJhY2tzLXYyYTEvbW9uby5tM3U4',
     type: 'hls',
   },
   {
@@ -769,7 +769,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/news-18-bangla-thumb/600/400',
     thumbnailImageHint: 'bengali news',
-    streamUrl: 'https://nw18live.cdn.jio.com/bpk-tv/News18_Bangla_NW18_MOB/output01/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9udzE4bGl2ZS5jZG4uamlvLmNvbS9icGstdHYvTmV3czE4X0JhbmdsYV9OVzE4X01PQi9vdXRwdXQwMS9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
@@ -824,7 +824,7 @@ export const channels: Channel[] = [
     logoImageHint: 'planet earth',
     thumbnailUrl: 'https://picsum.photos/seed/love-planet-thumb/600/400',
     thumbnailImageHint: 'earth documentary',
-    streamUrl: 'https://amg01821-lovetvchannels-lovetheplanetuksamsung-samsunguk-apopw.amagi.tv/ts-eu-w1-n2/playlist/amg01821-lovetvchannels-lovetheplanetuksamsung-samsunguk/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay1hcG9wdy5hbWFnaS50di90cy1ldS13MS1uMi9wbGF5bGlzdC9hbWcwMTgyMS1sb3ZldHZjaGFubmVscy1sb3ZldGhlcGxhbmV0dWtzYW1zdW5nLXNhbXN1bmd1ay9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -868,7 +868,7 @@ export const channels: Channel[] = [
     logoImageHint: 'comedy logo',
     thumbnailUrl: 'https://picsum.photos/seed/kings-comedy-thumb/600/400',
     thumbnailImageHint: 'comedy show',
-    streamUrl: 'https://cc-ejrl4az77gvl4.akamaized.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ejrl4az77gvl4/OTM/OTM_KINGS_OF_COMEDY_SAMSUNG/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6NzdlZ2Y0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejQ3ZWdmNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -934,7 +934,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/dd-news-thumb/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index_5.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvMDgxMWNkOGMzNzNhNGM0MDlkNTM4NWE2Y2QyZmExOGIvaW5kZXhfNS5tM3U4',
     type: 'hls',
   },
   {
@@ -945,7 +945,7 @@ export const channels: Channel[] = [
     logoImageHint: 'action movie',
     thumbnailUrl: 'https://picsum.photos/seed/best-action-thumb/600/400',
     thumbnailImageHint: 'action scene',
-    streamUrl: 'https://streams2.sofast.tv/ptnr-yupptv/title-BEST_ACTION_YUPPTV/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/9a4a5412-ca99-48d3-9013-d1811b95b9d2/b49bd4b1-ee45-4073-abf5-f038c2635ba4/2.m3u8',
+    streamUrl: 'aHR0cHM6Ly9zdHJlYW1zMi5zb2Zhc3QudHYvcHRuci15dXBwdHYvdGl0bGUtQkVTVF9BQ1RJT05fWVVQUFRWL3YxL21hbmlmZXN0LzYxMWQ3OWIxMWI3N2UyZjU3MTkzNGZkODBjYTE0MTM0NTM3NzJhYzcvOWE0YTU0MTItY2E5OS00OGQzLTkwMTMtZDE4MTFiOTViOWQyL2I0OWJkNGIxLWVlNDUtNDA3My1hYmY1LWYwMzhjMjYzNWJhNC8yLm0zdTg=',
     type: 'hls',
   },
   {
@@ -956,7 +956,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/sananda-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://anywhere.pwisetthon.com/http://115.187.41.216:8080/hls/sanandatv/2_1/index.m3u8?tkn=1888948061',
+    streamUrl: 'aHR0cHM6Ly9hbnl3aGVyZS5wd2lzZXR0aG9uLmNvbS9odHRwOi8vMTE1LjE4Ny40MS4yMTY6ODA4MC9obHMvc2FuYW5kYXR2LzJfMS9pbmRleC5tM3U4P3Rrbj0xODg4OTQ4MDYx',
     type: 'hls',
   },
   {
@@ -1044,7 +1044,7 @@ export const channels: Channel[] = [
     logoImageHint: 'spiritual logo',
     thumbnailUrl: 'https://picsum.photos/seed/zb-bhakti-thumb/600/400',
     thumbnailImageHint: 'devotional music',
-    streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3piYmhhY3RpL2luZGV4Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9zZXJ2ZXIuemlsbGFyYmFydGEuY29tL3piYmhha3RpL2luZGV4Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -1110,7 +1110,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/ktv-bangla-thumb/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/tribe-tv/index.m3u8',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYXN0ZXIvMGJjOGU4Mzc2YmQ4NDE3YTFiNjc2MTEzOGFhNDFjMjZjNzMwOTMxMi90cmliZS10di9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
@@ -1408,7 +1408,7 @@ export const channels: Channel[] = [
     logoImageHint: 'entertainment logo',
     thumbnailUrl: 'https://picsum.photos/seed/and-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'https://amg01117-amg01117c1-amgplt0029.playout.now3.amagi.tv/playlist/amg01117-amg01117c1-amgplt0029/playlist.m3u8',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTExNy1hbWcwMTExN2MxLWFtZ3BsdDAwMjkucGxheW91dC5ub3czLmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAxMTE3LWFtZzAxMTE3YzEtYW1ncGx0MDAyOS9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
 ];
