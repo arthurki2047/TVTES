@@ -461,7 +461,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/5301/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xMjkzLzEyOTNfMC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xMjkzL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
