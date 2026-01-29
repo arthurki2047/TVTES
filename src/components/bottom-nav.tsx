@@ -39,7 +39,15 @@ export function BottomNav() {
   const renderDesktopNavItem = (item: typeof navItems[0]) => {
     const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
     return (
-        <Button key={item.label} variant={isActive ? "secondary" : "ghost"} onClick={() => handleNav(item.href)}>
+        <Button
+            key={item.label}
+            variant="ghost"
+            onClick={() => handleNav(item.href)}
+            className={cn(
+                "transition-all duration-300",
+                isActive ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-muted"
+            )}
+        >
             <item.icon className="mr-2 h-4 w-4" />
             {item.label}
         </Button>
@@ -53,12 +61,12 @@ export function BottomNav() {
           key={item.href}
           onClick={() => handleNav(item.href)}
           className={cn(
-            'flex flex-col items-center gap-1 p-2 text-muted-foreground transition-colors hover:text-primary cursor-pointer',
-            isActive && 'text-primary'
+            'flex flex-col items-center justify-center gap-1 p-2 rounded-full h-14 w-14 transition-all duration-300 cursor-pointer',
+            isActive ? 'bg-primary text-primary-foreground scale-110 shadow-lg' : 'text-muted-foreground hover:text-primary'
           )}
         >
-          <item.icon className="h-6 w-6" />
-          <span className="text-xs">{item.label}</span>
+          <item.icon className="h-5 w-5" />
+          <span className="text-[10px] font-bold">{item.label}</span>
         </div>
       );
   }
@@ -79,11 +87,13 @@ export function BottomNav() {
       </header>
 
       {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/80 backdrop-blur-sm md:hidden">
-        <div className="container mx-auto flex h-16 max-w-md items-center justify-around">
-          {navItems.map(renderMobileNavItem)}
-        </div>
-      </nav>
+      <div className="fixed bottom-0 left-0 right-0 z-40 p-2 md:hidden">
+        <nav className="mx-auto w-full max-w-md rounded-full border bg-background/80 shadow-lg backdrop-blur-sm">
+          <div className="flex h-16 items-center justify-around">
+            {navItems.map(renderMobileNavItem)}
+          </div>
+        </nav>
+      </div>
     </>
   );
 }

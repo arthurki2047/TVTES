@@ -10,7 +10,7 @@ export default function MainLayout({
       <BottomNav />
       <main className="flex-1">{children}</main>
       {/* Padding at the bottom to prevent content from being obscured by the bottom nav */}
-      <div className="h-16 md:hidden" />
+      <div className="h-24 md:hidden" />
     </div>
   );
 }
