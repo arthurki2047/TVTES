@@ -40,7 +40,20 @@ export default function WatchPage() {
     if (channelId) {
       addRecentlyPlayed(channelId);
     }
-  }, [channelId, addRecentlyPlayed]);
+
+    // Cleanup function to run when the component unmounts (i.e., user navigates away)
+    return () => {
+      // Check if there is a video player ref and a video element
+      if (videoPlayerRef.current) {
+        const videoElement = videoPlayerRef.current.getVideoElement();
+        
+        // If a video is playing, not an iframe, and not already in PiP, enter PiP mode.
+        if (videoElement && !videoElement.paused && channel?.type !== 'iframe' && !document.pictureInPictureElement) {
+          videoPlayerRef.current.togglePictureInPicture();
+        }
+      }
+    };
+  }, [channelId, addRecentlyPlayed, channel]);
 
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {

@@ -21,6 +21,7 @@ interface VideoPlayerProps {
 export interface VideoPlayerHandles {
   getVideoElement: () => HTMLVideoElement | null;
   requestFullscreen: () => void;
+  togglePictureInPicture: () => void;
 }
 
 function formatTime(seconds: number) {
@@ -521,6 +522,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   useImperativeHandle(ref, () => ({
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
+    togglePictureInPicture: togglePictureInPicture,
   }));
 
   const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
