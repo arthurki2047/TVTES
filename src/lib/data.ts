@@ -153,7 +153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://9xjio.wiseplayout.com/9XM/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly85eGppbzoLnVzZXBsYXlvdXQuY29tLzlYTS9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -450,7 +450,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/5301/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'https://cdn-4.pishow.tv/live/1293/master.m3u8',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNC5waXNob3cudHYvbGl2ZS8xMjkzL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -956,7 +956,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/sananda-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cDovLzExNS4xODcuNDEuMjE2OjgwODAvaGxzL3NhbmFuZGF0di8yXzEvaW5kZXgubTN1OD90a249MTg4ODk0ODA2MQ==',
+    streamUrl: 'aHR0cDovLzExNS4xODcuNDEuMjE2OjgwODAvaGxzL3NhbmFuZGF0di8yXzEvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -1243,6 +1243,17 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
     thumbnailImageHint: 'movie scene',
     streamUrl: 'aHR0cHM6Ly9zaXMtZ2xvYmFsLnByb2Quc2Ftc3VuZ3R2LnBsdXMvdjEvdHZwcHJkL3NjLW1wMmFyNGNhNDI1eG8ubTN1OA==',
+    type: 'hls',
+  },
+  {
+    id: 'travel-4k',
+    name: 'Travel 4K',
+    category: 'Infotainment',
+    logoUrl: 'https://picsum.photos/seed/travel-4k-logo/400/400',
+    logoImageHint: 'travel logo',
+    thumbnailUrl: 'https://picsum.photos/seed/travel-4k-thumb/600/400',
+    thumbnailImageHint: 'travel 4k',
+    streamUrl: 'aHR0cHM6Ly9zdHJlYW1zMi5zb2Zhc3QudHYvcHRuci1sZ3R2L3RpdGxlLTRLLVRSQVZFTC1UVi1FTkdfTEcvdjEvbWFzdGVyLzYxMWQ3OWIxMWI3N2UyZjU3MTkzNGZkODBjYTE0MTM0NTM3NzJhYzcvZjkyYWI4YzQtNDg5Ny00NmFkLThkYTAtZDA5ZDRhOWJiMjVmL21hbmlmZXN0Lm0zdTg=',
     type: 'hls',
   },
   // Sony Channels and iframe channels at the bottom as requested
