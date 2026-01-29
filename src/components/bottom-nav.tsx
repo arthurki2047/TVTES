@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { SiteLogo } from './site-logo';
 import { Button } from './ui/button';
 import { NotificationsButton } from './notifications-button';
+import { useVideoPlayer } from '@/context/video-player-context';
+import React from 'react';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -19,6 +21,22 @@ const navItems = [
 export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { playerActionsRef } = useVideoPlayer();
+
+  const handleNavClick = async (e: React.MouseEvent, href: string) => {
+    if (pathname.startsWith('/watch/') && href !== pathname && playerActionsRef?.current) {
+      const videoElement = playerActionsRef.current.getVideoElement();
+      if (videoElement && !videoElement.paused && !document.pictureInPictureElement) {
+        e.preventDefault();
+        try {
+            await playerActionsRef.current.togglePictureInPicture();
+        } catch (error) {
+            console.error("Failed to enter PiP, navigating anyway.", error);
+        }
+        router.push(href);
+      }
+    }
+  };
 
 
   return (
@@ -33,7 +51,7 @@ export function BottomNav() {
                   const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
                   return (
                       <Button key={item.label} variant={isActive ? "secondary" : "ghost"} asChild>
-                          <Link href={item.href}>
+                          <Link href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                               <item.icon className="mr-2 h-4 w-4" />
                               {item.label}
                           </Link>
@@ -55,6 +73,7 @@ export function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className={cn(
                   'flex flex-col items-center gap-1 p-2 text-muted-foreground transition-colors hover:text-primary',
                   isActive && 'text-primary'

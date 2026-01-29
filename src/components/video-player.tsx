@@ -8,7 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Channel } from '@/lib/types';
-import { useVideoPlayer } from '@/context/video-player-context';
+import { useVideoPlayer, type VideoPlayerActions } from '@/context/video-player-context';
 
 interface VideoPlayerProps {
   src: string;
@@ -18,10 +18,7 @@ interface VideoPlayerProps {
   channel: Channel;
 }
 
-export interface VideoPlayerHandles {
-  getVideoElement: () => HTMLVideoElement | null;
-  requestFullscreen: () => void;
-  togglePictureInPicture: () => void;
+export interface VideoPlayerHandles extends VideoPlayerActions {
 }
 
 function formatTime(seconds: number) {
@@ -472,7 +469,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
    * This function is designed to be robust and cross-browser compatible,
    * handling entering/exiting PiP and common errors.
    */
-  const togglePictureInPicture = useCallback((e?: React.MouseEvent | KeyboardEvent) => {
+  const togglePictureInPicture = useCallback(async (e?: React.MouseEvent | KeyboardEvent) => {
     e?.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
@@ -484,22 +481,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         return;
     }
 
-    // 2. Toggle PiP state.
-    // 'document.pictureInPictureElement' securely checks if an element is currently in PiP.
-    if (document.pictureInPictureElement) {
-        document.exitPictureInPicture()
-          .catch(err => console.error("Error exiting Picture-in-Picture mode:", err));
-    } else {
-        // Request PiP for the current video. This can be done even if paused.
-        video.requestPictureInPicture()
-          .catch(err => {
-            // 3. Handle common errors, like 'NotAllowedError' if the user hasn't
-            // interacted with the page, or if it's blocked by browser policies.
-            console.error("Error entering Picture-in-Picture mode:", err);
-            if (err.name === 'NotAllowedError') {
-                setPlayerError('PiP was not allowed. Please click on the player first.');
-            }
-          });
+    try {
+        // 2. Toggle PiP state.
+        // 'document.pictureInPictureElement' securely checks if an element is currently in PiP.
+        if (document.pictureInPictureElement) {
+            await document.exitPictureInPicture();
+        } else {
+            // Request PiP for the current video. This can be done even if paused.
+            await video.requestPictureInPicture();
+        }
+    } catch (err: any) {
+        // 3. Handle common errors, like 'NotAllowedError' if the user hasn't
+        // interacted with the page, or if it's blocked by browser policies.
+        console.error(`Error ${document.pictureInPictureElement ? 'exiting' : 'entering'} Picture-in-Picture mode:`, err);
+        if (err.name === 'NotAllowedError') {
+            setPlayerError('PiP was not allowed. Please click on the player first.');
+        }
     }
     resetControlsTimeout();
   }, [resetControlsTimeout, isPiPSupported]);

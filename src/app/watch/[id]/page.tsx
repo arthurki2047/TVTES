@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Home, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
+import { useVideoPlayer } from '@/context/video-player-context';
 
 export default function WatchPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function WatchPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
+  const { setPlayerActionsRef } = useVideoPlayer();
   
   const channel = getChannelById(channelId);
   
@@ -36,31 +38,42 @@ export default function WatchPage() {
     return channel.streamUrl;
   }, [channel]);
 
+  // Set and unset the player actions ref in the context
+  useEffect(() => {
+    if (videoPlayerRef) {
+        setPlayerActionsRef(videoPlayerRef);
+    }
+    return () => {
+      setPlayerActionsRef(null);
+    }
+  }, [setPlayerActionsRef, videoPlayerRef]);
+
   useEffect(() => {
     if (channelId) {
       addRecentlyPlayed(channelId);
     }
+  }, [channelId, addRecentlyPlayed]);
 
-    // Cleanup function to run when the component unmounts (i.e., user navigates away)
-    return () => {
-      // Check if there is a video player ref and a video element
-      if (videoPlayerRef.current) {
+  const handleNavigation = useCallback(async (path: string) => {
+    if (videoPlayerRef.current && channel?.type !== 'iframe') {
         const videoElement = videoPlayerRef.current.getVideoElement();
-        
-        // If a video is playing, not an iframe, and not already in PiP, enter PiP mode.
-        if (videoElement && !videoElement.paused && channel?.type !== 'iframe' && !document.pictureInPictureElement) {
-          videoPlayerRef.current.togglePictureInPicture();
+        if (videoElement && !videoElement.paused && !document.pictureInPictureElement) {
+            try {
+                await videoPlayerRef.current.togglePictureInPicture();
+            } catch (error) {
+                console.error("Failed to enter PiP mode, navigating anyway.", error);
+            }
         }
-      }
-    };
-  }, [channelId, addRecentlyPlayed, channel]);
+    }
+    router.push(path);
+  }, [router, channel]);
 
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     }
-    router.push('/');
-  }, [router]);
+    handleNavigation('/');
+  }, [handleNavigation]);
   
   useEffect(() => {
     if (!channel) {
@@ -68,14 +81,9 @@ export default function WatchPage() {
     }
   }, [channel, router]);
 
-  const handleGoHome = () => {
-    if (document.pictureInPictureElement) {
-      // If in PiP mode, do nothing. This keeps the PiP window active.
-      // The user can use system navigation to go home.
-      return;
-    }
-    router.push('/');
-  };
+  const handleGoHome = useCallback(() => {
+    handleNavigation('/');
+  }, [handleNavigation]);
 
   const switchChannel = useCallback((direction: 'next' | 'prev') => {
     if (!channel) return;

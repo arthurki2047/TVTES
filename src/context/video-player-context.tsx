@@ -2,9 +2,18 @@
 
 import React, { createContext, useContext, useState, RefObject, useEffect, useCallback } from 'react';
 
+// Define handles here to be accessible globally without circular deps
+export interface VideoPlayerActions {
+  getVideoElement: () => HTMLVideoElement | null;
+  togglePictureInPicture: () => Promise<void>;
+  requestFullscreen: () => void;
+}
+
 interface VideoPlayerContextType {
   playerRef: RefObject<HTMLVideoElement> | null;
   setPlayerRef: (ref: RefObject<HTMLVideoElement> | null) => void;
+  playerActionsRef: RefObject<VideoPlayerActions> | null;
+  setPlayerActionsRef: (ref: RefObject<VideoPlayerActions> | null) => void;
   isMuted: boolean;
   toggleMute: () => void;
 }
@@ -13,23 +22,19 @@ const VideoPlayerContext = createContext<VideoPlayerContextType | null>(null);
 
 export function VideoPlayerProvider({ children }: { children: React.ReactNode }) {
   const [playerRef, setPlayerRef] = useState<RefObject<HTMLVideoElement> | null>(null);
+  const [playerActionsRef, setPlayerActionsRef] = useState<RefObject<VideoPlayerActions> | null>(null);
   const [isMuted, setIsMuted] = useState(true); // Start muted to allow initial autoplay
 
-  // This is the single source of truth for the user's mute preference.
   const toggleMute = useCallback(() => {
     setIsMuted(prev => !prev);
   }, []);
   
-  // This effect syncs the user's mute preference (from context state) to the video element.
   useEffect(() => {
     const video = playerRef?.current;
     if (!video) return;
 
-    // Apply the global mute state to the video element.
     video.muted = isMuted;
 
-    // This listener handles cases where the video's mute state might be changed externally
-    // (e.g., by browser controls) and syncs it back to our context state.
     const handleVolumeChange = () => {
         if (video.muted !== isMuted) {
             setIsMuted(video.muted);
@@ -45,9 +50,17 @@ export function VideoPlayerProvider({ children }: { children: React.ReactNode })
     };
   }, [playerRef, isMuted]);
 
+  const contextValue = {
+    playerRef,
+    setPlayerRef,
+    playerActionsRef,
+    setPlayerActionsRef,
+    isMuted,
+    toggleMute,
+  };
 
   return (
-    <VideoPlayerContext.Provider value={{ playerRef, setPlayerRef, isMuted, toggleMute }}>
+    <VideoPlayerContext.Provider value={contextValue}>
       {children}
     </VideoPlayerContext.Provider>
   );
