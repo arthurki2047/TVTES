@@ -956,7 +956,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/sananda-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9hbnl3aGVyZS5wd2lzZXR0aG9uLmNvbS9odHRwOi8vMTE1LjE4Ny40MS4yMTY6ODA4MC9obHMvc2FuYW5kYXR2LzJfMS9pbmRleC5tM3U4P3Rrbj0xODg4OTQ4MDYx',
+    streamUrl: 'aHR0cDovLzExNS4xODcuNDEuMjE2OjgwODAvaGxzL3NhbmFuZGF0di8yXzEvaW5kZXgubTN1OD90a249MTg4ODk0ODA2MQ==',
     type: 'hls',
   },
   {
