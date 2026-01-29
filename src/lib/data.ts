@@ -544,7 +544,7 @@ export const channels: Channel[] = [
   {
     id: 'mix-hollywood',
     name: 'MIX HOLLYWOOD',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/7202/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/7201/600/400',
@@ -1028,7 +1028,7 @@ export const channels: Channel[] = [
   {
     id: 'rokuten-scitv',
     name: 'Rokuten SciTV',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/rokuten-scitv-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/rokuten-scitv-thumb/600/400',
@@ -1039,7 +1039,7 @@ export const channels: Channel[] = [
   {
     id: 'xumo-tv',
     name: 'Xumo Tv',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/xumo-tv-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/xumo-tv-thumb/600/400',
@@ -1050,7 +1050,7 @@ export const channels: Channel[] = [
   {
     id: 'plex-rush',
     name: 'Plex Rush',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/plex-rush-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/plex-rush-thumb/600/400',
@@ -1061,7 +1061,7 @@ export const channels: Channel[] = [
   {
     id: 'rakuten-tv',
     name: 'Rakuten TV',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/rakuten-tv-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/rakuten-tv-thumb/600/400',
@@ -1072,7 +1072,7 @@ export const channels: Channel[] = [
   {
     id: 'next-g-tv',
     name: 'Next G TV',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/next-g-tv-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/next-g-tv-thumb/600/400',
@@ -1083,7 +1083,7 @@ export const channels: Channel[] = [
   {
     id: 'free-movies',
     name: 'Free Movies',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/free-movies-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/free-movies-thumb/600/400',
@@ -1094,7 +1094,7 @@ export const channels: Channel[] = [
   {
     id: 'sony-movies',
     name: 'Sony Movies',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/sony-movies-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/sony-movies-thumb/600/400',
@@ -1105,7 +1105,7 @@ export const channels: Channel[] = [
   {
     id: 'the-movie-club',
     name: 'The Movie Club',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/the-movie-club-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-thumb/600/400',
@@ -1425,12 +1425,12 @@ export const channels: Channel[] = [
   {
     id: 'the-movie-club-2',
     name: 'The Movie Club 2',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/the-movie-club-2-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-2-thumb/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: '',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejQ3Z3dsNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -1462,6 +1462,7 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
   { name: 'Kids', slug: 'kids', imageUrl: 'https://picsum.photos/seed/new-cartoon/400/400', imageHint: 'cartoon characters' },
   { name: 'Entertainment', slug: 'entertainment', imageUrl: 'https://picsum.photos/seed/cat-ent/400/400', imageHint: 'movie set' },
   { name: 'Movies', slug: 'movies', imageUrl: 'https://picsum.photos/seed/cat-movies/400/400', imageHint: 'film reel' },
+  { name: 'English Movies', slug: 'english-movies', imageUrl: 'https://picsum.photos/seed/cat-english-movies/400/400', imageHint: 'hollywood sign' },
   { name: 'Music', slug: 'music', imageUrl: 'https://picsum.photos/seed/cat-music/400/400', imageHint: 'live concert' },
   { name: 'Sports', slug: 'sports', imageUrl: 'https://picsum.photos/seed/cat-sports/400/400', imageHint: 'stadium lights' },
   { name: 'Infotainment', slug: 'infotainment', imageUrl: 'https://picsum.photos/seed/cat-info/400/400', imageHint: 'nature documentary' },
