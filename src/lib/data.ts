@@ -417,7 +417,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/4501/600/400',
     thumbnailImageHint: 'bollywood music',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWZpbG1pZ2FhbmUvMmI0NzY0MzYtNWQ1Ny00NzJiLTliOWQtNThjZTY0ODc4MDc2LzEubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWZpbG1pZ2FhbmUvNWEyYjJmNDktOTIyOS00ZGE2LWJhODUtZDNlZTk3NzNjYjdmLzAubTN1OA==',
     type: 'hls',
   },
   {
