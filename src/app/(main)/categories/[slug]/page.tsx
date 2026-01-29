@@ -3,19 +3,14 @@
 import { useState, useMemo } from 'react';
 import { getChannels, getChannelCategory } from '@/lib/data';
 import { ChannelCard } from '@/components/channel-card';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, List } from 'lucide-react';
 import { ChannelListItem } from '@/components/channel-list-item';
 
-interface CategoryPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default function CategoryPage() {
   const [view, setView] = useState('grid');
+  const params = useParams<{ slug: string }>();
   
   const category = useMemo(() => getChannelCategory(params.slug), [params.slug]);
 
