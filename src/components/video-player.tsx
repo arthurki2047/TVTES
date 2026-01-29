@@ -273,23 +273,49 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   }, [setPlayerRef]);
 
   /**
-   * --- AUTO-LOAD EFFECT ---
-   * This `useEffect` hook runs when the component mounts or when the `initializeHls`
-   * function changes (which happens if the `src` prop changes).
-   * By calling `initializeHls()` here, we ensure that the video stream
-   * begins to load automatically as soon as the player is on the screen.
+   * --- AUTO-LOAD EFFECT & CLEANUP ---
+   * This `useEffect` hook manages the lifecycle of the video stream.
+   * It calls `initializeHls()` to start loading the stream and returns a cleanup function.
+   * The cleanup function is critical for resource management, preventing memory leaks and
+   * unnecessary background data usage when the component unmounts.
    */
   useEffect(() => {
     initializeHls();
     const video = videoRef.current;
+    
     return () => {
-        if (hlsRef.current) hlsRef.current.destroy();
-        if (video) {
-            video.pause();
-            video.removeAttribute('src');
-            video.load();
-        }
-    }
+      const videoElement = videoRef.current;
+
+      // --- SPECIAL HANDLING FOR PICTURE-IN-PICTURE ---
+      // If the component unmounts while the video is in PiP mode, we must not destroy the stream.
+      // Doing so would cause the PiP window to freeze. Instead, we let the browser manage the
+      // video element and attach a one-time listener to clean up the HLS instance only when the user
+      // explicitly closes the PiP window.
+      if (document.pictureInPictureElement === videoElement) {
+        const onLeavePiP = () => {
+          if (hlsRef.current) {
+            hlsRef.current.destroy();
+          }
+          // Clean up the event listener itself.
+          videoElement?.removeEventListener('leavepictureinpicture', onLeavePiP);
+        };
+        videoElement?.addEventListener('leavepictureinpicture', onLeavePiP, { once: true });
+        
+        // By returning here, we skip the immediate, standard cleanup.
+        return;
+      }
+      
+      // --- STANDARD CLEANUP ---
+      // This runs when the component unmounts and is NOT in PiP mode.
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
+    };
   }, [initializeHls, retryVersion]);
   
   const handleSeek = useCallback((amount: number) => {
