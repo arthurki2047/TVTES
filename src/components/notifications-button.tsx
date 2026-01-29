@@ -30,38 +30,6 @@ const notifications = [
     read: false,
     avatar: 'https://picsum.photos/seed/notif6/40/40',
   },
-  {
-    id: '1',
-    title: 'New Channel Added!',
-    description: 'T-Series channel has been added to the Music category.',
-    time: '15m ago',
-    read: true,
-    avatar: 'https://picsum.photos/seed/notif1/40/40',
-  },
-  {
-    id: '2',
-    title: 'Maintenance Scheduled',
-    description: 'Scheduled maintenance will occur tonight at 2 AM across all services.',
-    time: '2h ago',
-    read: false,
-    avatar: 'https://picsum.photos/seed/notif2/40/40',
-  },
-  {
-    id: '3',
-    title: 'Your favorite show is starting!',
-    description: "'The Kapil Sharma Show' is now live on SONY. Don't miss it.",
-    time: '1d ago',
-    read: true,
-    avatar: 'https://picsum.photos/seed/notif3/40/40',
-  },
-    {
-    id: '4',
-    title: 'New Movie Premier',
-    description: 'The latest blockbuster "Amar Action" is now available in the Movies category.',
-    time: '3d ago',
-    read: true,
-    avatar: 'https://picsum.photos/seed/notif4/40/40',
-  },
 ];
 
 export function NotificationsButton() {
