@@ -45,7 +45,7 @@ export function BottomNav() {
             onClick={() => handleNav(item.href)}
             className={cn(
                 "transition-all duration-300",
-                isActive ? "bg-primary text-primary-foreground hover:bg-primary/90" : "hover:bg-muted"
+                isActive ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground hover:text-primary"
             )}
         >
             <item.icon className="mr-2 h-4 w-4" />
