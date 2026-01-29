@@ -2,7 +2,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPipActive, setIsPipActive] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [showUnlock, setShowUnlock] = useState(false);
@@ -67,6 +69,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isManifestLive, setIsManifestLive] = useState(false);
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [playerError, setPlayerError] = useState<string | null>(null);
+  const pathname = usePathname();
   
   // Smart Reload states
   const [retryVersion, setRetryVersion] = useState(0);
@@ -106,22 +109,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }, 5000);
   }, [isLocked]);
   
-  /**
-   * --- AUTOPLAY HANDLING ---
-   * This function attempts to play the video.
-   * Modern browsers have strict autoplay policies. Playback will usually only start if:
-   * 1. The video is muted.
-   * 2. The user has interacted with the site before (e.g., clicked a button).
-   * This component's mute state is controlled by a global context to ensure autoplay on first load
-   * while respecting user's preference on subsequent loads.
-   */
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
     const promise = video.play();
     if (promise !== undefined) {
       promise.catch(error => {
-        // We catch the AbortError which can happen if the user navigates away quickly.
-        // Other errors (like NotAllowedError for autoplay) are logged but don't crash the app.
         if (error.name !== 'AbortError') {
           console.error("Video play failed:", error);
           setPlayerError('Playback was prevented by the browser. Please click the play button.');
@@ -130,18 +122,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   },[]);
   
-  /**
-   * --- STREAM LOADING & ERROR HANDLING (AUTO-LOAD LOGIC) ---
-   * This function is called on component mount to automatically load the stream.
-   * It initializes the player based on the stream type (HLS or MP4).
-   * For HLS streams, it uses the hls.js library to handle playback.
-   * For MP4, it uses the native HTML5 <video> element.
-   */
   const initializeHls = useCallback(() => {
     const currentVideo = videoRef.current;
     if (!currentVideo) return;
 
-    // Clean up any existing HLS instance before initializing a new one.
     if (hlsRef.current) {
         hlsRef.current.destroy();
     }
@@ -149,40 +133,24 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         clearTimeout(retryTimeoutRef.current);
     }
     
-    // Reset player state for the new stream.
     setPlayerError(null);
     setQualityLevels([]);
     setCurrentQuality(-1);
     setIsManifestLive(false);
 
-    // Mute state is now handled globally by VideoPlayerContext to preserve user preference across channels.
-    // The context ensures the first playback is muted for autoplay, and subsequent ones respect the user's choice.
-
     if (type === 'hls') {
         import('hls.js').then(Hls => {
-            // --- NATIVE HLS FALLBACK ---
-            // Check if HLS.js is supported. If not, but the browser can play HLS natively (like Safari),
-            // we will fall back to using the native <video> element's capabilities.
             if (Hls.default.isSupported()) {
-                
-                const hls = new Hls.default({
-                  // Use default hls.js config for robust, battle-tested streaming
-                });
+                const hls = new Hls.default({});
                 hlsRef.current = hls;
 
-                /**
-                 * --- HLS.js ERROR RECOVERY LOGIC ---
-                 * HLS.js provides an error event listener. We hook into it to detect
-                 * fatal errors and attempt to recover automatically, creating a more resilient stream.
-                 * This is also where we handle buffer stalls, which cause live streams to "get stuck."
-                 */
                 hls.on(Hls.default.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
                              console.warn(`HLS.js fatal network error. Retry ${retryCountRef.current + 1}/${MAX_RETRIES}...`);
                             if (retryCountRef.current < MAX_RETRIES) {
-                                const delay = RETRY_DELAY * Math.pow(2, retryCountRef.current); // Exponential backoff
+                                const delay = RETRY_DELAY * Math.pow(2, retryCountRef.current);
                                 retryCountRef.current++;
                                 retryTimeoutRef.current = setTimeout(() => setRetryVersion(v => v + 1), delay);
                             } else {
@@ -213,10 +181,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     }
                 });
 
-
-                // This event fires when the HLS manifest has been successfully loaded and parsed.
                 hls.on(Hls.default.Events.MANIFEST_PARSED, (event, data) => {
-                     retryCountRef.current = 0; // Reset retry count on successful load
+                     retryCountRef.current = 0; 
                      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
 
                      if (data.details) {
@@ -224,9 +190,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         setIsManifestLive(isStreamLive);
                      }
                      setPlayerError(null);
-                     // --- AUTOPLAY ---
-                     // Once the manifest is ready, we attempt to play the video automatically.
-                     // The global context has handled the mute state for us.
                      playVideo(currentVideo);
                      if (hls.levels && hls.levels.length > 1) {
                         setQualityLevels(hls.levels);
@@ -237,22 +200,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     setCurrentQuality(data.level)
                 });
                 
-                // --- AUTO-LOAD TRIGGER ---
-                // This is the call that starts loading the HLS stream source.
                 hls.loadSource(decodedSrc);
                 hls.attachMedia(currentVideo);
 
             } else if (currentVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                // This is the NATIVE HLS FALLBACK for browsers like Safari.
-                // We set the src directly and let the browser handle playback.
                 currentVideo.src = decodedSrc;
-                playVideo(currentVideo); // Attempt to play.
+                playVideo(currentVideo);
             }
         });
     } else if (type === 'mp4') {
-        // For direct MP4 links, we just set the src and play.
         currentVideo.src = decodedSrc;
-        playVideo(currentVideo); // Attempt to play.
+        playVideo(currentVideo);
     }
   }, [decodedSrc, type, playVideo]);
 
@@ -264,24 +222,15 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     };
   }, [setPlayerRef]);
 
-  /**
-   * --- AUTO-LOAD EFFECT & CLEANUP ---
-   * This `useEffect` hook manages the lifecycle of the video stream.
-   * It calls `initializeHls()` to start loading the stream and returns a cleanup function.
-   * The cleanup function is critical for resource management, preventing memory leaks and
-   * unnecessary background data usage when the component unmounts.
-   */
   useEffect(() => {
     initializeHls();
     const video = videoRef.current;
     
     return () => {
-      // --- STANDARD CLEANUP ---
-      // This runs when the component unmounts.
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-      }
-      if (video) {
+      if (video && document.pictureInPictureElement !== video) {
+        if (hlsRef.current) {
+          hlsRef.current.destroy();
+        }
         video.pause();
         video.removeAttribute('src');
         video.load();
@@ -376,11 +325,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     else toggleControls();
   };
 
-  /**
-   * --- PLAY/PAUSE CONTROL ---
-   * This function is called when the user clicks the main play/pause button in the UI.
-   * It toggles the playback state of the video.
-   */
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (videoRef.current?.paused) playVideo(videoRef.current);
@@ -455,10 +399,34 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       resetControlsTimeout();
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
+
+  const togglePictureInPicture = useCallback(async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!document.pictureInPictureEnabled) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+        if (document.pictureInPictureElement === video) {
+            await document.exitPictureInPicture();
+        } else {
+            await video.requestPictureInPicture();
+        }
+    } catch (error) {
+        console.error("PiP toggle failed:", error);
+    }
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
   
   useImperativeHandle(ref, () => ({
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
+    requestPictureInPicture: async () => {
+        const video = videoRef.current;
+        if (video && document.pictureInPictureEnabled && document.pictureInPictureElement !== video) {
+            await video.requestPictureInPicture();
+        }
+    },
   }));
 
   const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
@@ -497,13 +465,31 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     };
     
     const handleMouseLeave = () => { if (!isLocked && videoRef.current && !videoRef.current.paused) { if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current); setShowControls(false); } };
-    
+
+    const handleEnterPip = () => setIsPipActive(true);
+    const handleLeavePip = () => {
+        setIsPipActive(false);
+        if (!pathname.startsWith('/watch/')) {
+            if (hlsRef.current) {
+                hlsRef.current.destroy();
+                hlsRef.current = null;
+            }
+            if (video) {
+                video.pause();
+                video.removeAttribute('src');
+                video.load();
+            }
+        }
+    };
+
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
+    video.addEventListener('enterpictureinpicture', handleEnterPip);
+    video.addEventListener('leavepictureinpicture', handleLeavePip);
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -518,6 +504,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('enterpictureinpicture', handleEnterPip);
+      video.removeEventListener('leavepictureinpicture', handleLeavePip);
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -528,7 +516,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
       if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, playVideo]);
+  }, [resetControlsTimeout, isLocked, playVideo, pathname]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -554,6 +542,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const uniqueByHeight = reversedLevels.filter((level, index, self) => index === self.findIndex((l) => l.height === level.height));
     return uniqueByHeight;
   }, [qualityLevels]);
+
+  const isPipSupported = isClient && 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled;
 
   return (
     <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
@@ -645,6 +635,11 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                                 </div>
                             </PopoverContent>
                         </Popover>
+                    )}
+                    {isPipSupported && (
+                        <Button variant="ghost" size="icon" onClick={togglePictureInPicture}>
+                            <PictureInPicture2 />
+                        </Button>
                     )}
                     <Button variant="ghost" size="icon" onClick={toggleFullscreen}>{isFullscreen ? <Minimize /> : <Maximize />}</Button>
                 </div>

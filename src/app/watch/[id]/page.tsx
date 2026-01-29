@@ -21,7 +21,7 @@ export default function WatchPage() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
-  const { setPlayerActionsRef } = useVideoPlayer();
+  const { setPlayerActionsRef, playerActionsRef } = useVideoPlayer();
   
   const channel = getChannelById(channelId);
   
@@ -58,7 +58,10 @@ export default function WatchPage() {
     router.push(path);
   }, [router]);
 
-  const handleBack = useCallback(() => {
+  const handleBack = useCallback(async () => {
+    if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+    }
     if (document.fullscreenElement) {
         document.exitFullscreen();
     }
@@ -71,9 +74,19 @@ export default function WatchPage() {
     }
   }, [channel, router]);
 
-  const handleGoHome = useCallback(() => {
-    handleNavigation('/');
-  }, [handleNavigation]);
+  const handleGoHome = useCallback(async () => {
+    const video = playerActionsRef?.current?.getVideoElement();
+    if (video && !video.paused) {
+        try {
+            if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+                await playerActionsRef.current.requestPictureInPicture();
+            }
+        } catch (error) {
+            console.error("Failed to enter PiP mode automatically:", error);
+        }
+    }
+    router.push('/');
+  }, [router, playerActionsRef]);
 
   const switchChannel = useCallback((direction: 'next' | 'prev') => {
     if (!channel) return;

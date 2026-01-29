@@ -6,6 +6,7 @@ import React, { createContext, useContext, useState, RefObject, useEffect, useCa
 export interface VideoPlayerActions {
   getVideoElement: () => HTMLVideoElement | null;
   requestFullscreen: () => void;
+  requestPictureInPicture: () => Promise<void>;
 }
 
 interface VideoPlayerContextType {
