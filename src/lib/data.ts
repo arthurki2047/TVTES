@@ -1422,6 +1422,17 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9xbi0wMTI3My1wb2wtMS0wMS0xLS0tNzI0Ny1hbXlwLmh0dHAuZ2xvYmFsLmRucy5xd2lsdGVkLWNkcy5jcWxvdWQuY29tL09UTS9PVE1fS2lkc1Rvb25zSGluZGktU0NURV9DRE4vcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
+  {
+    id: 'the-movie-club-2',
+    name: 'The Movie Club 2',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/the-movie-club-2-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-2-thumb/600/400',
+    thumbnailImageHint: 'movie scene',
+    streamUrl: '',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
