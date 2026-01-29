@@ -14,12 +14,28 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
 const notifications = [
+    {
+    id: '5',
+    title: 'New Channel Added!',
+    description: 'BIG MAGIC has been added to the Entertainment category.',
+    time: '1m ago',
+    read: false,
+    avatar: 'https://picsum.photos/seed/notif5/40/40',
+  },
+  {
+    id: '6',
+    title: 'New Channel Added!',
+    description: 'DD TRIPURA has been added to the Entertainment category.',
+    time: '2m ago',
+    read: false,
+    avatar: 'https://picsum.photos/seed/notif6/40/40',
+  },
   {
     id: '1',
     title: 'New Channel Added!',
     description: 'T-Series channel has been added to the Music category.',
     time: '15m ago',
-    read: false,
+    read: true,
     avatar: 'https://picsum.photos/seed/notif1/40/40',
   },
   {
