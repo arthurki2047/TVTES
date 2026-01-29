@@ -25,6 +25,23 @@ export default function WatchPage() {
   
   const channel = getChannelById(channelId);
   
+  // This effect will run when the component mounts.
+  // It checks if there's an active Picture-in-Picture element
+  // and closes it. This ensures that when you switch to a new
+  // channel, the old channel's PiP window is terminated.
+  useEffect(() => {
+    const exitPip = async () => {
+      if (document.pictureInPictureElement) {
+        try {
+          await document.exitPictureInPicture();
+        } catch (error) {
+          console.error("Failed to exit PiP mode on channel switch:", error);
+        }
+      }
+    };
+    exitPip();
+  }, []);
+
   const decodedStreamUrl = useMemo(() => {
     if (!channel || channel.type !== 'iframe') return channel?.streamUrl || '';
     try {
