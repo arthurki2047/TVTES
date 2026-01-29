@@ -56,6 +56,11 @@ export default function WatchPage() {
   }, [channel, router]);
 
   const handleGoHome = () => {
+    if (document.pictureInPictureElement) {
+      // If in PiP mode, do nothing. This keeps the PiP window active.
+      // The user can use system navigation to go home.
+      return;
+    }
     router.push('/');
   };
 
