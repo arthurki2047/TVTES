@@ -1133,8 +1133,8 @@ export const channels: Channel[] = [
     logoImageHint: 'science technology',
     thumbnailUrl: 'https://picsum.photos/seed/discovery-science-thumb/600/400',
     thumbnailImageHint: 'science experiment',
-    streamUrl: 'aHR0cHM6Ly9jZG4uc3RtaWZ5LmNvbS9lbWJlZC1mcmVlL3YxL2Rpc2NvdmVyeS1zY2llbmNlLXBrLWp3',
-    type: 'iframe',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMDEzNi13YmQtYW1nMDAxMzZjMjAtdGFibG8tdXMtNzE5MC5wbGF5b3V0cy5ub3cuYW1hZ2kudHYvcGxheWxpc3Q3MjBwLm0zdTg=',
+    type: 'hls',
   },
   {
     id: 'sony',
