@@ -4,10 +4,13 @@ import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { ChannelCard } from '@/components/channel-card';
 import { channels } from '@/lib/data';
-import { SearchIcon } from 'lucide-react';
+import { SearchIcon, LayoutGrid, List } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ChannelListItem } from '@/components/channel-list-item';
 
 export default function SearchPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [view, setView] = useState('grid');
 
   const filteredChannels = useMemo(() => {
     if (!searchTerm) {
@@ -36,11 +39,33 @@ export default function SearchPage() {
 
       <div>
         {searchTerm && filteredChannels.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {filteredChannels.map(channel => (
-              <ChannelCard key={channel.id} channel={channel} />
-            ))}
-          </div>
+          <>
+            <div className="flex justify-end mb-4">
+                <div className="flex items-center gap-1 rounded-full bg-muted p-1">
+                    <Button variant={view === 'grid' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('grid')} className="rounded-full gap-2">
+                        <LayoutGrid className="h-4 w-4" />
+                        Grid
+                    </Button>
+                    <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('list')} className="rounded-full gap-2">
+                        <List className="h-4 w-4" />
+                        List
+                    </Button>
+                </div>
+            </div>
+            {view === 'grid' ? (
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {filteredChannels.map(channel => (
+                  <ChannelCard key={channel.id} channel={channel} />
+                ))}
+              </div>
+            ) : (
+                <div className="space-y-2">
+                    {filteredChannels.map(channel => (
+                        <ChannelListItem key={channel.id} channel={channel} />
+                    ))}
+                </div>
+            )}
+          </>
         )}
         {searchTerm && filteredChannels.length === 0 && (
           <div className="text-center py-10">
