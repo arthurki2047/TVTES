@@ -5,7 +5,6 @@ import React, { createContext, useContext, useState, RefObject, useEffect, useCa
 // Define handles here to be accessible globally without circular deps
 export interface VideoPlayerActions {
   getVideoElement: () => HTMLVideoElement | null;
-  togglePictureInPicture: () => Promise<void>;
   requestFullscreen: () => void;
 }
 

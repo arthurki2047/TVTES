@@ -54,19 +54,9 @@ export default function WatchPage() {
     }
   }, [channelId, addRecentlyPlayed]);
 
-  const handleNavigation = useCallback(async (path: string) => {
-    if (videoPlayerRef.current && channel?.type !== 'iframe') {
-        const videoElement = videoPlayerRef.current.getVideoElement();
-        if (videoElement && !videoElement.paused && !document.pictureInPictureElement) {
-            try {
-                await videoPlayerRef.current.togglePictureInPicture();
-            } catch (error) {
-                console.error("Failed to enter PiP mode, navigating anyway.", error);
-            }
-        }
-    }
+  const handleNavigation = useCallback((path: string) => {
     router.push(path);
-  }, [router, channel]);
+  }, [router]);
 
   const handleBack = useCallback(() => {
     if (document.fullscreenElement) {

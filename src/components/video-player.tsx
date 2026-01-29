@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop, PictureInPicture2 } from 'lucide-react';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -67,8 +67,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [isManifestLive, setIsManifestLive] = useState(false);
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [playerError, setPlayerError] = useState<string | null>(null);
-  const [isPiPSupported, setIsPiPSupported] = useState(false);
-  const [isInPiP, setIsInPiP] = useState(false);
   
   // Smart Reload states
   const [retryVersion, setRetryVersion] = useState(0);
@@ -261,12 +259,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   useEffect(() => {
     setIsClient(true);
     setPlayerRef(videoRef);
-    // --- PiP FEATURE DETECTION ---
-    // Check if PiP is enabled in the browser. This is the first step for progressive enhancement.
-    // The UI button for PiP will only be rendered if this is true.
-    if (typeof document !== 'undefined' && 'pictureInPictureEnabled' in document) {
-      setIsPiPSupported(document.pictureInPictureEnabled);
-    }
     return () => {
       setPlayerRef(null);
     };
@@ -284,29 +276,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const video = videoRef.current;
     
     return () => {
-      const videoElement = videoRef.current;
-
-      // --- SPECIAL HANDLING FOR PICTURE-IN-PICTURE ---
-      // If the component unmounts while the video is in PiP mode, we must not destroy the stream.
-      // Doing so would cause the PiP window to freeze. Instead, we let the browser manage the
-      // video element and attach a one-time listener to clean up the HLS instance only when the user
-      // explicitly closes the PiP window.
-      if (document.pictureInPictureElement === videoElement) {
-        const onLeavePiP = () => {
-          if (hlsRef.current) {
-            hlsRef.current.destroy();
-          }
-          // Clean up the event listener itself.
-          videoElement?.removeEventListener('leavepictureinpicture', onLeavePiP);
-        };
-        videoElement?.addEventListener('leavepictureinpicture', onLeavePiP, { once: true });
-        
-        // By returning here, we skip the immediate, standard cleanup.
-        return;
-      }
-      
       // --- STANDARD CLEANUP ---
-      // This runs when the component unmounts and is NOT in PiP mode.
+      // This runs when the component unmounts.
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
@@ -485,67 +456,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     }
   }, [isLocked, resetControlsTimeout, resetUnlockTimeout]);
   
-  /**
-   * --- PICTURE-IN-PICTURE (PIP) IMPLEMENTATION ---
-   * This section follows best practices for implementing PiP mode.
-   */
-
-  /**
-   * Toggles Picture-in-Picture mode.
-   * This function is designed to be robust and cross-browser compatible,
-   * handling entering/exiting PiP and common errors.
-   */
-  const togglePictureInPicture = useCallback(async (e?: React.MouseEvent | KeyboardEvent) => {
-    e?.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-
-    // 1. Check for browser support AND if PiP is disabled on the video element.
-    // 'document.pictureInPictureEnabled' and 'video.disablePictureInPicture' ensure compatibility.
-    if (!isPiPSupported || video.disablePictureInPicture) {
-        console.warn('Picture-in-Picture is not supported or is disabled for this video.');
-        return;
-    }
-
-    try {
-        // 2. Toggle PiP state.
-        // 'document.pictureInPictureElement' securely checks if an element is currently in PiP.
-        if (document.pictureInPictureElement) {
-            await document.exitPictureInPicture();
-        } else {
-            // Request PiP for the current video. This can be done even if paused.
-            await video.requestPictureInPicture();
-        }
-    } catch (err: any) {
-        // 3. Handle common errors, like 'NotAllowedError' if the user hasn't
-        // interacted with the page, or if it's blocked by browser policies.
-        console.error(`Error ${document.pictureInPictureElement ? 'exiting' : 'entering'} Picture-in-Picture mode:`, err);
-        if (err.name === 'NotAllowedError') {
-            setPlayerError('PiP was not allowed. Please click on the player first.');
-        }
-    }
-    resetControlsTimeout();
-  }, [resetControlsTimeout, isPiPSupported]);
-
-  // Adds a keyboard shortcut ('P' key) for toggling Picture-in-Picture for accessibility.
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if modifier keys are pressed or if input fields are focused.
-      const target = e.target as HTMLElement;
-      if (e.key.toLowerCase() === 'p' && !e.metaKey && !e.ctrlKey && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
-        e.preventDefault();
-        togglePictureInPicture(e);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [togglePictureInPicture]);
-
-
   useImperativeHandle(ref, () => ({
     getVideoElement: () => videoRef.current,
     requestFullscreen: () => toggleFullscreen(),
-    togglePictureInPicture: togglePictureInPicture,
   }));
 
   const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
@@ -585,20 +498,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     
     const handleMouseLeave = () => { if (!isLocked && videoRef.current && !videoRef.current.paused) { if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current); setShowControls(false); } };
     
-    // --- Picture-in-Picture Event Handling ---
-    // These events are crucial for updating the UI based on PiP state.
-    // They fire automatically, ensuring smooth UI transitions.
-    const handleEnterPiP = () => setIsInPiP(true);
-    const handleLeavePiP = () => setIsInPiP(false);
-
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
-    video.addEventListener('enterpictureinpicture', handleEnterPiP);
-    video.addEventListener('leavepictureinpicture', handleLeavePiP);
     player.addEventListener('mousemove', resetControlsTimeout);
     player.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -613,8 +518,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('enterpictureinpicture', handleEnterPiP);
-      video.removeEventListener('leavepictureinpicture', handleLeavePiP);
       player.removeEventListener('mousemove', resetControlsTimeout);
       player.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -658,7 +561,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline autoPlay muted onClick={handleTap} data-channel-id={channel.id} />
       
       {/* UI for displaying fatal playback errors */}
-      {playerError && !isInPiP && (
+      {playerError && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 p-4 text-center">
             <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
             <h3 className="text-xl font-bold">Stream Error</h3>
@@ -673,7 +576,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       )}
       
       {/* Container for all player controls. Visibility is toggled based on user interaction. */}
-      <div className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked && !isInPiP) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
+      <div className={cn("video-controls-container absolute inset-0 flex flex-col justify-between transition-opacity", (showControls && !isLocked) ? 'opacity-100' : 'opacity-0 pointer-events-none')}>
         {/* Gradient overlays to ensure control visibility against various video content */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
 
@@ -694,7 +597,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
           <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronRight size={40} /></Button>
         </div>
 
-        {/* Bottom controls: Progress bar, volume, settings, PiP, and fullscreen */}
+        {/* Bottom controls: Progress bar, volume, settings, and fullscreen */}
         <div className="pt-8 pb-2 md:pb-4" onClick={e => e.stopPropagation()}>
             {type === 'mp4' && !isLive ? (
                 <div className="px-4 md:px-6 mb-2">
@@ -743,8 +646,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                             </PopoverContent>
                         </Popover>
                     )}
-                    {/* The PiP button is only rendered if the browser supports the API. */}
-                    {isPiPSupported && (<Button variant="ghost" size="icon" onClick={togglePictureInPicture}><PictureInPicture2 /></Button>)}
                     <Button variant="ghost" size="icon" onClick={toggleFullscreen}>{isFullscreen ? <Minimize /> : <Maximize />}</Button>
                 </div>
             </div>
