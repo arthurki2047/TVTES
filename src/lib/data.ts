@@ -153,7 +153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly85eGppbzoLnVzZXBsYXlvdXQuY29tLzlYTS9tYXN0ZXIubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTExNy1hbWcwMTExN2MxLWFtZ3BsdDAwMjkucGxheW91dC5ub3czLmFtYWdpLnR2L3BsYXlsaXN0L2FtZzAxMTE3LWFtZzAxMTE3YzEtYW1ncGx0MDAyOS9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -164,7 +164,7 @@ export const channels: Channel[] = [
     logoImageHint: 'bollywood music',
     thumbnailUrl: 'https://picsum.photos/seed/1601/600/400',
     thumbnailImageHint: 'bollywood music',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyLzl4LWphbHdhLzNiNTQ2MDk4LWNjNzItNDYzZi1hMWY3LTQ4ODBkMDgxMWVmZS8zLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9tdW10MDMudGFuZ290di5pbi85WEpBTFdBL3RyYWNrcy12MmExL21vbm8ubTN1OA==',
     type: 'hls',
   },
   {
@@ -219,7 +219,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2201/600/400',
     thumbnailImageHint: 'news headline',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTczLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9hYWp0YWtoZGxpdmUtYW1kLmFrYW1haXplZC5uZXQvaGxzL2xpdmUvMjAxNDQxNS9hYWp0YWtoZC9hYWp0YWtoZGxpdmUvbGl2ZV83MjBwL2NodW5rcy5tM3U4',
     type: 'hls',
   },
   {
@@ -241,7 +241,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/2401/600/400',
     thumbnailImageHint: 'international news',
-    streamUrl: 'aHR0cHM6Ly90ZXN0LXl1cHB0di5jYWNoZWZseS5uZXQvMTIwNzIzL3NtaWw6ZGRpbmRpYWhkLnNtaWwvcGxheWxpc3QubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvY2VkYTE0NTgzNDc3NDI2YWExNjJhNjUzOTJkOGVhMDcvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -252,7 +252,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/2501/600/400',
     thumbnailImageHint: 'indian music',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjUwLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jZG4tMi5waXNob3cudHYvbGl2ZS8yMjYvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -318,7 +318,7 @@ export const channels: Channel[] = [
     logoImageHint: 'farming logo',
     thumbnailUrl: 'https://picsum.photos/seed/3001/600/400',
     thumbnailImageHint: 'agriculture field',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNTgzLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNi5waXNob3cudHYvbGl2ZS85L21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -340,7 +340,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/3301/600/400',
     thumbnailImageHint: 'action movie',
-    streamUrl: 'aHR0cHM6Ly9jZG5iNHUud2lzZXBsYXlvdXQuY29tL0I0VV9LYWRhay9tYXN0ZXIubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly9jZG5iNHUud2lzZXBsYXlvdXQuY29tL0I0VV9LYWRhay9IRDcyMC9IRDcyMC5tM3U4',
     type: 'hls',
   },
   {
@@ -351,7 +351,7 @@ export const channels: Channel[] = [
     logoImageHint: 'sports logo',
     thumbnailUrl: 'https://picsum.photos/seed/3401/600/400',
     thumbnailImageHint: 'cricket match',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjA0Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jZG4tNi5waXNob3cudHYvbGl2ZS8xMy9tYXN0ZXIubTN1OA==',
     type: 'hls',
   },
   {
@@ -450,7 +450,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/5401/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3pvb20tdHYvZDgxYjZjZDMtZjUxYS00MzRjLTlhNmMtNzNkMWE2OWJiZmMwLzAubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly9kYWkuZ29vZ2xlLmNvbS9saW5lYXIvaGxzL2V2ZW50L0pDQW0yNXFrUlhpS2NLMUFKTWx2S1EvbWFzdGVyLm0zdTg=',
     type: 'hls',
   },
   {
@@ -780,7 +780,7 @@ export const channels: Channel[] = [
     logoImageHint: 'comedy logo',
     thumbnailUrl: 'https://picsum.photos/seed/kings-comedy-thumb/600/400',
     thumbnailImageHint: 'comedy show',
-    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6NzdlZ2Y0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejQ3ZWdmNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejQ3Z3dsNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -1398,6 +1398,28 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/9151/600/400',
     thumbnailImageHint: 'regional show',
     streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvNTJiOTk4ZTk1MTBkNDFjMjlhZDJjZWNhOGVhM2Q4NDkvaW5kZXhfMy5tM3U4',
+    type: 'hls',
+  },
+  {
+    id: 'hollywood-desi',
+    name: 'HOLLYWOOD DESI',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/hollywood-desi-logo/400/400',
+    logoImageHint: 'movie logo',
+    thumbnailUrl: 'https://picsum.photos/seed/hollywood-desi-thumb/600/400',
+    thumbnailImageHint: 'hollywood movie',
+    streamUrl: 'aHR0cHM6Ly9jYy11NmhhZG5vaDB1NnRkLmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtdTZoYWRub2gwZDZ0ZC9PVE0vT1RNX0hvbGx5d29vZEFjdGlvbkhpbmRpLVNDVEVfU0FNU1VORy9wbGF5bGlzdC5tM3U4',
+    type: 'hls',
+  },
+  {
+    id: 'horray-rhymes',
+    name: 'HORRAY RHYMES',
+    category: 'Kids',
+    logoUrl: 'https://picsum.photos/seed/horray-rhymes-logo/400/400',
+    logoImageHint: 'kids logo',
+    thumbnailUrl: 'https://picsum.photos/seed/horray-rhymes-thumb/600/400',
+    thumbnailImageHint: 'kids rhymes',
+    streamUrl: 'aHR0cHM6Ly9xbi0wMTI3My1wb2wtMS0wMS0xLS0tNzI0Ny1hbXlwLmh0dHAuZ2xvYmFsLmRucy5xd2lsdGVkLWNkcy5jcWxvdWQuY29tL09UTS9PVE1fS2lkc1Rvb25zSGluZGktU0NURV9DRE4vcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
 ];
