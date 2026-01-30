@@ -40,7 +40,8 @@ export default function SearchPage() {
       <div>
         {searchTerm && filteredChannels.length > 0 && (
           <>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-between items-center mb-4">
+                <p className="text-muted-foreground">{filteredChannels.length} results found</p>
                 <div className="flex items-center gap-1 rounded-full bg-muted p-1">
                     <Button variant={view === 'grid' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('grid')} className="rounded-full gap-2">
                         <LayoutGrid className="h-4 w-4" />

@@ -25,7 +25,7 @@ export default function CategoryPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-headline text-4xl font-bold">{category.name}</h1>
         {channelsInCategory.length > 0 && (
-            <div className="hidden sm:flex items-center gap-1 rounded-full bg-muted p-1">
+            <div className="flex items-center gap-1 rounded-full bg-muted p-1">
                 <Button variant={view === 'grid' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('grid')} className="rounded-full gap-2">
                     <LayoutGrid className="h-4 w-4" />
                     Grid

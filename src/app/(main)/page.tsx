@@ -33,7 +33,7 @@ export default function HomePage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-headline text-3xl font-bold">All Channels</h2>
-            <div className="hidden sm:flex items-center gap-1 rounded-full bg-muted p-1">
+            <div className="flex items-center gap-1 rounded-full bg-muted p-1">
                 <Button variant={view === 'grid' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('grid')} className="rounded-full gap-2">
                     <LayoutGrid className="h-4 w-4" />
                     Grid
@@ -43,7 +43,7 @@ export default function HomePage() {
                     List
                 </Button>
             </div>
-            <div className="text-muted-foreground font-bold">{totalChannels} Channels</div>
+            <div className="hidden sm:block text-muted-foreground font-bold">{totalChannels} Channels</div>
           </div>
           
           {view === 'grid' ? (
