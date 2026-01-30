@@ -126,9 +126,6 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const currentVideo = videoRef.current;
     if (!currentVideo) return;
 
-    if (hlsRef.current) {
-        hlsRef.current.destroy();
-    }
     if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
     }
@@ -651,5 +648,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 });
 
 VideoPlayer.displayName = 'VideoPlayer';
+
+    
 
     
