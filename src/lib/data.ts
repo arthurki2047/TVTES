@@ -153,7 +153,7 @@ export const channels: Channel[] = [
     logoImageHint: 'music logo',
     thumbnailUrl: 'https://picsum.photos/seed/1501/600/400',
     thumbnailImageHint: 'music video',
-    streamUrl: 'aHR0cHM6Ly85eGppbzo0NDMuc3NsLndpc2VwbGF5b3V0LmNvbS85WE0vbWFzdGVyLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly85eGppby53aXNlcGxheW91dC5jb20vOVhNL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -982,17 +982,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'tara-tv',
-    name: 'Tara TV',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/tara-tv-logo/400/400',
-    logoImageHint: 'tv logo',
-    thumbnailUrl: 'https://picsum.photos/seed/tara-tv-thumb/600/400',
-    thumbnailImageHint: 'live show',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYXN0ZXIvMGJjOGU4Mzc2YmQ4NDE3YTFiNjc2MTEzOGFhNDFjMjZjNzMwOTMxMi90YXJhLXR2L2luZGV4Lm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'rokuten-scitv',
     name: 'Rokuten SciTV',
     category: 'English Movies',
@@ -1375,7 +1364,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-2-thumb/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtdTZoYWRub2gwZDZ0ZC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejdiZ3ZsNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
