@@ -1,11 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
-import { StreamKeyManager } from "@/components/stream-key-manager";
-import { generateStreamKey } from "@/app/(main)/profile/actions";
 
-export default async function ProfilePage() {
-  const initialStreamKey = await generateStreamKey();
-
+export default function ProfilePage() {
   return (
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">Profile</h1>
@@ -21,9 +17,6 @@ export default async function ProfilePage() {
           This is where user settings and profile information will be displayed.
         </p>
       </div>
-      
-      <StreamKeyManager initialStreamKey={initialStreamKey} />
-
     </div>
   );
 }
