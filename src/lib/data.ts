@@ -1433,17 +1433,6 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly92Zy1waXRhYXJhdHZsaXZlLmFrYW1haXplZC5uZXQvdjEvdmdsaXZlLXNrLTkwNjQ4Mi9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
-  {
-    id: 'swastik-stories',
-    name: 'SWASTIK STORIES',
-    category: 'Devotional',
-    logoUrl: 'https://picsum.photos/seed/swastik-stories-logo/400/400',
-    logoImageHint: 'spiritual stories',
-    thumbnailUrl: 'https://picsum.photos/seed/swastik-stories-thumb/600/400',
-    thumbnailImageHint: 'mythological stories',
-    streamUrl: 'aHR0cHM6Ly9jc20tZS1jZXNoYXJlZGxzZ3NpbjJsaXZlLTg3NTkzMTg0LmJsbnEueW9zcGFjZS5jb20vY3NtL2V4dGxpdmUvcnVubnR2cHJkMDEsc3dhc3Rpa3J1bm4vbWFzdGVyLm0zdTg=',
-    type: 'hls',
-  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
