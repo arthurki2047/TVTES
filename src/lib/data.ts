@@ -1094,7 +1094,7 @@ export const channels: Channel[] = [
   // Sony Channels and iframe channels at the bottom as requested
   {
     id: 'discovery-science',
-    name: 'Discovery Science',
+    name: 'Science Is Amazing',
     category: 'Educational',
     logoUrl: 'https://picsum.photos/seed/discovery-science-logo/400/400',
     logoImageHint: 'science technology',
@@ -1342,7 +1342,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/the-movie-club-2-thumb/600/400',
     thumbnailImageHint: 'movie scene',
-    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtZWpybDRhejdiZ3ZsNC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9jYy1lanJsNGF6Nzdndmw0LmFrYW1haXplZC5uZXQvdjEvbWFzdGVyLzM3MjJjNjBhODE1YzE5OWQ5YzBlZjM2YzViNzNkYTY4YTYyYjA5ZDEvY2MtdTZoYWRub2gwZDZ0ZC9PVE0vT1RNX0tJTkdTX09GX0NPTUVEWV9TQU1TVU5HL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -1353,7 +1353,7 @@ export const channels: Channel[] = [
     logoImageHint: 'spiritual logo',
     thumbnailUrl: 'https://picsum.photos/seed/divvya-thumb/600/400',
     thumbnailImageHint: 'devotional content',
-    streamUrl: 'aHR0cHM6Ly92Zy1waXRhYXJhdHZsaXZlLmFrYW1haXplZC5uZXQvdjEvdmdsaXZlLXNrLTkwNjQ4Mi9wbGF5bGlzdC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly92Zy1waXRhYXJhdHZsaXZlLmFrYW1haXplZC5uZXQvdjEvvglive-sk-906482/playlist.m3u8',
     type: 'hls',
   },
 ];
