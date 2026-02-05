@@ -674,17 +674,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'abzy-movies',
-    name: 'ABZY MOVIES',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/abzy-movies-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/abzy-movies-thumb/600/400',
-    thumbnailImageHint: 'movie poster',
-    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvZGI4ZDRlY2E3MmQ2NDc0OGEwMGQwNjMxZGViZjU0MmQvaW5kZXgubTN1OA==',
-    type: 'hls',
-  },
-  {
     id: 'showbox',
     name: 'SHOWBOX',
     category: 'Music',
