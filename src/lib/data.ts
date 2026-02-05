@@ -300,6 +300,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'wild-stuff',
+    name: 'WILD STUFF',
+    category: 'Infotainment',
+    logoUrl: 'https://picsum.photos/seed/wild-stuff-logo/400/400',
+    logoImageHint: 'wildlife logo',
+    thumbnailUrl: 'https://picsum.photos/seed/wild-stuff-thumb/600/400',
+    thumbnailImageHint: 'wild animals',
+    streamUrl: 'aHR0cHM6Ly9hbWcwMTA3Ni1hbWcwMTA3NmM4LXNhbXN1bmctaW4tNzA1OC5wbGF5b3V0cy5ub3cuYW1hZ2kudHYvcGxheWxpc3QvYW1nMDEwNzYtbGlnaHRuaW5nLXB1bHNlLXNhbXN1bmdpbi9wbGF5bGlzdC5tM3U4',
+    type: 'hls',
+  },
+  {
     id: 'history-tv-18-hd',
     name: 'HISTORY TV18 HD',
     category: 'Educational',
@@ -1071,7 +1082,7 @@ export const channels: Channel[] = [
   },
   // Sony Channels and iframe channels at the bottom as requested
   {
-    id: 'discovery-science',
+    id: 'science-is-amazing',
     name: 'Science Is Amazing',
     category: 'Educational',
     logoUrl: 'https://picsum.photos/seed/discovery-science-logo/400/400',
