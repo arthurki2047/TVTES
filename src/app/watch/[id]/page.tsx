@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, ArrowLeft, ChevronLeft, ChevronRight, Maximize, Minimize } from 'lucide-react';
 import { BottomNav } from '@/components/bottom-nav';
 import { useRecentlyPlayed } from '@/hooks/use-recently-played';
 import { useVideoPlayer } from '@/context/video-player-context';
@@ -22,6 +22,7 @@ export default function WatchPage() {
   const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
   const { setPlayerActionsRef, playerActionsRef } = useVideoPlayer();
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   const channel = getChannelById(channelId);
   
@@ -70,6 +71,45 @@ export default function WatchPage() {
       addRecentlyPlayed(channelId);
     }
   }, [channelId, addRecentlyPlayed]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
+      setIsFullscreen(isCurrentlyFullscreen);
+      if (!isCurrentlyFullscreen && screen.orientation && typeof screen.orientation.unlock === 'function') {
+        screen.orientation.unlock();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleIframeFullscreen = useCallback(() => {
+    const elem = iframeRef.current;
+    if (!elem) return;
+
+    if (!document.fullscreenElement && !(document as any).webkitIsFullScreen) {
+        const promise = elem.requestFullscreen ? elem.requestFullscreen()
+          : (elem as any).webkitRequestFullscreen ? (elem as any).webkitRequestFullscreen()
+          : null;
+        
+        if (promise) promise.catch(err => {});
+
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          try {
+            screen.orientation.lock('landscape').catch(() => {});
+          } catch(e) {}
+        }
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
+    }
+  }, []);
 
   const handleNavigation = useCallback((path: string) => {
     router.push(path);
@@ -161,9 +201,12 @@ export default function WatchPage() {
                allowFullScreen
                sandbox="allow-forms allow-presentation allow-same-origin allow-scripts"
              ></iframe>
-             <div className="absolute left-2 top-2">
+             <div className="absolute inset-x-2 top-2 z-10 flex items-center justify-between">
                 <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={handleBack}>
                    <ArrowLeft />
+                </Button>
+                <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleIframeFullscreen}>
+                   {isFullscreen ? <Minimize /> : <Maximize />}
                 </Button>
              </div>
            </>
