@@ -575,17 +575,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'bollywood-classic',
-    name: 'BOLLYWOOD CLASSIC',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/8102/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/8101/600/400',
-    thumbnailImageHint: 'classic bollywood',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL2JvbGx5d29vZC1jbGFzc2ljL2NkZWUzZTcyLTIzZDctNGVlMC1iYWZhLWIxYTYyODMyZWU4NS8wLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'nh-bolly-flix',
     name: 'NH BOLLY FLIX',
     category: 'Movies',
@@ -983,7 +972,7 @@ export const channels: Channel[] = [
   },
   {
     id: 'xumo-tv',
-    name: 'Xumo Tv',
+    name: 'Xumo Sci-fi & Fantasy',
     category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/xumo-tv-logo/400/400',
     logoImageHint: 'movie logo',
