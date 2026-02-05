@@ -1170,17 +1170,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'nazara-tv',
-    name: 'Nazara TV',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/nazara-tv-logo/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/nazara-tv-thumb/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9kMjgyYTdyenBibDBuai5jbG91ZGZyb250Lm5ldC9saXZlL25hemFyYS9tYXN0ZXIubTN1OA==',
-    type: 'hls',
-  },
-  {
     id: 'big-magic',
     name: 'BIG MAGIC',
     category: 'Entertainment',
