@@ -75,6 +75,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [retryVersion, setRetryVersion] = useState(0);
   const retryCountRef = useRef(0);
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const waitingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -167,13 +168,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                         }
                     } else if (data.type === Hls.default.ErrorTypes.MEDIA_ERROR && data.details === 'bufferStalledError') {
                         const video = videoRef.current;
-                        console.warn('HLS.js buffer stalled, attempting to jump to live edge.');
-                        if (video && hls.media) {
-                            const liveSyncPosition = hls.liveSyncPosition;
-                            if (liveSyncPosition && isFinite(liveSyncPosition)) {
-                                video.currentTime = liveSyncPosition;
-                                playVideo(video);
-                            }
+                        console.warn('HLS.js buffer stalled, attempting to recover.');
+                        const liveSyncPosition = hls.liveSyncPosition;
+                        if (liveSyncPosition && isFinite(liveSyncPosition) && video) {
+                            console.log('Jumping to live edge to recover from stall.');
+                            video.currentTime = liveSyncPosition;
+                        } else {
+                            console.log('Buffer stalled, but no live edge to jump to. Attempting to resume loading.');
+                            hls.startLoad();
                         }
                     }
                 });
@@ -449,8 +451,34 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     const handlePause = () => { setIsPlaying(false); releaseWakeLock(); };
     const handleTimeUpdate = () => setProgress(video.currentTime);
     const handleDurationChange = () => setDuration(video.duration);
-    const handleWaiting = () => {}; // Could show a spinner
-    const handlePlaying = () => resetControlsTimeout();
+    
+    const handleWaiting = () => {
+      if (waitingTimeoutRef.current) clearTimeout(waitingTimeoutRef.current);
+      waitingTimeoutRef.current = setTimeout(() => {
+        if (video && !video.paused) {
+            console.warn("Video playback has stalled for over 10 seconds. Attempting recovery.");
+            let recovered = false;
+            if (isLive && hlsRef.current) {
+                const liveSyncPosition = hlsRef.current.liveSyncPosition;
+                if (liveSyncPosition && isFinite(liveSyncPosition)) {
+                    console.log('Stall recovery: seeking to live edge.');
+                    video.currentTime = liveSyncPosition;
+                    playVideo(video);
+                    recovered = true;
+                }
+            }
+            if (!recovered) {
+                console.log('Stall recovery: triggering a full reload.');
+                setRetryVersion(v => v + 1);
+            }
+        }
+      }, 10000); // 10 seconds
+    };
+
+    const handlePlaying = () => { 
+        if (waitingTimeoutRef.current) clearTimeout(waitingTimeoutRef.current);
+        resetControlsTimeout();
+    };
     
     const handleFullscreenChange = () => {
         const isCurrentlyFullscreen = !!document.fullscreenElement || !!(document as any).webkitIsFullScreen;
@@ -512,8 +540,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
       if (unlockTimeoutRef.current) clearTimeout(unlockTimeoutRef.current);
       if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+      if (waitingTimeoutRef.current) clearTimeout(waitingTimeoutRef.current);
     };
-  }, [resetControlsTimeout, isLocked, playVideo, pathname]);
+  }, [resetControlsTimeout, isLocked, playVideo, pathname, isLive]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
