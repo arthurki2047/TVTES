@@ -587,7 +587,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
       {isLocked && isFullscreen && showUnlock && (
          <div className="absolute inset-0 z-20 flex items-center justify-center">
-            <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-white/20 hover:scale-110"><Unlock size={48} /></Button>
+            <Button variant="ghost" size="icon" onClick={toggleLock} className="h-20 w-20 rounded-full bg-primary/40 backdrop-blur-sm text-white transition-all hover:bg-primary/60 hover:scale-110"><Unlock size={48} /></Button>
         </div>
       )}
       
@@ -598,19 +598,19 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
         {/* Top controls: Back button and Lock button (in fullscreen) */}
         <div className="p-2 md:p-4 flex justify-between items-center">
-            <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={(e) => { e.stopPropagation(); onBack(); }}><ArrowLeft /></Button>
-            {isFullscreen && (<Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white/20 hover:text-white" onClick={toggleLock}><Lock /></Button>)}
+            <Button variant="ghost" size="icon" className="text-white bg-primary/50 hover:bg-primary/70" onClick={(e) => { e.stopPropagation(); onBack(); }}><ArrowLeft /></Button>
+            {isFullscreen && (<Button variant="ghost" size="icon" className="text-white bg-primary/50 hover:bg-primary/70" onClick={toggleLock}><Lock /></Button>)}
         </div>
         
         {/* Center controls: Channel switching and main Play/Pause button */}
         <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/30 backdrop-blur-sm transition-all hover:bg-black/50 hover:scale-105"><ChevronLeft size={40} /></Button>
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><ChevronLeft size={40} /></Button>
           <div className="flex items-center justify-center gap-4 md:gap-6">
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-14 w-14 rounded-full bg-black/30 backdrop-blur-sm transition-all hover:bg-black/50 hover:scale-105"><RotateCcw size={28} /></Button>
-            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/30 backdrop-blur-sm transition-all hover:bg-black/50 hover:scale-105">{isPlaying ? <Pause size={48} /> : <Play size={48} className="ml-1" />}</Button>
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-14 w-14 rounded-full bg-black/30 backdrop-blur-sm transition-all hover:bg-black/50 hover:scale-105"><RotateCw size={28} /></Button>
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCcw size={28} /></Button>
+            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105">{isPlaying ? <Pause size={48} /> : <Play size={48} className="ml-1" />}</Button>
+            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCw size={28} /></Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/30 backdrop-blur-sm transition-all hover:bg-black/50 hover:scale-105"><ChevronRight size={40} /></Button>
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><ChevronRight size={40} /></Button>
         </div>
 
         {/* Bottom controls: Progress bar, volume, settings, and fullscreen */}
@@ -642,7 +642,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     {uniqueQualityLevels.length > 1 && type === 'hls' && (
                         <Popover>
                             <PopoverTrigger asChild><Button variant="ghost" size="icon"><Settings /></Button></PopoverTrigger>
-                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-primary/70 backdrop-blur-sm border-primary/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
                                     <div key={-1} onClick={() => handleQualityChange(-1)} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", currentQuality === -1 && "bg-primary text-primary-foreground hover:bg-primary/90")}>Auto</div>
                                     {uniqueQualityLevels.map((level) => (<div key={level.height} onClick={() => handleQualityChange(qualityLevels.indexOf(level))} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", currentQuality === qualityLevels.indexOf(level) && "bg-primary text-primary-foreground hover:bg-primary/90")}>{level.height}p</div>))}
@@ -653,7 +653,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     {isFullscreen && (
                         <Popover>
                             <PopoverTrigger asChild><Button variant="ghost" size="icon"><Crop /></Button></PopoverTrigger>
-                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-black/70 backdrop-blur-sm border-white/20 text-white p-2 mb-2">
+                            <PopoverContent container={playerRef.current} align="end" className="w-48 bg-primary/70 backdrop-blur-sm border-primary/20 text-white p-2 mb-2">
                                 <div className="grid gap-1">
                                     <div onClick={() => handleFitModeChange('contain')} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", fitMode === 'contain' && "bg-primary text-primary-foreground hover:bg-primary/90")}>Original</div>
                                     <div onClick={() => handleFitModeChange('cover')} className={cn("p-2 text-sm rounded-md cursor-pointer hover:bg-white/10", fitMode === 'cover' && "bg-primary text-primary-foreground hover:bg-primary/90")}>Fit to Screen</div>
@@ -681,4 +681,5 @@ VideoPlayer.displayName = 'VideoPlayer';
     
 
     
+
 
