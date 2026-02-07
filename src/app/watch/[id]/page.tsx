@@ -1,3 +1,4 @@
+
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -111,19 +112,21 @@ export default function WatchPage() {
     }
   }, []);
 
-  const handleNavigation = useCallback((path: string) => {
-    router.push(path);
-  }, [router]);
-
   const handleBack = useCallback(() => {
-    if (document.pictureInPictureElement) {
-        document.exitPictureInPicture().catch(e => console.error("Error exiting PiP on back navigation", e));
-    }
     if (document.fullscreenElement) {
         document.exitFullscreen();
     }
-    handleNavigation('/');
-  }, [handleNavigation]);
+
+    const video = playerActionsRef?.current?.getVideoElement();
+    if (video && !video.paused) {
+      if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+        playerActionsRef.current.requestPictureInPicture().catch(error => {
+          console.error("Failed to enter PiP mode automatically:", error);
+        });
+      }
+    }
+    router.back();
+  }, [router, playerActionsRef]);
   
   useEffect(() => {
     if (!channel) {

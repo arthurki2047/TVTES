@@ -547,18 +547,35 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) {
-        touchStartX.current = 0; touchEndX.current = 0; return;
+        touchStartX.current = 0; touchEndX.current = 0; touchStartY.current = 0; touchEndY.current = 0; return;
     }
     touchStartX.current = e.targetTouches[0].clientX; touchStartY.current = e.targetTouches[0].clientY;
   };
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => { if (touchStartX.current === 0) return; touchEndX.current = e.targetTouches[0].clientX; touchEndY.current = e.targetTouches[0].clientY; };
+  
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     if (target.closest('button, [role="slider"], [data-radix-popper-content-wrapper]')) return;
-    const xDiff = touchStartX.current - touchEndX.current; const yDiff = touchStartY.current - touchEndY.current;
-    const isSwipe = touchEndX.current !== 0 && Math.abs(xDiff) > 50 && Math.abs(xDiff) > Math.abs(yDiff);
-    if (!isLocked && isSwipe) onSwipe(xDiff > 0 ? 'left' : 'right');
-    else if (!isSwipe && touchStartX.current !== 0) handleTap();
+    if (touchStartX.current === 0) return;
+
+    const xDiff = touchStartX.current - touchEndX.current;
+    const yDiff = touchStartY.current - touchEndY.current;
+
+    const isHorizontalSwipe = touchEndX.current !== 0 && Math.abs(xDiff) > 50 && Math.abs(xDiff) > Math.abs(yDiff);
+    const isVerticalSwipe = touchEndY.current !== 0 && Math.abs(yDiff) > 50 && Math.abs(yDiff) > Math.abs(xDiff);
+
+    if (!isLocked) {
+      if (isHorizontalSwipe) {
+        onSwipe(xDiff > 0 ? 'left' : 'right');
+      } else if (isVerticalSwipe && yDiff < 0) { // Swipe down
+        onBack();
+      } else if (!isHorizontalSwipe && !isVerticalSwipe) {
+        handleTap();
+      }
+    } else {
+      handleTap();
+    }
+
     touchStartX.current = 0; touchEndX.current = 0; touchStartY.current = 0; touchEndY.current = 0;
   };
 
@@ -681,5 +698,6 @@ VideoPlayer.displayName = 'VideoPlayer';
     
 
     
+
 
 
