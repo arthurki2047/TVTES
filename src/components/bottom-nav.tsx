@@ -22,15 +22,13 @@ export function BottomNav() {
   const router = useRouter();
   const { playerRef, playerActionsRef } = useVideoPlayer();
 
-  const handleNav = async (href: string) => {
+  const handleNav = (href: string) => {
     const video = playerRef?.current;
     if (video && !video.paused && pathname.startsWith('/watch/') && href !== pathname) {
-      try {
-        if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-          await playerActionsRef.current.requestPictureInPicture();
-        }
-      } catch (error) {
-        console.error("Failed to enter PiP mode automatically:", error);
+      if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+        playerActionsRef.current.requestPictureInPicture().catch(error => {
+            console.error("Failed to enter PiP mode automatically:", error);
+        });
       }
     }
     router.push(href);

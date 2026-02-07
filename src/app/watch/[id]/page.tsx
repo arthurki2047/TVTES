@@ -115,9 +115,9 @@ export default function WatchPage() {
     router.push(path);
   }, [router]);
 
-  const handleBack = useCallback(async () => {
+  const handleBack = useCallback(() => {
     if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture();
+        document.exitPictureInPicture().catch(e => console.error("Error exiting PiP on back navigation", e));
     }
     if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -131,15 +131,13 @@ export default function WatchPage() {
     }
   }, [channel, router]);
 
-  const handleGoHome = useCallback(async () => {
+  const handleGoHome = useCallback(() => {
     const video = playerActionsRef?.current?.getVideoElement();
     if (video && !video.paused) {
-        try {
-            if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-                await playerActionsRef.current.requestPictureInPicture();
-            }
-        } catch (error) {
-            console.error("Failed to enter PiP mode automatically:", error);
+        if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+            playerActionsRef.current.requestPictureInPicture().catch(error => {
+                console.error("Failed to enter PiP mode automatically:", error);
+            });
         }
     }
     router.push('/');
