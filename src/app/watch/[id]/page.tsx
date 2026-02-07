@@ -265,10 +265,10 @@ export default function WatchPage() {
 
             {channel.type === 'iframe' && (
               <div className="absolute inset-x-0 bottom-1/2 flex translate-y-1/2 items-center justify-between px-2">
-                <Button variant="ghost" size="icon" onClick={() => switchChannel('prev')} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110">
+                <Button variant="ghost" size="icon" onClick={() => switchChannel('prev')} className="h-16 w-16 rounded-full bg-black/25 backdrop-blur-sm transition-all hover:bg-black/40 hover:scale-105">
                   <ChevronLeft className="h-8 w-8" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => switchChannel('next')} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110">
+                <Button variant="ghost" size="icon" onClick={() => switchChannel('next')} className="h-16 w-16 rounded-full bg-black/25 backdrop-blur-sm transition-all hover:bg-black/40 hover:scale-105">
                   <ChevronRight className="h-8 w-8" />
                 </Button>
               </div>

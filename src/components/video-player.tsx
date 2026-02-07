@@ -604,13 +604,13 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         
         {/* Center controls: Channel switching and main Play/Pause button */}
         <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronLeft size={40} /></Button>
+          <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-black/25 backdrop-blur-sm transition-all hover:bg-black/40 hover:scale-105"><ChevronLeft size={40} /></Button>
           <div className="flex items-center justify-center gap-2 md:gap-4">
             <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110"><RotateCcw size={32} /></Button>
             <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110">{isPlaying ? <Pause size={56} /> : <Play size={56} className="ml-1" />}</Button>
             <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-16 w-16 rounded-full bg-black/40 backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-110"><RotateCw size={32} /></Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-accent/20 backdrop-blur-md transition-all hover:bg-accent/40 hover:scale-110 shadow-lg shadow-accent/20"><ChevronRight size={40} /></Button>
+          <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-black/25 backdrop-blur-sm transition-all hover:bg-black/40 hover:scale-105"><ChevronRight size={40} /></Button>
         </div>
 
         {/* Bottom controls: Progress bar, volume, settings, and fullscreen */}
