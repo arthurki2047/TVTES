@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { User, Send, PlayCircle } from "lucide-react";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState } from "react";
 
 const channelRequestFormSchema = z.object({
   channelName: z.string().min(2, {
@@ -29,7 +30,7 @@ const channelRequestFormSchema = z.object({
   additionalInfo: z.string().optional(),
 });
 
-function ChannelRequestForm() {
+function ChannelRequestForm({ onNewRequest }: { onNewRequest: (values: z.infer<typeof channelRequestFormSchema>) => void }) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof channelRequestFormSchema>>({
     resolver: zodResolver(channelRequestFormSchema),
@@ -40,7 +41,7 @@ function ChannelRequestForm() {
   });
 
   function onSubmit(values: z.infer<typeof channelRequestFormSchema>) {
-    console.log(values);
+    onNewRequest(values);
     toast({
       title: "Request Submitted!",
       description: `Thank you for requesting "${values.channelName}". We'll look into it.`,
@@ -197,8 +198,47 @@ function TestStreamForm() {
   );
 }
 
+function ChannelRequestsList({ requests }: { requests: z.infer<typeof channelRequestFormSchema>[] }) {
+  return (
+    <Card className="md:col-span-2">
+      <CardHeader>
+        <CardTitle>Submitted Channel Requests</CardTitle>
+        <CardDescription>
+          These are the channel requests you've submitted during this session.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {requests.length > 0 ? (
+          <ul className="space-y-4">
+            {requests.map((request, index) => (
+              <li key={index} className="rounded-lg border bg-muted/50 p-4">
+                <p className="font-semibold text-card-foreground">{request.channelName}</p>
+                {request.additionalInfo && (
+                  <p className="mt-1 text-sm text-muted-foreground">{request.additionalInfo}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/50 p-12 text-center">
+            <Send className="mx-auto h-12 w-12 text-muted-foreground" />
+            <h3 className="mt-4 text-xl font-semibold">No Requests Yet</h3>
+            <p className="mt-2 text-muted-foreground">Use the form to request a new channel.</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 
 export default function ProfilePage() {
+  const [requests, setRequests] = useState<z.infer<typeof channelRequestFormSchema>[]>([]);
+
+  const handleNewRequest = (request: z.infer<typeof channelRequestFormSchema>) => {
+      setRequests(prev => [...prev, request]);
+  };
+
   return (
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">Profile</h1>
@@ -217,7 +257,11 @@ export default function ProfilePage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         <TestStreamForm />
-        <ChannelRequestForm />
+        <ChannelRequestForm onNewRequest={handleNewRequest} />
+      </div>
+
+      <div className="mt-8 grid gap-8">
+        <ChannelRequestsList requests={requests} />
       </div>
     </div>
   );
