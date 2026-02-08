@@ -18,10 +18,15 @@ import { useVideoPlayer } from '@/context/video-player-context';
 export default function WatchPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const channelId = params.id;
   const searchParams = useSearchParams();
+  const { id: channelId } = params;
+
+  const urlParam = searchParams.get('url');
+  const typeParam = searchParams.get('type');
+  const nameParam = searchParams.get('name');
   const listParam = searchParams.get('list');
   const categoryParam = searchParams.get('category');
+  
   const videoPlayerRef = useRef<VideoPlayerHandles>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { addRecentlyPlayed } = useRecentlyPlayed();
@@ -30,9 +35,9 @@ export default function WatchPage() {
   
   const channel = useMemo(() => {
     if (channelId === 'test') {
-      const url = searchParams.get('url');
-      const type = searchParams.get('type') as 'hls' | 'mp4' | 'iframe' | null;
-      const name = searchParams.get('name') || 'Test Stream';
+      const url = urlParam;
+      const type = typeParam as 'hls' | 'mp4' | 'iframe' | null;
+      const name = nameParam || 'Test Stream';
 
       if (url && type) {
         return {
@@ -51,7 +56,7 @@ export default function WatchPage() {
       return undefined;
     }
     return getChannelById(channelId);
-  }, [channelId, searchParams]);
+  }, [channelId, urlParam, typeParam, nameParam]);
   
   // This effect will run when the component mounts.
   // It checks if there's an active Picture-in-Picture element
@@ -72,14 +77,22 @@ export default function WatchPage() {
 
   const decodedStreamUrl = useMemo(() => {
     if (!channel || channel.type !== 'iframe') return channel?.streamUrl || '';
+
+    if (channel.id === 'test') {
+      // Test streams provide a raw URL
+      return channel.streamUrl;
+    }
+    
+    // Regular channels have a base64 encoded URL
     try {
       const decoded = atob(channel.streamUrl);
       if (decoded.startsWith('http')) {
         return decoded;
       }
     } catch (e) {
-      // Not a valid base64 string, so use it as is.
+      // Fallback for regular channels if something is wrong with encoding
     }
+    
     return channel.streamUrl;
   }, [channel]);
 
@@ -320,3 +333,4 @@ export default function WatchPage() {
   );
 }
     
+
