@@ -46,8 +46,8 @@ export default function CategoriesPage() {
         >
           {languages.map(lang => (
             <div key={lang} className="flex items-center space-x-2">
-              <RadioGroupItem value={lang} id={`lang-${lang}`} />
-              <Label htmlFor={`lang-${lang}`} className="text-base font-medium cursor-pointer">{lang}</Label>
+              <RadioGroupItem value={lang} id={`lang-cat-${lang}`} />
+              <Label htmlFor={`lang-cat-${lang}`} className="text-base font-medium cursor-pointer">{lang}</Label>
             </div>
           ))}
         </RadioGroup>

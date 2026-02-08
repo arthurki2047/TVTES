@@ -1,28 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ChannelCard } from '@/components/channel-card';
 import { RecentlyPlayed } from '@/components/recommendations';
-import { getChannels } from '@/lib/data';
+import { getChannels, channels } from '@/lib/data';
 import { SiteLogo } from '@/components/site-logo';
 import Link from 'next/link';
 import { Search, LayoutGrid, List, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChannelListItem } from '@/components/channel-list-item';
+import type { Language } from '@/lib/types';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 const INITIAL_CHANNEL_COUNT = 20;
 
 export default function HomePage() {
   const [view, setView] = useState('grid');
-  const [visibleChannels, setVisibleChannels] = useState(INITIAL_CHANNEL_COUNT);
-  const channels = getChannels();
-  const totalChannels = channels.length;
+  const [visibleChannelsCount, setVisibleChannelsCount] = useState(INITIAL_CHANNEL_COUNT);
+  
+  const [selectedLanguage, setSelectedLanguage] = useState<Language | 'All'>('All');
+
+  const languages = useMemo(() => {
+    const allLangs = channels.map(c => c.language);
+    return ['All', ...[...new Set(allLangs)].sort()] as (Language | 'All')[];
+  }, []);
+
+  const allChannels = useMemo(() => getChannels(), []);
+
+  const filteredChannels = useMemo(() => {
+    if (selectedLanguage === 'All') {
+      return allChannels;
+    }
+    return allChannels.filter(c => c.language === selectedLanguage);
+  }, [selectedLanguage, allChannels]);
+
+  useEffect(() => {
+    setVisibleChannelsCount(INITIAL_CHANNEL_COUNT);
+  }, [selectedLanguage]);
+
+  const totalChannels = filteredChannels.length;
 
   const showMoreChannels = () => {
-    setVisibleChannels(totalChannels);
+    setVisibleChannelsCount(totalChannels);
   };
 
-  const channelsToShow = channels.slice(0, visibleChannels);
+  const channelsToShow = filteredChannels.slice(0, visibleChannelsCount);
 
   return (
     <div className="container py-6">
@@ -38,6 +61,22 @@ export default function HomePage() {
         </div>
 
         <RecentlyPlayed />
+        
+        <div className="rounded-lg border bg-card p-4">
+            <h2 className="mb-3 text-lg font-semibold">Filter by Language</h2>
+            <RadioGroup
+              value={selectedLanguage}
+              onValueChange={(value) => setSelectedLanguage(value as Language | 'All')}
+              className="flex flex-wrap items-center gap-x-6 gap-y-3"
+            >
+              {languages.map(lang => (
+                <div key={lang} className="flex items-center space-x-2">
+                  <RadioGroupItem value={lang} id={`lang-home-${lang}`} />
+                  <Label htmlFor={`lang-home-${lang}`} className="text-base font-medium cursor-pointer">{lang}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+        </div>
 
         <section className="space-y-4">
           <div className="flex items-center justify-between">
@@ -55,21 +94,28 @@ export default function HomePage() {
             <div className="hidden sm:block text-muted-foreground font-bold">{totalChannels} Channels</div>
           </div>
           
-          {view === 'grid' ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {channelsToShow.map(channel => (
-                <ChannelCard key={channel.id} channel={channel} listType="list" listValue="all" />
-              ))}
-            </div>
+          {channelsToShow.length > 0 ? (
+            view === 'grid' ? (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {channelsToShow.map(channel => (
+                    <ChannelCard key={channel.id} channel={channel} listType="list" listValue="all" />
+                ))}
+                </div>
+            ) : (
+                <div className="space-y-2">
+                {channelsToShow.map(channel => (
+                    <ChannelListItem key={channel.id} channel={channel} listType="list" listValue="all" />
+                ))}
+                </div>
+            )
           ) : (
-            <div className="space-y-2">
-              {channelsToShow.map(channel => (
-                <ChannelListItem key={channel.id} channel={channel} listType="list" listValue="all" />
-              ))}
+            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/50 p-12 text-center">
+                <h3 className="mt-4 text-xl font-semibold">No Channels Found</h3>
+                <p className="mt-2 text-muted-foreground">No channels match the selected language &quot;{selectedLanguage}&quot;.</p>
             </div>
           )}
 
-          {visibleChannels < totalChannels && (
+          {visibleChannelsCount < totalChannels && (
             <div className="text-center mt-6">
               <Button onClick={showMoreChannels} variant="outline" size="lg">
                 <ChevronDown className="mr-2 h-4 w-4" />
