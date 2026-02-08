@@ -322,17 +322,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'dangal',
-    name: 'DANGAL',
-    category: 'Entertainment',
-    logoUrl: 'https://picsum.photos/seed/3202/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/3201/600/400',
-    thumbnailImageHint: 'indian drama',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNzAxLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'b4u-kadak',
     name: 'B4U KADAK',
     category: 'Movies',
