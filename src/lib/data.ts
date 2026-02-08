@@ -467,7 +467,7 @@ export const channels: Channel[] = [
   {
     id: 'fresh-movies',
     name: 'Fresh Movies',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/fresh-movies-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/fresh-movies-thumb/600/400',
@@ -489,7 +489,7 @@ export const channels: Channel[] = [
   {
     id: 'cine-life',
     name: 'Cine Life',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/cine-life-logo/400/400',
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/cine-life-thumb/600/400',
@@ -544,7 +544,7 @@ export const channels: Channel[] = [
   {
     id: 'all-time-movies',
     name: 'ALL TIME MOVIES',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/8402/400/400',
     logoImageHint: 'classic movies',
     thumbnailUrl: 'https://picsum.photos/seed/8401/600/400',
@@ -1034,7 +1034,7 @@ export const channels: Channel[] = [
     logoImageHint: 'tv logo',
     thumbnailUrl: 'https://picsum.photos/seed/mon-tv-thumb/600/400',
     thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9tYXlhLmlwdHYyMDIyLmNvbS9zaC9NT05fVFZfQkFOR0xBL3RyYWNrcy12MWExL21vbm8udHMubTN1OD9maWx0ZXIudHJhY2tzPWExdjF2MnYz djQ=',
+    streamUrl: 'aHR0cHM6Ly9tYXlhLmlwdHYyMDIyLmNvbS9zaC9NT05fVFZfQkFOR0xBL3RyYWNrcy12MWExL21vbm8udHMubTN1OD9maWx0ZXIudHJhY2tzPWExdjF2MnYzIHY0',
     type: 'hls',
   },
   {
@@ -1282,7 +1282,7 @@ export const channels: Channel[] = [
   {
     id: 'movie-box',
     name: 'MOVIE BOX',
-    category: 'Movies',
+    category: 'English Movies',
     logoUrl: 'https://picsum.photos/seed/movie-box-logo/400/400',
     logoImageHint: 'movie box',
     thumbnailUrl: 'https://picsum.photos/seed/movie-box-thumb/600/400',
