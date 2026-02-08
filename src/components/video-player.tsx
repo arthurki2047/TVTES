@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop, PictureInPicture2 } from 'lucide-react';
+import { AlertTriangle, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ChevronLeft, ChevronRight, ArrowLeft, Lock, Unlock, Settings, RotateCcw, RotateCw, Crop, PictureInPicture2, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -71,6 +71,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [playerError, setPlayerError] = useState<string | null>(null);
   const pathname = usePathname();
   const [animationKey, setAnimationKey] = useState<number | null>(null);
+  const [brightness, setBrightness] = useState(1);
   
   // Smart Reload states
   const [retryVersion, setRetryVersion] = useState(0);
@@ -351,6 +352,12 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       resetControlsTimeout();
   }, [resetControlsTimeout]);
 
+  const handleBrightnessChange = useCallback((newBrightness: number[]) => {
+    const value = newBrightness[0];
+    setBrightness(value);
+    resetControlsTimeout();
+  }, [resetControlsTimeout]);
+
   const toggleMute = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
       contextToggleMute();
@@ -599,7 +606,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const isPipSupported = isClient && 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled;
 
   return (
-    <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
+    <div ref={playerRef} className="group relative w-full aspect-video bg-black text-white" style={{ filter: `brightness(${brightness})` }} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseMove={resetControlsTimeout}>
       {/* The native video element that will be controlled by React and hls.js */}
       <video ref={videoRef} className={cn("h-full w-full", { 'object-contain': fitMode === 'contain', 'object-cover': fitMode === 'cover', 'object-fill': fitMode === 'fill' })} playsInline autoPlay muted onClick={handleTap} data-channel-id={channel.id} />
       
@@ -697,6 +704,27 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                             </PopoverContent>
                         </Popover>
                     )}
+                     <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Sun />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent container={playerRef.current} side="top" align="center" className="h-32 p-4 w-auto bg-primary/70 backdrop-blur-sm border-primary/20 text-white mb-2">
+                             <div className="flex items-center h-full">
+                                <Slider
+                                    orientation="vertical"
+                                    defaultValue={[1]}
+                                    value={[brightness]}
+                                    onValueChange={handleBrightnessChange}
+                                    max={1.5}
+                                    min={0.5}
+                                    step={0.1}
+                                    inverted
+                                />
+                             </div>
+                        </PopoverContent>
+                    </Popover>
                     {isPipSupported && (
                         <Button variant="ghost" size="icon" onClick={togglePictureInPicture}>
                             <PictureInPicture2 />
@@ -716,6 +744,7 @@ VideoPlayer.displayName = 'VideoPlayer';
     
 
     
+
 
 
 
