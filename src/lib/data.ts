@@ -1374,7 +1374,7 @@ export const channels: Channel[] = [
   {
     id: 'hollywood-desi',
     name: 'HOLLYWOOD DESI',
-    category: 'English Movies',
+    category: 'Movies',
     language: 'Hindi',
     logoUrl: 'https://picsum.photos/seed/hollywood-desi-logo/400/400',
     logoImageHint: 'hollywood movie',
