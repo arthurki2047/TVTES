@@ -6,14 +6,23 @@ import { RecentlyPlayed } from '@/components/recommendations';
 import { getChannels } from '@/lib/data';
 import { SiteLogo } from '@/components/site-logo';
 import Link from 'next/link';
-import { Search, LayoutGrid, List } from 'lucide-react';
+import { Search, LayoutGrid, List, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChannelListItem } from '@/components/channel-list-item';
 
+const INITIAL_CHANNEL_COUNT = 20;
+
 export default function HomePage() {
   const [view, setView] = useState('grid');
+  const [visibleChannels, setVisibleChannels] = useState(INITIAL_CHANNEL_COUNT);
   const channels = getChannels();
   const totalChannels = channels.length;
+
+  const showMoreChannels = () => {
+    setVisibleChannels(totalChannels);
+  };
+
+  const channelsToShow = channels.slice(0, visibleChannels);
 
   return (
     <div className="container py-6">
@@ -48,15 +57,24 @@ export default function HomePage() {
           
           {view === 'grid' ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {channels.map(channel => (
+              {channelsToShow.map(channel => (
                 <ChannelCard key={channel.id} channel={channel} listType="list" listValue="all" />
               ))}
             </div>
           ) : (
             <div className="space-y-2">
-              {channels.map(channel => (
+              {channelsToShow.map(channel => (
                 <ChannelListItem key={channel.id} channel={channel} listType="list" listValue="all" />
               ))}
+            </div>
+          )}
+
+          {visibleChannels < totalChannels && (
+            <div className="text-center mt-6">
+              <Button onClick={showMoreChannels} variant="outline" size="lg">
+                <ChevronDown className="mr-2 h-4 w-4" />
+                Show All Channels
+              </Button>
             </div>
           )}
         </section>
