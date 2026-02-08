@@ -10,15 +10,15 @@ import { ChannelListItem } from '@/components/channel-list-item';
 
 export default function CategoryPage() {
   const [view, setView] = useState('grid');
-  const params = useParams<{ slug: string }>();
+  const { slug } = useParams<{ slug: string }>();
   
-  const category = useMemo(() => getChannelCategory(params.slug), [params.slug]);
+  const category = useMemo(() => getChannelCategory(slug), [slug]);
 
   if (!category) {
     notFound();
   }
 
-  const channelsInCategory = useMemo(() => getChannels(params.slug), [params.slug]);
+  const channelsInCategory = useMemo(() => getChannels(slug), [slug]);
 
   return (
     <div className="container py-6">
@@ -42,13 +42,13 @@ export default function CategoryPage() {
         view === 'grid' ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {channelsInCategory.map(channel => (
-              <ChannelCard key={channel.id} channel={channel} listType="category" listValue={params.slug}/>
+              <ChannelCard key={channel.id} channel={channel} listType="category" listValue={slug}/>
             ))}
           </div>
         ) : (
             <div className="space-y-2">
                 {channelsInCategory.map(channel => (
-                    <ChannelListItem key={channel.id} channel={channel} listType="category" listValue={params.slug}/>
+                    <ChannelListItem key={channel.id} channel={channel} listType="category" listValue={slug}/>
                 ))}
             </div>
         )

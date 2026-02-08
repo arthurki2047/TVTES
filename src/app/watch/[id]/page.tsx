@@ -16,11 +16,10 @@ import { useVideoPlayer } from '@/context/video-player-context';
 
 export default function WatchPage() {
   const router = useRouter();
-  const params = useParams();
+  const { id: channelId } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const videoPlayerRef = useRef<VideoPlayerHandles>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const channelId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { addRecentlyPlayed } = useRecentlyPlayed();
   const { setPlayerActionsRef, playerActionsRef } = useVideoPlayer();
   const [isFullscreen, setIsFullscreen] = useState(false);
