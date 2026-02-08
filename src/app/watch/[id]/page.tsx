@@ -18,6 +18,8 @@ export default function WatchPage() {
   const router = useRouter();
   const { id: channelId } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
+  const listParam = searchParams.get('list');
+  const categoryParam = searchParams.get('category');
   const videoPlayerRef = useRef<VideoPlayerHandles>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { addRecentlyPlayed } = useRecentlyPlayed();
@@ -147,8 +149,8 @@ export default function WatchPage() {
 
   const switchChannel = useCallback((direction: 'next' | 'prev') => {
     if (!channel) return;
-    const listType = searchParams.get('list') ? 'list' : searchParams.get('category') ? 'category' : 'list';
-    const listValue = searchParams.get('list') || searchParams.get('category') || 'all';
+    const listType = listParam ? 'list' : categoryParam ? 'category' : 'list';
+    const listValue = listParam || categoryParam || 'all';
 
     let currentChannelList: Channel[];
     if (listType === 'category') {
@@ -171,7 +173,7 @@ export default function WatchPage() {
     if (nextChannel) {
       router.push(`/watch/${nextChannel.id}?${listType}=${listValue}`);
     }
-  }, [channel, channelId, router, searchParams]);
+  }, [channel, channelId, router, listParam, categoryParam]);
 
   const handleSwipe = (direction: 'left' | 'right') => {
     if (channel?.type === 'iframe') return;
