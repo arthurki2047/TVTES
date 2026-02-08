@@ -872,6 +872,17 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
+    id: 'bhakti-bangla-tv',
+    name: 'Bhakti Bangla TV',
+    category: 'Devotional',
+    logoUrl: 'https://picsum.photos/seed/bhakti-bangla-logo/400/400',
+    logoImageHint: 'spiritual logo',
+    thumbnailUrl: 'https://picsum.photos/seed/bhakti-bangla-thumb/600/400',
+    thumbnailImageHint: 'devotional content',
+    streamUrl: 'aHR0cHM6Ly9saW1leC50di9iaGFrdGktYmFuZ2xh',
+    type: 'iframe',
+  },
+  {
     id: 'ananda-barta',
     name: 'ANANDA BARTA',
     category: 'News',
