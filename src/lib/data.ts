@@ -542,17 +542,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'nh-bolly-flix',
-    name: 'NH BOLLY FLIX',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/8202/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/8201/600/400',
-    thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'aHR0cHM6Ly9jYy1yNWh1cGN5bTVvZWhoLmFrYW1haXplZC5uZXQvdjEvbWFuaWZlc3QvMzcyMmM2MGE4MTVjMTk5ZDljMGVmMzZjNWI3M2RhNjhhNjJiMDlkMS9jYy1yNWh1cGN5bTVvZWhoLzhmMGE5M2ExLThkMTYtNDhlOS04OGViLTU0ZGViMmJjM2M0Zi8wLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'all-time-movies',
     name: 'ALL TIME MOVIES',
     category: 'Movies',
@@ -737,17 +726,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/epic-thumb/600/400',
     thumbnailImageHint: 'historical epic',
     streamUrl: 'aHR0cHM6Ly9lcGljb252aC5ha2FtYWl6ZWQubmV0L2xpdmUvZXBpYy9tYXN0ZXIubTN1OA==',
-    type: 'hls',
-  },
-  {
-    id: 'nh-bollygold',
-    name: 'NH BOLLYGOLD',
-    category: 'Movies',
-    logoUrl: 'https://picsum.photos/seed/nh-bollygold-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/nh-bollygold-thumb/600/400',
-    thumbnailImageHint: 'bollywood classic',
-    streamUrl: 'aHR0cHM6Ly9jc20tZS1ydW5udHZwcmRsaXZlLWViLnJ1bm5hZHMucnVubi5tZWRpYS9jc20vZXh0bGl2ZS9ydW5udHZwcmQwMSxuaGJvbGx5Z29sZG90dHBsYXkubTN1OA==',
     type: 'hls',
   },
   {
@@ -1192,17 +1170,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'india-tv',
-    name: 'INDIA TV',
-    category: 'News',
-    logoUrl: 'https://picsum.photos/seed/9062/400/400',
-    logoImageHint: 'news logo',
-    thumbnailUrl: 'https://picsum.photos/seed/9061/600/400',
-    thumbnailImageHint: 'news broadcast',
-    streamUrl: 'aHR0cHM6Ly9wbC1pbmRpYXR2bmV3cy5ha2FtYWl6ZWQubmV0L291dC92MS9kYjc5MTc5YjYwODY0MWNlYWE1YTRkMGRkMGZjYThkYS9pbmRleC5tM3U4',
-    type: 'hls',
-  },
-  {
     id: 'aastha',
     name: 'AASTHA',
     category: 'Devotional',
@@ -1323,6 +1290,17 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIxMDczMS90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
+  {
+    id: 'dubbed-tv',
+    name: 'Dubbed TV',
+    category: 'Movies',
+    logoUrl: 'https://picsum.photos/seed/dubbed-tv-logo/400/400',
+    logoImageHint: 'dubbed movie',
+    thumbnailUrl: 'https://picsum.photos/seed/dubbed-tv-thumb/600/400',
+    thumbnailImageHint: 'dubbed movie',
+    streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIwOTU5My90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
+    type: 'hls',
+  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
@@ -1353,5 +1331,3 @@ export function getChannelById(id: string): Channel | undefined {
 export function getChannelCategory(slug: string): { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; } | undefined {
     return categories.find(cat => cat.slug === slug);
 }
-
-    
