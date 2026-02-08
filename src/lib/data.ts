@@ -1375,9 +1375,9 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
   { name: 'Lifestyle', slug: 'lifestyle', imageUrl: 'https://picsum.photos/seed/cat-lifestyle/400/400', imageHint: 'healthy living' },
 ];
 
-export function getChannels(category?: string): Channel[] {
-  if (category) {
-    return channels.filter(channel => channel.category.toLowerCase() === category.toLowerCase());
+export function getChannels(categorySlug?: string): Channel[] {
+  if (categorySlug) {
+    return channels.filter(channel => channel.category.toLowerCase().replace(/ /g, '-') === categorySlug.toLowerCase());
   }
   return channels;
 }
