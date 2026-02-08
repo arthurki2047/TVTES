@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Send } from "lucide-react";
+import { User, Send, PlayCircle } from "lucide-react";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -19,8 +19,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from "next/navigation";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const formSchema = z.object({
+const channelRequestFormSchema = z.object({
   channelName: z.string().min(2, {
     message: "Channel name must be at least 2 characters.",
   }),
@@ -29,15 +31,15 @@ const formSchema = z.object({
 
 function ChannelRequestForm() {
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof channelRequestFormSchema>>({
+    resolver: zodResolver(channelRequestFormSchema),
     defaultValues: {
       channelName: "",
       additionalInfo: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof channelRequestFormSchema>) {
     console.log(values);
     toast({
       title: "Request Submitted!",
@@ -98,6 +100,103 @@ function ChannelRequestForm() {
   );
 }
 
+const testStreamFormSchema = z.object({
+  streamUrl: z.string().url({ message: "Please enter a valid stream URL." }),
+  streamType: z.enum(['hls', 'mp4', 'iframe'], {
+    required_error: "You need to select a stream type.",
+  }),
+});
+
+function TestStreamForm() {
+  const router = useRouter();
+  const form = useForm<z.infer<typeof testStreamFormSchema>>({
+    resolver: zodResolver(testStreamFormSchema),
+    defaultValues: {
+      streamUrl: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof testStreamFormSchema>) {
+    const { streamUrl, streamType } = values;
+    const query = new URLSearchParams({
+        url: streamUrl,
+        type: streamType,
+        name: 'Test Stream',
+    });
+    router.push(`/watch/test?${query.toString()}`);
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Test a Stream</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="streamUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stream URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/stream.m3u8" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Enter the URL of the HLS, MP4, or Iframe stream you want to test.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="streamType"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Stream Type</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="hls" />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">HLS (.m3u8)</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="mp4" />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">MP4</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="iframe" />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">Iframe</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              <PlayCircle className="mr-2 h-4 w-4" />
+              Test Stream
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
+
 
 export default function ProfilePage() {
   return (
@@ -116,7 +215,8 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 grid gap-8 md:grid-cols-2">
+        <TestStreamForm />
         <ChannelRequestForm />
       </div>
     </div>

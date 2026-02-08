@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -16,7 +17,8 @@ import { useVideoPlayer } from '@/context/video-player-context';
 
 export default function WatchPage() {
   const router = useRouter();
-  const { id: channelId } = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>();
+  const channelId = params.id;
   const searchParams = useSearchParams();
   const listParam = searchParams.get('list');
   const categoryParam = searchParams.get('category');
@@ -26,7 +28,30 @@ export default function WatchPage() {
   const { setPlayerActionsRef, playerActionsRef } = useVideoPlayer();
   const [isFullscreen, setIsFullscreen] = useState(false);
   
-  const channel = getChannelById(channelId);
+  const channel = useMemo(() => {
+    if (channelId === 'test') {
+      const url = searchParams.get('url');
+      const type = searchParams.get('type') as 'hls' | 'mp4' | 'iframe' | null;
+      const name = searchParams.get('name') || 'Test Stream';
+
+      if (url && type) {
+        return {
+          id: 'test',
+          name: name,
+          category: 'Other',
+          language: 'English',
+          logoUrl: 'https://picsum.photos/seed/test/400/400',
+          logoImageHint: 'test pattern',
+          thumbnailUrl: 'https://picsum.photos/seed/test-thumb/600/400',
+          thumbnailImageHint: 'test pattern',
+          streamUrl: url,
+          type: type,
+        } as Channel;
+      }
+      return undefined;
+    }
+    return getChannelById(channelId);
+  }, [channelId, searchParams]);
   
   // This effect will run when the component mounts.
   // It checks if there's an active Picture-in-Picture element
@@ -69,7 +94,7 @@ export default function WatchPage() {
   }, [setPlayerActionsRef, videoPlayerRef]);
 
   useEffect(() => {
-    if (channelId) {
+    if (channelId && channelId !== 'test') {
       addRecentlyPlayed(channelId);
     }
   }, [channelId, addRecentlyPlayed]);
@@ -130,7 +155,7 @@ export default function WatchPage() {
   }, [router, playerActionsRef]);
   
   useEffect(() => {
-    if (!channel) {
+    if (channel === undefined) {
       router.replace('/');
     }
   }, [channel, router]);
@@ -148,7 +173,7 @@ export default function WatchPage() {
   }, [router, playerActionsRef]);
 
   const switchChannel = useCallback((direction: 'next' | 'prev') => {
-    if (!channel) return;
+    if (!channel || channelId === 'test') return;
     const listType = listParam ? 'list' : categoryParam ? 'category' : 'list';
     const listValue = listParam || categoryParam || 'all';
 
@@ -176,11 +201,11 @@ export default function WatchPage() {
   }, [channel, channelId, router, listParam, categoryParam]);
 
   const handleSwipe = (direction: 'left' | 'right') => {
-    if (channel?.type === 'iframe') return;
+    if (channel?.type === 'iframe' || channelId === 'test') return;
     switchChannel(direction === 'left' ? 'next' : 'prev');
   };
 
-  if (!channel) {
+  if (channel === undefined) {
     return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
@@ -188,7 +213,7 @@ export default function WatchPage() {
     );
   }
 
-  const relatedChannels = getChannels(channel.category).filter(c => c.id !== channelId).slice(0, 7);
+  const relatedChannels = channelId !== 'test' && channel ? getChannels(channel.category).filter(c => c.id !== channelId).slice(0, 7) : [];
 
   return (
     <div className="flex h-screen flex-col bg-black">
@@ -231,13 +256,17 @@ export default function WatchPage() {
                     <h1 className="font-headline text-3xl font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">{channel.name}</h1>
                     <p className="text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">{channel.category}</p>
                 </div>
-                <FavoriteToggleButton channelId={channel.id} channelName={channel.name} className="h-12 w-12 shrink-0"/>
+                 {channelId !== 'test' ? (
+                    <FavoriteToggleButton channelId={channel.id} channelName={channel.name} className="h-12 w-12 shrink-0"/>
+                ) : <div className="h-12 w-12 shrink-0"/>}
             </div>
             <div className="mt-4 prose prose-invert max-w-none">
-                {channel.type === 'iframe' ? (
+                {channel.type === 'iframe' && channelId !== 'test' ? (
                   <p>You are watching {channel.name}. Player controls are provided by the embedded stream. Some features like Picture-in-Picture or swiping to change channels may not be available.</p>
-                ) : (
+                ) : channelId !== 'test' ? (
                   <p>You are watching {channel.name}. Swipe left or right on the player to switch channels.</p>
+                ) : (
+                  <p>You are watching a test stream. Some features like channel swiping, related channels and favorites are disabled.</p>
                 )}
             </div>
             
@@ -267,7 +296,7 @@ export default function WatchPage() {
               </div>
             )}
 
-            {channel.type === 'iframe' && (
+            {channel.type === 'iframe' && channelId !== 'test' && (
               <div className="absolute inset-x-0 bottom-1/2 flex translate-y-1/2 items-center justify-between px-2">
                 <Button variant="ghost" size="icon" onClick={() => switchChannel('prev')} className="h-16 w-16 rounded-full bg-black/25 backdrop-blur-sm transition-all hover:bg-black/40 hover:scale-105">
                   <ChevronLeft className="h-8 w-8" />
