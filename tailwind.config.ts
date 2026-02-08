@@ -95,10 +95,16 @@ export default {
             height: '0',
           },
         },
+        'bubble-scale': {
+          '0%': { transform: 'scale(0.5)', opacity: '0.7' },
+          '50%': { transform: 'scale(1.2)', opacity: '0.3' },
+          '100%': { transform: 'scale(2)', opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'bubble-scale': 'bubble-scale 0.5s ease-out forwards',
       },
     },
   },

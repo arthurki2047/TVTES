@@ -70,6 +70,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [playerError, setPlayerError] = useState<string | null>(null);
   const pathname = usePathname();
+  const [animationKey, setAnimationKey] = useState<number | null>(null);
   
   // Smart Reload states
   const [retryVersion, setRetryVersion] = useState(0);
@@ -109,6 +110,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
       }
     }, 5000);
   }, [isLocked]);
+
+  const triggerCenterAnimation = useCallback(() => {
+    setAnimationKey(Date.now());
+  }, []);
   
   const playVideo = useCallback((video: HTMLVideoElement | null) => {
     if (!video) return;
@@ -146,7 +151,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                     if (data.fatal) {
                         switch(data.type) {
                           case Hls.default.ErrorTypes.NETWORK_ERROR:
-                             console.warn(`HLS.js fatal network error. Retry ${retryCountRef.current + 1}/${MAX_RETRIES}...`);
+                             console.warn(`HLS.js fatal network error. Retry ${'${retryCountRef.current + 1}'}/${MAX_RETRIES}...`);
                             if (retryCountRef.current < MAX_RETRIES) {
                                 const delay = RETRY_DELAY * Math.pow(2, retryCountRef.current);
                                 retryCountRef.current++;
@@ -162,7 +167,7 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
                             hls.recoverMediaError();
                             break;
                           default:
-                            setPlayerError(`A fatal error occurred. Details: ${data.details}.`);
+                            setPlayerError(`A fatal error occurred. Details: ${'${data.details}'}.`);
                             hls.destroy();
                             break;
                         }
@@ -241,9 +246,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     if (videoRef.current) {
         const newTime = videoRef.current.currentTime + amount;
         videoRef.current.currentTime = Math.max(0, Math.min(newTime, isLive ? videoRef.current.seekable.end(videoRef.current.seekable.length - 1) : duration));
+        triggerCenterAnimation();
     }
     resetControlsTimeout();
-  }, [resetControlsTimeout, isLive, duration]);
+  }, [resetControlsTimeout, isLive, duration, triggerCenterAnimation]);
   
   useEffect(() => {
     const video = videoRef.current;
@@ -326,10 +332,14 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
 
   const togglePlay = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (videoRef.current?.paused) playVideo(videoRef.current);
-    else videoRef.current?.pause();
+    if (videoRef.current?.paused) {
+      playVideo(videoRef.current);
+    } else {
+      videoRef.current?.pause();
+    }
+    triggerCenterAnimation();
     resetControlsTimeout();
-  }, [resetControlsTimeout, playVideo]);
+  }, [resetControlsTimeout, playVideo, triggerCenterAnimation]);
 
   const handleVolumeChange = useCallback((newVolume: number[]) => {
       const value = newVolume[0];
@@ -428,8 +438,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
     },
   }));
 
-  const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
-  const handlePrevChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('right'); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout]);
+  const handleNextChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('left'); triggerCenterAnimation(); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout, triggerCenterAnimation]);
+  const handlePrevChannel = useCallback((e: React.MouseEvent) => { e.stopPropagation(); onSwipe('right'); triggerCenterAnimation(); resetControlsTimeout(); }, [onSwipe, resetControlsTimeout, triggerCenterAnimation]);
   const handleQualityChange = useCallback((levelIndex: number) => { if (hlsRef.current) { hlsRef.current.currentLevel = levelIndex; setCurrentQuality(levelIndex); } resetControlsTimeout(); }, [resetControlsTimeout]);
   const handleFitModeChange = useCallback((mode: FitMode) => { setFitMode(mode); resetControlsTimeout(); }, [resetControlsTimeout]);
   
@@ -622,10 +632,18 @@ export const VideoPlayer = forwardRef<VideoPlayerHandles, VideoPlayerProps>(({ s
         {/* Center controls: Channel switching and main Play/Pause button */}
         <div className="flex-1 flex items-center justify-between px-2 md:px-8" onClick={e => e.stopPropagation()}>
           <Button variant="ghost" size="icon" onClick={handlePrevChannel} className="h-16 w-16 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><ChevronLeft size={40} /></Button>
-          <div className="flex items-center justify-center gap-4 md:gap-6">
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCcw size={28} /></Button>
-            <Button variant="ghost" size="icon" onClick={togglePlay} className="h-20 w-20 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105">{isPlaying ? <Pause size={48} /> : <Play size={48} className="ml-1" />}</Button>
-            <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCw size={28} /></Button>
+          <div className="relative flex items-center justify-center">
+            {animationKey && (
+                <div
+                    key={animationKey}
+                    className="absolute h-32 w-32 rounded-full border-4 border-white/50 bg-transparent animate-bubble-scale"
+                />
+            )}
+            <div className="flex items-center justify-center gap-4 md:gap-6">
+                <Button variant="ghost" size="icon" onClick={() => handleSeek(-30)} className="z-10 h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCcw size={28} /></Button>
+                <Button variant="ghost" size="icon" onClick={togglePlay} className="z-10 h-20 w-20 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105">{isPlaying ? <Pause size={48} /> : <Play size={48} className="ml-1" />}</Button>
+                <Button variant="ghost" size="icon" onClick={() => handleSeek(30)} className="z-10 h-14 w-14 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><RotateCw size={28} /></Button>
+            </div>
           </div>
           <Button variant="ghost" size="icon" onClick={handleNextChannel} className="h-16 w-16 rounded-full bg-primary/30 backdrop-blur-sm transition-all hover:bg-primary/50 hover:scale-105"><ChevronRight size={40} /></Button>
         </div>
@@ -698,6 +716,7 @@ VideoPlayer.displayName = 'VideoPlayer';
     
 
     
+
 
 
 
