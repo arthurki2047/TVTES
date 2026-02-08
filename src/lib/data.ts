@@ -879,7 +879,7 @@ export const channels: Channel[] = [
     logoImageHint: 'spiritual logo',
     thumbnailUrl: 'https://picsum.photos/seed/bhakti-bangla-thumb/600/400',
     thumbnailImageHint: 'devotional content',
-    streamUrl: 'aHR0cHM6Ly9saW1leC50di9iaGFrdGktYmFuZ2xh',
+    streamUrl: 'https://limex.tv/bhakti-bangla',
     type: 'iframe',
   },
   {
@@ -956,7 +956,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/rokuten-scitv-thumb/600/400',
     thumbnailImageHint: 'sci-fi movie',
-    streamUrl: 'aHR0cHM6Ly9zY2ktZmktcmFrdXRlbi10di11ay5mYXN0LnJha3V0ZW4udHYvdjEvbWFzdGVyLzA1NDdmMTg2NDliZDc4OGJlYzdiNjdiNzQ2ZTQ3NjcwZjU1OGI2YjIvcHJvZHVjdGlvbi1MaXZlQ2hhbm5lbC02MjQxL21hc3Rlci5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9zY2ktZmktcmFrdXRlbi10di11ay5mYXN0LnJha3V0ZW4udHYvdjEvbWFzdGVyLzYyNDEvaW5kZXgubTN1OA==',
     type: 'hls',
   },
   {
@@ -978,7 +978,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/plex-rush-thumb/600/400',
     thumbnailImageHint: 'action movie',
-    streamUrl: 'aHR0cHM6Ly80MzZmNTk1Nzk0MzY0NzNlODE2ODI4NGNhYzVkNzI1Zi5tZWRpYXRhaWxvci51cy1lYXN0LTEuYW1hem9uYXdzLmNvbS92MS9tYXN0ZXIvNDRmNzNiYTRkMDNlOTYwN2RjZDliZWJkY2I4NDk0ZDg2OTY0ZjFkOC9QbGV4X1J1c2hCeUFNQy9wbGF5bGlzdC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9saXZlLXBsZXgtdHYtYW1jLnBsZXgudHYvY2hhbm5lbC9hNDRmNzNiYTRkMDNlOTYwN2RjZDliZWJkY2I4NDk0ZDg2OTY0ZjFkOC5tM3U4',
     type: 'hls',
   },
   {
@@ -989,7 +989,7 @@ export const channels: Channel[] = [
     logoImageHint: 'movie logo',
     thumbnailUrl: 'https://picsum.photos/seed/rakuten-tv-thumb/600/400',
     thumbnailImageHint: 'movie collection',
-    streamUrl: 'aHR0cHM6Ly85YmU3ODNkNjUyY2Q0YjA5OWNmNjNlMWRjMTM0YzRhMy5tZWRpYXRhaWxvci5ldS13ZXN0LTEuYW1hem9uYXdzLmNvbS92MS9tYXN0ZXIvMDU0N2YxODY0OWJkNzg4YmVjN2I2N2I3NDZlNDc2NzBmNTU4YjZiMi9wcm9kdWN0aW9uLUxpdmVDaGFubmVsLTYxODEvbWFzdGVyLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9hY3Rpb24tcmFrdXRlbi10di11ay5mYXN0LnJha3V0ZW4udHYvdjEvbWFzdGVyLzA1NDdmMTg2NDliZDc4OGJlYzdiNjdiNzQ2ZTQ3NjcwZjU1OGI2YjIvcHJvZHVjdGlvbi1MaXZlQ2hhbm5lbC02MTgxL21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
@@ -1041,13 +1041,24 @@ export const channels: Channel[] = [
     name: 'HORRAY RHYMES',
     category: 'Kids',
     logoUrl: 'https://picsum.photos/seed/horray-rhymes-logo/400/400',
-    logoImageHint: 'kids logo',
+    logoImageHint: 'kids rhymes',
     thumbnailUrl: 'https://picsum.photos/seed/horray-rhymes-thumb/600/400',
     thumbnailImageHint: 'kids rhymes',
     streamUrl: 'aHR0cHM6Ly9xbi0wMTI3My1wb2wtMS0wMS0xLS0tNzI0Ny1hbXlwLmh0dHAuZ2xvYmFsLmRucy5xd2lsdGVkLWNkcy5jcWxvdWQuY29tL09UTS9PVE1fS2lkc1Rvb25zSGluZGktU0NURV9DRE4vcGxheWxpc3QubTN1OA==',
     type: 'hls',
   },
   // Sony Channels and iframe channels at the bottom as requested
+  {
+    id: 'mon-tv',
+    name: 'Mon TV',
+    category: 'Entertainment',
+    logoUrl: 'https://picsum.photos/seed/mon-tv-logo/400/400',
+    logoImageHint: 'tv logo',
+    thumbnailUrl: 'https://picsum.photos/seed/mon-tv-thumb/600/400',
+    thumbnailImageHint: 'tv show',
+    streamUrl: 'https://limex.tv/mon-tv-bangla',
+    type: 'iframe',
+  },
   {
     id: 'science-is-amazing',
     name: 'Science Is Amazing',
