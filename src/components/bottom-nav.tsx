@@ -25,13 +25,15 @@ export function BottomNav() {
   const handleNav = (href: string) => {
     const video = playerRef?.current;
     if (video && !video.paused && pathname.startsWith('/watch/') && href !== pathname) {
-      if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-        playerActionsRef.current.requestPictureInPicture().catch(error => {
-            console.error("Failed to enter PiP mode automatically:", error);
-        });
-      }
+        router.push(href);
+        if (playerActionsRef?.current && document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+            playerActionsRef.current.requestPictureInPicture().catch(error => {
+                console.error("Failed to enter PiP mode automatically:", error);
+            });
+        }
+    } else {
+        router.push(href);
     }
-    router.push(href);
   };
 
   const renderDesktopNavItem = (item: typeof navItems[0]) => {
@@ -60,7 +62,7 @@ export function BottomNav() {
           onClick={() => handleNav(item.href)}
           className={cn(
             'flex flex-col items-center justify-center gap-1 p-2 rounded-full h-14 w-14 transition-all duration-300 cursor-pointer',
-            isActive ? 'bg-primary text-primary-foreground scale-110 shadow-lg' : 'text-muted-foreground hover:text-primary'
+            isActive ? 'bg-gradient-to-br from-primary to-accent text-primary-foreground scale-110 shadow-lg' : 'text-gray-300 hover:text-white'
           )}
         >
           <item.icon className="h-5 w-5" />
@@ -86,7 +88,7 @@ export function BottomNav() {
 
       {/* Mobile Bottom Nav */}
       <div className="fixed bottom-0 left-0 right-0 z-40 p-2 md:hidden">
-        <nav className="mx-auto w-full max-w-md rounded-full border bg-background/80 shadow-lg backdrop-blur-sm">
+        <nav className="mx-auto w-full max-w-md rounded-full border border-white/10 bg-black/50 shadow-lg backdrop-blur-lg">
           <div className="flex h-16 items-center justify-around">
             {navItems.map(renderMobileNavItem)}
           </div>
