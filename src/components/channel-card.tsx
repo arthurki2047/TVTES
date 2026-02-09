@@ -37,10 +37,10 @@ export function ChannelCard({ channel, listType, listValue, className }: Channel
                 alt={`Logo for ${channel.name}`}
                 width={400}
                 height={400}
-                className="h-8 w-8 rounded-full border-2 border-background/80 bg-background/80 object-contain p-0.5"
+                className="h-7 w-7 rounded-full border-2 border-background/80 bg-background/80 object-contain p-0.5"
                 data-ai-hint={channel.logoImageHint}
               />
-              <h3 className="font-headline text-base font-semibold text-white shadow-black [text-shadow:0_1px_2px_var(--tw-shadow-color)]">
+              <h3 className="font-headline text-sm font-semibold text-white shadow-black [text-shadow:0_1px_2px_var(--tw-shadow-color)]">
                 {channel.name}
               </h3>
             </div>

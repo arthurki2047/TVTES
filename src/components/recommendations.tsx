@@ -9,8 +9,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 function RecentlyPlayedSkeleton() {
     return (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {[...Array(5)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-lg" />)}
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+            {[...Array(7)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-lg" />)}
         </div>
     );
 }
@@ -42,7 +42,7 @@ export function RecentlyPlayed() {
   return (
     <section className="space-y-4">
       <h2 className="font-headline text-3xl font-bold">Recently Watched</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
           {recentlyPlayedChannels.map(channel => (
             <ChannelCard key={channel.id} channel={channel} />
           ))}
