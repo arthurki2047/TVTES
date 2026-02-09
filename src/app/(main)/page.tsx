@@ -10,8 +10,6 @@ import { Search, LayoutGrid, List, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChannelListItem } from '@/components/channel-list-item';
 import type { Language } from '@/lib/types';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 
 const INITIAL_CHANNEL_COUNT = 20;
 
@@ -64,18 +62,17 @@ export default function HomePage() {
         
         <div className="rounded-lg border bg-card p-4">
             <h2 className="mb-3 text-lg font-semibold">Filter by Language</h2>
-            <RadioGroup
-              value={selectedLanguage}
-              onValueChange={(value) => setSelectedLanguage(value as Language | 'All')}
-              className="flex flex-wrap items-center gap-x-6 gap-y-3"
-            >
+            <div className="flex flex-wrap items-center gap-2">
               {languages.map(lang => (
-                <div key={lang} className="flex items-center space-x-2">
-                  <RadioGroupItem value={lang} id={`lang-home-${lang}`} />
-                  <Label htmlFor={`lang-home-${lang}`} className="text-base font-medium cursor-pointer">{lang}</Label>
-                </div>
+                <Button
+                  key={lang}
+                  variant={selectedLanguage === lang ? 'secondary' : 'ghost'}
+                  onClick={() => setSelectedLanguage(lang)}
+                >
+                  {lang}
+                </Button>
               ))}
-            </RadioGroup>
+            </div>
         </div>
 
         <section className="space-y-4">

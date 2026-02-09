@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import type { Language } from '@/lib/types';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 
 export default function CategoriesPage() {
   const router = useRouter();
@@ -39,18 +37,17 @@ export default function CategoriesPage() {
       
       <div className="mb-8 rounded-lg border bg-card p-4">
         <h2 className="mb-3 text-lg font-semibold">Filter by Language</h2>
-        <RadioGroup
-          value={selectedLanguage}
-          onValueChange={(value) => setSelectedLanguage(value as Language | 'All')}
-          className="flex flex-wrap items-center gap-x-6 gap-y-3"
-        >
+        <div className="flex flex-wrap items-center gap-2">
           {languages.map(lang => (
-            <div key={lang} className="flex items-center space-x-2">
-              <RadioGroupItem value={lang} id={`lang-cat-${lang}`} />
-              <Label htmlFor={`lang-cat-${lang}`} className="text-base font-medium cursor-pointer">{lang}</Label>
-            </div>
+            <Button
+              key={lang}
+              variant={selectedLanguage === lang ? 'secondary' : 'ghost'}
+              onClick={() => setSelectedLanguage(lang)}
+            >
+              {lang}
+            </Button>
           ))}
-        </RadioGroup>
+        </div>
       </div>
       
       {filteredCategories.length > 0 ? (
