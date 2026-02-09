@@ -107,7 +107,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1001/600/400',
     thumbnailImageHint: 'breaking news',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMjc4MC5tM3U4',
+    streamUrl: 'aHR0cHM6Ly92Zy1yZXB1YmxpY3R2bGl2ZS5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci82MTFkNzkiYjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy92Z2xpdmUtc2stNDU2MzY4L21haW4ubTN1OA==',
     type: 'hls',
   },
   {
@@ -203,7 +203,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1801/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNDY0Lm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9kMmRzb3l2a3IzM20wNS5jbG91ZGZyb250Lm5ldC9pbmRleC5tM3U4P2FrZXM9ZXlKMGFXMWxjM0JoY21Oc2FXNTBJam9pSlNVMElpd2laVzFpWlNJNklqSXdORFF3T1dsa09qUXpWemswTTBKdlp6TTJNVFEyTmpVeE1UVTVNaTBpTzJDVndsT1FRZm54LS1BMEM1dzRVN2otWE9MQ0ZUN0VlRVVjbWswTmpJWSY=',
     type: 'hls',
   },
   {
@@ -1343,7 +1343,7 @@ export function getChannels(categorySlug?: string): Channel[] {
   if (categorySlug) {
     const category = categories.find(c => c.slug === categorySlug);
     if (category) {
-        return channels.filter(channel => channel.category.toLowerCase() === category.name.toLowerCase());
+        return channels.filter(channel => channel.category === category.name);
     }
     return [];
   }
