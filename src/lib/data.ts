@@ -435,18 +435,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'shemaroo-bollywood',
-    name: 'SHEMAROO BOLLYWOOD',
-    category: 'Movies',
-    language: 'Hindi',
-    logoUrl: 'https://picsum.photos/seed/5602/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/5601/600/400',
-    thumbnailImageHint: 'bollywood movie',
-    streamUrl: 'aHR0cHM6Ly9kMzVqNTA0ejB4MnZ1Mi5jbG91ZGZyb250Lm5ldC92MS9tYW5pZmVzdC8wYmM4ZTgzNzZiZDg0MTdhMWI2NzYxMTM4YWE0MWMyNmM3MzA5MzEyL3NoZW1hcm9vLWJvbGx5d29vZC9jYTU1MzczNS1lOTA4LTRmNzUtYThjZC03MDVjM2MyMmZjYjIvMC5tM3U4',
-    type: 'hls',
-  },
-  {
     id: 'cine-jomjomat',
     name: 'Cine Jomjomat',
     category: 'Movies',
@@ -963,18 +951,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'rokuten-scitv',
-    name: 'Rokuten SciTV',
-    category: 'English Movies',
-    language: 'English',
-    logoUrl: 'https://picsum.photos/seed/rokuten-scitv-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/rokuten-scitv-thumb/600/400',
-    thumbnailImageHint: 'sci-fi movie',
-    streamUrl: 'aHR0cHM6Ly9zY2ktZmktcmFrdXRlbi10di11ay5mYXN0LnJha3V0ZW4udHYvdjEvbWFzdGVyLzYyNDEvaW5kZXgubTN1OA==',
-    type: 'hls',
-  },
-  {
     id: 'xumo-tv',
     name: 'Xumo Sci-fi & Fantasy',
     category: 'English Movies',
@@ -996,18 +972,6 @@ export const channels: Channel[] = [
     thumbnailUrl: 'https://picsum.photos/seed/rakuten-tv-thumb/600/400',
     thumbnailImageHint: 'movie collection',
     streamUrl: 'aHR0cHM6Ly9hY3Rpb24tcmFrdXRlbi10di11ay5mYXN0LnJha3V0ZW4udHYvdjEvbWFzdGVyLzA1NDdmMTg2NDliZDc4OGJlYzdiNjdiNzQ2ZTQ3NjcwZjU1OGI2YjIvcHJvZHVjdGlvbi1MaXZlQ2hhbm5lbC02MTgxL21hc3Rlci5tM3U4',
-    type: 'hls',
-  },
-  {
-    id: 'next-g-tv',
-    name: 'Next G TV',
-    category: 'English Movies',
-    language: 'English',
-    logoUrl: 'https://picsum.photos/seed/next-g-tv-logo/400/400',
-    logoImageHint: 'movie logo',
-    thumbnailUrl: 'https://picsum.photos/seed/next-g-tv-thumb/600/400',
-    thumbnailImageHint: 'movie poster',
-    streamUrl: 'aHR0cHM6Ly9tb3ZpZXMubmV4Zy50di9tb3ZpZS1oL21vdmllLWguc21pbC9wbGF5bGlzdC5tM3U4',
     type: 'hls',
   },
   {
@@ -1377,7 +1341,8 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
 
 export function getChannels(categorySlug?: string): Channel[] {
   if (categorySlug) {
-    return channels.filter(channel => channel.category.toLowerCase().replace(/ /g, '-') === categorySlug.toLowerCase());
+    const categoryName = categorySlug.replace(/-/g, ' ');
+    return channels.filter(channel => channel.category.toLowerCase() === categoryName.toLowerCase());
   }
   return channels;
 }
