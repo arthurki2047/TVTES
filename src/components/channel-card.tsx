@@ -24,9 +24,9 @@ export function ChannelCard({ channel, listType, listValue, className }: Channel
             <Image
               src={channel.thumbnailUrl}
               alt={`Thumbnail for ${channel.name}`}
-              width={600}
-              height={400}
-              className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              width={200}
+              height={200}
+              className="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
               data-ai-hint={channel.thumbnailImageHint}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

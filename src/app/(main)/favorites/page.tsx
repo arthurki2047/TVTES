@@ -16,7 +16,7 @@ export default function FavoritesPage() {
       <h1 className="mb-6 font-headline text-4xl font-bold">Favorites</h1>
       {!isLoaded ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-lg" />)}
         </div>
       ) : favoriteChannels.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

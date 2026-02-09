@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 function RecentlyPlayedSkeleton() {
     return (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-48 rounded-lg" />)}
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-lg" />)}
         </div>
     );
 }
