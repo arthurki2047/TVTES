@@ -95,7 +95,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/901/600/400',
     thumbnailImageHint: 'news report',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfMTczNS5tM3U4',
+    streamUrl: 'aHR0cHM6Ly9keWpteWl2M2JwMmV6LmNsb3VkZnJvbnQubmV0L3B1Yi1pb3R2OWJhbmFlbjh5cS9saXZlYWJyL3BsYXlsaXN0Lm0zdTg=',
     type: 'hls',
   },
   {
@@ -131,7 +131,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1201/600/400',
     thumbnailImageHint: 'live news',
-    streamUrl: 'aHR0cHM6Ly9taW5pLmFsbGlub25lcmVib3JuLmZ1bi9qaW90di1pbm4vYXBwL3RzX2xpdmVfNjcyLm0zdTg=',
+    streamUrl: 'aHR0cHM6Ly9kMmw0YXI2eTNtcnM0ay5jbG91ZGZyb250Lm5ldC9saXZlLXN0cmVhbWluZy9hbmFuZGEtbGl2ZXR2L21hc3Rlci5tM3U4',
     type: 'hls',
   },
   {
