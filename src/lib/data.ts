@@ -1233,10 +1233,22 @@ export const channels: Channel[] = [
     category: 'News',
     language: 'Hindi',
     logoUrl: 'https://picsum.photos/seed/9112/400/400',
-    logoImageHint: 'news logo',
+    logoImageHint: 'news update',
     thumbnailUrl: 'https://picsum.photos/seed/9111/600/400',
     thumbnailImageHint: 'news update',
     streamUrl: 'aHR0cHM6Ly9keWpteWl2M2JwMmV6LmNsb3VkZnJvbnQubmV0L3B1Yi1pb3R2OWhpbmp6Z3RwZS9saXZlYWJyL3BsYXlsaXN0Lm0zdTg=',
+    type: 'hls',
+  },
+  {
+    id: 'india-tv',
+    name: 'INDIA TV',
+    category: 'News',
+    language: 'Hindi',
+    logoUrl: 'https://picsum.photos/seed/india-tv-logo/400/400',
+    logoImageHint: 'news logo',
+    thumbnailUrl: 'https://picsum.photos/seed/india-tv-thumb/600/400',
+    thumbnailImageHint: 'news broadcast',
+    streamUrl: 'aHR0cHM6Ly9wbC1pbmRpYXR2bmV3cy5ha2FtYWl6ZWQubmV0L291dC92MS9kYjc5MTc5YjYwODY0MWNlYWE1YTRkMGRkMGRjYThkYS9pbmRleC5tM3U4',
     type: 'hls',
   },
   {
@@ -1341,8 +1353,11 @@ export const categories: { name: ChannelCategory; slug: string; imageUrl: string
 
 export function getChannels(categorySlug?: string): Channel[] {
   if (categorySlug) {
-    const categoryName = categorySlug.replace(/-/g, ' ');
-    return channels.filter(channel => channel.category.toLowerCase() === categoryName.toLowerCase());
+    const category = categories.find(c => c.slug === categorySlug);
+    if (category) {
+        return channels.filter(channel => channel.category.toLowerCase() === category.name.toLowerCase());
+    }
+    return [];
   }
   return channels;
 }
