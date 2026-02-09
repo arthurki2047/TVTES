@@ -107,7 +107,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1001/600/400',
     thumbnailImageHint: 'breaking news',
-    streamUrl: 'aHR0cHM6Ly92Zy1yZXB1YmxpY3R2bGl2ZS5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci82MTFkNzkiYjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy92Z2xpdmUtc2stNDU2MzY4L21haW4ubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly92Zy1yZXB1YmxpY3R2bGl2ZS5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci82MTFkNzkiYjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy92Z2xpdmUtc2stNDU2MzY4L21haW4ubTN1OD9hZHMucGFydG5lcj1yZXB1YmxpY3dlYg==',
     type: 'hls',
   },
   {
@@ -831,18 +831,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   {
-    id: 'hi-dost',
-    name: 'Hi Dost',
-    category: 'Entertainment',
-    language: 'Hindi',
-    logoUrl: 'https://picsum.photos/seed/hi-dost-logo/400/400',
-    logoImageHint: 'entertainment logo',
-    thumbnailUrl: 'https://picsum.photos/seed/hi-dost-thumb/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9jZG4tMS5waXNob3cudHYvbGl2ZS8yMjQvbWFzdGVyLm0zdTg=',
-    type: 'hls',
-  },
-  {
     id: 'khushboo-bangla',
     name: 'KHUSHBOO BANGLA',
     category: 'Entertainment',
@@ -1035,18 +1023,6 @@ export const channels: Channel[] = [
     type: 'hls',
   },
   // Sony Channels and iframe channels at the bottom as requested
-  {
-    id: 'mon-tv',
-    name: 'Mon TV',
-    category: 'Entertainment',
-    language: 'Bengali',
-    logoUrl: 'https://picsum.photos/seed/mon-tv-logo/400/400',
-    logoImageHint: 'tv logo',
-    thumbnailUrl: 'https://picsum.photos/seed/mon-tv-thumb/600/400',
-    thumbnailImageHint: 'tv show',
-    streamUrl: 'aHR0cHM6Ly9tYXlhLmlwdHYyMDIyLmNvbS9zaC9NT05fVFZfQkFOR0xBL3RyYWNrcy12MWExL21vbm8udHMubTN1OD9maWx0ZXIudHJhY2tzPWExdjF2MnYzIHY0',
-    type: 'hls',
-  },
   {
     id: 'science-is-amazing',
     name: 'Science Is Amazing',
