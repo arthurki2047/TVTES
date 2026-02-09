@@ -1,11 +1,9 @@
-
-
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getChannelById, getChannels } from '@/lib/data';
+import { getChannelById, getChannels, categories } from '@/lib/data';
 import type { Channel } from '@/lib/types';
 import { VideoPlayer, type VideoPlayerHandles } from '@/components/video-player';
 import { FavoriteToggleButton } from '@/components/favorite-toggle-button';
@@ -226,7 +224,19 @@ export default function WatchPage() {
     );
   }
 
-  const relatedChannels = channelId !== 'test' && channel ? getChannels(channel.category).filter(c => c.id !== channelId).slice(0, 7) : [];
+  const categoryObject = useMemo(() => {
+    if (!channel) return undefined;
+    return categories.find(cat => cat.name === channel.category);
+  }, [channel]);
+
+  const relatedChannels = useMemo(() => {
+    if (channelId === 'test' || !channel || !categoryObject) {
+      return [];
+    }
+    return getChannels(categoryObject.slug)
+      .filter(c => c.id !== channelId)
+      .slice(0, 7);
+  }, [channel, channelId, categoryObject]);
 
   return (
     <div className="flex h-screen flex-col bg-black">
@@ -283,14 +293,14 @@ export default function WatchPage() {
                 )}
             </div>
             
-            {relatedChannels.length > 0 && (
+            {relatedChannels.length > 0 && categoryObject && (
               <div className="mt-8">
                 <h2 className="mb-4 font-headline text-2xl font-bold text-primary">Related Channels</h2>
                 <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
                   {relatedChannels.map(relatedChannel => (
                     <Link
                       key={relatedChannel.id}
-                      href={`/watch/${relatedChannel.id}?category=${channel.category}`}
+                      href={`/watch/${relatedChannel.id}?category=${categoryObject.slug}`}
                       className="group block w-24 flex-shrink-0 text-center"
                       title={relatedChannel.name}
                     >
@@ -333,4 +343,5 @@ export default function WatchPage() {
   );
 }
     
+
 
