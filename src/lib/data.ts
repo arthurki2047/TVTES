@@ -1323,18 +1323,6 @@ export const channels: Channel[] = [
     streamUrl: 'aHR0cHM6Ly9saXZlMjAuYm96enR2LmNvbS9naWF0dnBsYXlvdXQ3L2dpYXR2LTIxMDczMS90cmFja3MtdjFhMS9tb25vLnRzLm0zdTg=',
     type: 'hls',
   },
-  {
-    id: 'bhakti-bangla-tv',
-    name: 'Bhakti Bangla TV',
-    category: 'Devotional',
-    language: 'Bengali',
-    logoUrl: 'https://picsum.photos/seed/bhakti-bangla-logo/400/400',
-    logoImageHint: 'spiritual logo',
-    thumbnailUrl: 'https://picsum.photos/seed/bhakti-bangla-thumb/600/400',
-    thumbnailImageHint: 'devotional content',
-    streamUrl: 'https://limex.tv/bhakti-bangla',
-    type: 'iframe',
-  },
 ];
 
 export const categories: { name: ChannelCategory; slug: string; imageUrl: string; imageHint: string; }[] = [
