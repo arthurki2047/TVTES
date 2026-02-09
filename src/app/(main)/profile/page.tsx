@@ -17,89 +17,31 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
+import Link from "next/link";
 
-const channelRequestFormSchema = z.object({
-  channelName: z.string().min(2, {
-    message: "Channel name must be at least 2 characters.",
-  }),
-  additionalInfo: z.string().optional(),
-});
-
-function ChannelRequestForm({ onNewRequest }: { onNewRequest: (values: z.infer<typeof channelRequestFormSchema>) => void }) {
-  const { toast } = useToast();
-  const form = useForm<z.infer<typeof channelRequestFormSchema>>({
-    resolver: zodResolver(channelRequestFormSchema),
-    defaultValues: {
-      channelName: "",
-      additionalInfo: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof channelRequestFormSchema>) {
-    onNewRequest(values);
-    toast({
-      title: "Request Submitted!",
-      description: `Thank you for requesting "${values.channelName}". We'll look into it.`,
-    });
-    form.reset();
-  }
-
+function RequestChannelCard() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Request a Channel</CardTitle>
+        <CardDescription>
+          Have a channel you'd like to see added? Let us know by filling out our request form.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="channelName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Channel Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., NASA TV" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The name of the channel you'd like to see on Amar TV.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="additionalInfo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Additional Information (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Provide any extra details, like a link to the stream if you have it."
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              <Send className="mr-2 h-4 w-4" />
-              Submit Request
-            </Button>
-          </form>
-        </Form>
+        <Button asChild className="w-full">
+          <Link href="https://forms.gle/avRKxHU8ujE1JMC78" target="_blank" rel="noopener noreferrer">
+            <Send className="mr-2 h-4 w-4" />
+            Open Request Form
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );
 }
+
 
 const testStreamFormSchema = z.object({
   streamUrl: z.string().url({ message: "Please enter a valid stream URL." }),
@@ -198,47 +140,7 @@ function TestStreamForm() {
   );
 }
 
-function ChannelRequestsList({ requests }: { requests: z.infer<typeof channelRequestFormSchema>[] }) {
-  return (
-    <Card className="md:col-span-2">
-      <CardHeader>
-        <CardTitle>Submitted Channel Requests</CardTitle>
-        <CardDescription>
-          These are the channel requests you've submitted during this session.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {requests.length > 0 ? (
-          <ul className="space-y-4">
-            {requests.map((request, index) => (
-              <li key={index} className="rounded-lg border bg-muted/50 p-4">
-                <p className="font-semibold text-card-foreground">{request.channelName}</p>
-                {request.additionalInfo && (
-                  <p className="mt-1 text-sm text-muted-foreground">{request.additionalInfo}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/50 p-12 text-center">
-            <Send className="mx-auto h-12 w-12 text-muted-foreground" />
-            <h3 className="mt-4 text-xl font-semibold">No Requests Yet</h3>
-            <p className="mt-2 text-muted-foreground">Use the form to request a new channel.</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-
 export default function ProfilePage() {
-  const [requests, setRequests] = useState<z.infer<typeof channelRequestFormSchema>[]>([]);
-
-  const handleNewRequest = (request: z.infer<typeof channelRequestFormSchema>) => {
-      setRequests(prev => [...prev, request]);
-  };
-
   return (
     <div className="container py-6">
       <h1 className="mb-6 font-headline text-4xl font-bold">Profile</h1>
@@ -257,11 +159,7 @@ export default function ProfilePage() {
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         <TestStreamForm />
-        <ChannelRequestForm onNewRequest={handleNewRequest} />
-      </div>
-
-      <div className="mt-8 grid gap-8">
-        <ChannelRequestsList requests={requests} />
+        <RequestChannelCard />
       </div>
     </div>
   );
