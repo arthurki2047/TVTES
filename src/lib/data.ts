@@ -107,7 +107,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/1001/600/400',
     thumbnailImageHint: 'breaking news',
-    streamUrl: 'aHR0cHM6Ly92Zy1yZXB1YmxpY3R2bGl2ZS5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci82MTFkNzkiYjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy92Z2xpdmUtc2stNDU2MzY4L21haW4ubTN1OA==',
+    streamUrl: 'aHR0cHM6Ly92Zy1yZXB1YmxpY3R2bGl2ZS5ha2FtYWl6ZWQubmV0L3YxL21hc3Rlci82MTFkNzkiYjExYjc3ZTJmNTcxOTM0ZmQ4MGNhMTQxMzQ1Mzc3MmFjNy92Z2xpdmUtc2stNDU2MzY4L21haW4ubTN1OD9hZHMucGFydG5lcj1yZXB1YmxpY3dlYg==',
     type: 'hls',
   },
   {
