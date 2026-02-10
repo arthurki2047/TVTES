@@ -803,7 +803,7 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/dd-news-thumb/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'aHR0cHM6Ly93d3cueW91dHViZS1ub2Nvb2tpZS5jb20vZW1iZWQvVHhvQVlXZzY0QW8/c2k9dElxU0xMSXlYU2djS2JqYw==',
+    streamUrl: 'aHR0cHM6Ly93d3cueW91dHViZS1ub2Nvb2tpZS5jb20vZW1iZWQvVGhvQVlXZzY0QW8/c2k9dElxU0xMSXlYU2djS2JqYw==',
     type: 'iframe',
   },
   {
