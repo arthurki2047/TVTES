@@ -1,76 +1,11 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-const contactFormSchema = z.object({
-  firstName: z.string().min(1, { message: 'First name is required.' }),
-  lastName: z.string().min(1, { message: 'Last name is required.' }),
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-  message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
-});
+import Link from 'next/link';
 
 export default function ContactPage() {
-    const { toast } = useToast();
-    const form = useForm<z.infer<typeof contactFormSchema>>({
-        resolver: zodResolver(contactFormSchema),
-        defaultValues: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        message: '',
-        },
-    });
-
-    async function onSubmit(values: z.infer<typeof contactFormSchema>) {
-        try {
-            // Replace with your actual server endpoint
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
-
-            if (response.ok) {
-                toast({
-                    title: 'Message Sent!',
-                    description: "Thanks for reaching out. We'll get back to you soon.",
-                });
-                form.reset();
-            } else {
-                 const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred.' }));
-                toast({
-                    variant: 'destructive',
-                    title: 'Uh oh! Something went wrong.',
-                    description: errorData.message || 'There was a problem with your request.',
-                });
-            }
-        } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: 'Uh oh! Something went wrong.',
-                description: 'Could not send message. Please check your network and try again.',
-            });
-        }
-    }
-
     return (
         <div className="container py-6">
         <h1 className="mb-6 font-headline text-4xl font-bold">Contact Us</h1>
@@ -105,71 +40,15 @@ export default function ContactPage() {
                     <CardTitle>Send us a Message</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="firstName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                        <FormLabel>First Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="John" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="lastName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                        <FormLabel>Last Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Doe" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input type="email" placeholder="john.doe@example.com" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="message"
-                                render={({ field }) => (
-                                    <FormItem>
-                                    <FormLabel>Comment or Message</FormLabel>
-                                    <FormControl>
-                                        <Textarea placeholder="Your message..." className="min-h-[120px]" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                                <Send className="mr-2 h-4 w-4" />
-                                {form.formState.isSubmitting ? 'Sending...' : 'Submit'}
-                            </Button>
-                        </form>
-                    </Form>
+                   <p className="text-muted-foreground mb-4">
+                        To get in touch with us, please fill out our contact form. Your feedback is important to us!
+                    </p>
+                    <Button asChild className="w-full">
+                        <Link href="https://forms.gle/tQg8vgeruYjJn7dp6" target="_blank" rel="noopener noreferrer">
+                            <Send className="mr-2 h-4 w-4" />
+                            Open Contact Form
+                        </Link>
+                    </Button>
                 </CardContent>
             </Card>
         </div>
