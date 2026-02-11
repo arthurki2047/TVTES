@@ -37,13 +37,38 @@ export default function ContactPage() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof contactFormSchema>) {
-        console.log(values);
-        toast({
-        title: 'Message Sent!',
-        description: "Thanks for reaching out. We'll get back to you soon.",
-        });
-        form.reset();
+    async function onSubmit(values: z.infer<typeof contactFormSchema>) {
+        try {
+            // Replace with your actual server endpoint
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+
+            if (response.ok) {
+                toast({
+                    title: 'Message Sent!',
+                    description: "Thanks for reaching out. We'll get back to you soon.",
+                });
+                form.reset();
+            } else {
+                 const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred.' }));
+                toast({
+                    variant: 'destructive',
+                    title: 'Uh oh! Something went wrong.',
+                    description: errorData.message || 'There was a problem with your request.',
+                });
+            }
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: 'Uh oh! Something went wrong.',
+                description: 'Could not send message. Please check your network and try again.',
+            });
+        }
     }
 
     return (
@@ -141,7 +166,7 @@ export default function ContactPage() {
 
                             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                                 <Send className="mr-2 h-4 w-4" />
-                                Submit
+                                {form.formState.isSubmitting ? 'Sending...' : 'Submit'}
                             </Button>
                         </form>
                     </Form>
