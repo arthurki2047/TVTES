@@ -40,7 +40,7 @@ export function NoticeBoard() {
       <div className="container flex items-center justify-center gap-2">
         <Info className="h-5 w-5 flex-shrink-0" />
         <p className="flex-grow text-center">
-          All content featured on Amar TV is sourced from publicly available platforms on the internet. We do not host or stream any content directly. If you’re a copyright holder and wish to have something removed, please contact us — we will take immediate action.
+          All content featured on AMAR TV is sourced from publicly available platforms on the internet. We do not host or stream any content directly. If you are a copyright holder and believe any content should be removed, please contact us and we will take immediate action.
         </p>
         <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-primary-foreground/10 h-7 w-7" onClick={handleDismiss}>
           <X className="h-4 w-4" />
