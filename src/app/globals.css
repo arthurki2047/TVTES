@@ -70,7 +70,5 @@
   }
   body {
     @apply text-foreground;
-    background: linear-gradient(to bottom, #FF9933, #FFFFFF, #138808);
-    background-attachment: fixed;
   }
 }
