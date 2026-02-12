@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('font-body antialiased', ptSans.variable, playfairDisplay.variable)}>
+      <body className={cn('font-body antialiased bg-gradient-indian-flag bg-fixed', ptSans.variable, playfairDisplay.variable)}>
         <NoticeBoard />
         <VideoPlayerProvider>
           {children}

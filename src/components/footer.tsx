@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const footerLinks = [
   { href: '/dmca', label: 'DMCA/Copyright Policy' },
@@ -6,7 +7,7 @@ const footerLinks = [
   { href: '/disclaimer', label: 'Disclaimer' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/cookies', label: 'Cookie Policy' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/contact', label: 'Contact Us' },
 ];
 
 export function Footer() {
@@ -15,7 +16,16 @@ export function Footer() {
       <div className="container mx-auto">
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
           {footerLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-primary transition-colors">
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "transition-colors",
+                link.href === '/contact'
+                  ? "text-destructive"
+                  : "hover:text-primary"
+              )}
+            >
               {link.label}
             </Link>
           ))}

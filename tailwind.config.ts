@@ -16,6 +16,9 @@ export default {
       },
     },
     extend: {
+      backgroundImage: {
+        'gradient-indian-flag': 'linear-gradient(to bottom, #FF9933, #FFFFFF, #138808)',
+      },
       fontFamily: {
         body: ['var(--font-pt-sans)', 'sans-serif'],
         headline: ['var(--font-playfair-display)', 'serif'],
