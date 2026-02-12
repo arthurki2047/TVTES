@@ -803,8 +803,8 @@ export const channels: Channel[] = [
     logoImageHint: 'news logo',
     thumbnailUrl: 'https://picsum.photos/seed/dd-news-thumb/600/400',
     thumbnailImageHint: 'news broadcast',
-    streamUrl: 'aHR0cHM6Ly93d3cueW91dHViZS1ub2Nvb2tpZS5jb20vZW1iZWQvVGhvQVlXZzY0QW8/c2k9dElxU0xMSXlYU2djS2JqYw==',
-    type: 'iframe',
+    streamUrl: 'aHR0cHM6Ly9kM3FzM2QycmtoZnFydC5jbG91ZGZyb250Lm5ldC9vdXQvdjEvMDgxMWNkOGMzN2NhNGM0MDlkNTM4NWE2Y2QyZmExODkvaW5kZXgubTN1OA==',
+    type: 'hls',
   },
   {
     id: 'bangla-plus',
